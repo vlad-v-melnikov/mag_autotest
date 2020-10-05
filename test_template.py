@@ -4,10 +4,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
-class TestInFirefox(unittest.TestCase):
+class TestParent(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome()
         self.driver.maximize_window()
 
         if not os.path.isdir('./screenshots'):

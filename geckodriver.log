@@ -1048,3 +1048,20 @@ JavaScript error: resource://gre/modules/URIFixup.jsm, line 271: NS_ERROR_FAILUR
 
 ###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
 
+1601929269136	geckodriver	INFO	Listening on 127.0.0.1:54589
+1601929272219	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\OLGA~1.MEL\\AppData\\Local\\Temp\\rust_mozprofileW1p44Q"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1601929275887	Marionette	INFO	Listening on port 54597
+1601929275912	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 271: NS_ERROR_FAILURE: Should pass a non-null uri
+Marionette threw an error: TypeError: this.curBrowser.contentBrowser is null
+GeckoDriver.prototype.navigateTo@chrome://marionette/content/driver.js:1248:3
+
+1601929293328	Marionette	INFO	Stopped listening on port 54597
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+

@@ -1,6 +1,8 @@
 import unittest
-import pyautogui
+from PIL import Image, ImageChops
 import glob
+from pprint import pprint
+
 
 class TestCompareImages(unittest.TestCase):
 
@@ -9,10 +11,14 @@ class TestCompareImages(unittest.TestCase):
         for prod, test in screens:
             with self.subTest():
                 try:
-                    result = pyautogui.locate(test, prod)
-                    self.assertTrue(bool(result), f"{test} does not match {prod}")
+                    img_prod = Image.open(prod).convert('RGB')
+                    img_test = Image.open(test).convert('RGB')
+                    diff = ImageChops.difference(img_prod, img_test)
+                    self.assertFalse(bool(diff.getbbox()), f"{test} does not match {prod}")
                 except AssertionError as e:
+                    identifier = prod[(prod.find('_') + 1):prod.find('.png')]
                     print(str(e))
+                    diff.save('screenshots/diff_' + identifier + '.png')
 
 
 if __name__ == "__main__":

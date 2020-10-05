@@ -5,9 +5,7 @@ import random
 import os
 import glob
 import pyautogui
-from test_in_Firefox_template import TestInFirefox
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.by import By
+from test_template import TestParent
 
 
 def clear_screenshots():
@@ -16,7 +14,7 @@ def clear_screenshots():
         os.unlink(f)
 
 
-class MagTestTester(TestInFirefox):
+class MagTestTester(TestParent):
 
     def test_GFS_NAMER_single_product(self):
         types = ['test', 'prod']
@@ -52,14 +50,8 @@ class MagTestTester(TestInFirefox):
             for iden in selected_element_ids:
                 self.driver.find_element_by_id(iden).click()
                 time.sleep(1)  # let the image load
-                screenshot_region_test = [30, 215, 1000, 800]
-                screenshot_region_prod = [
-                    screenshot_region_test[0] - 5,
-                    screenshot_region_test[1] - 5,
-                    screenshot_region_test[2] + 5,
-                    screenshot_region_test[3] + 5
-                ]
-                region = screenshot_region_test if ty == 'test' else screenshot_region_prod
+                screenshot_region = [30, 215, 1000, 800]
+                region = screenshot_region
                 pyautogui.screenshot('screenshots/' + ty + '_' + iden + '.png', region=region)
                 self.driver.find_element_by_class_name('nav_button').click()
 
