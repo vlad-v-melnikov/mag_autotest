@@ -1,3 +1,4 @@
 /screenshots/
-geckodriver.log
-image_compare_log.txt
+/geckodriver.log
+/image_compare_log.txt
+/.idea/
