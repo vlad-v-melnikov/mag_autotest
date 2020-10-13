@@ -1,0 +1,3 @@
+class Settings:
+    SCREENSHOT_REGION = [30, 215, 1000, 800]
+    SAMPLE_NUMBER = 5

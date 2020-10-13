@@ -1,10 +1,13 @@
 import unittest
 from PIL import Image, ImageChops
 import glob
-from pprint import pprint
+import logging
 
 
 class TestCompareImages(unittest.TestCase):
+
+    def setUp(self):
+        logging.basicConfig(filename='image_compare_log.txt', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
     def test_screens(self):
         screens = zip(glob.glob('screenshots/prod_*.png'), glob.glob('screenshots/test_*.png'))
@@ -18,6 +21,7 @@ class TestCompareImages(unittest.TestCase):
                 except AssertionError as e:
                     identifier = prod[(prod.find('_') + 1):prod.find('.png')]
                     print(str(e))
+                    logging.info(f'{test} does not match {prod}')
                     diff.save('screenshots/diff_' + identifier + '.png')
 
 
