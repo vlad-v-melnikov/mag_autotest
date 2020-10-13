@@ -39,7 +39,7 @@ class MagTestTester(TestParent):
     def click_hour(self, hour):
         self.driver.find_element_by_id(hour).click()
 
-    def _test_one_product(self, ty, product) -> None:
+    def test_one_product(self, ty, product) -> None:
         self.driver.find_element_by_id(product).click()
         time.sleep(1)
         if product not in self.settings.links:
@@ -85,7 +85,13 @@ class MagTestTester(TestParent):
 
             # going over products
             for product in self.settings.links['products']:
-                self._test_one_product(ty, product)
+                self.test_one_product(ty, product)
 
 if __name__ == "__main__":
     unittest.main()
+
+# To Do:
+# 1) refactor to run two drivers in parallel
+# 2) So that we have many test cases as in compare.
+# 3) Retry load for test
+# 4) test and prod drivers in a dictionary
