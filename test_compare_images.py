@@ -7,7 +7,7 @@ import logging
 class TestCompareImages(unittest.TestCase):
 
     def setUp(self):
-        logging.basicConfig(filename='image_compare_log.txt', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+        logging.basicConfig(filename='image_compare.log', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
     def test_screens(self):
         screens = zip(glob.glob('screenshots/prod_*.png'), glob.glob('screenshots/test_*.png'))
@@ -18,10 +18,11 @@ class TestCompareImages(unittest.TestCase):
                     img_test = Image.open(test).convert('RGB')
                     diff = ImageChops.difference(img_prod, img_test)
                     self.assertFalse(bool(diff.getbbox()), f"{test} does not match {prod}")
+                    logging.info(f'{test} MATCHES {prod}')
                 except AssertionError as e:
                     identifier = prod[(prod.find('_') + 1):prod.find('.png')]
                     print(str(e))
-                    logging.info(f'{test} does not match {prod}')
+                    logging.info(f'{test} DOES NOT match {prod}')
                     diff.save('screenshots/diff_' + identifier + '.png')
 
 
