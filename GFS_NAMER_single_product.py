@@ -20,11 +20,13 @@ def clear_screenshots():
 
 class MagTestTester(TestParent):
 
-    what_fors = ['test', 'prod']
-    sites = [
-        "https://magtest.ncep.noaa.gov",
-        "https://mag.ncep.noaa.gov",
-    ]
+    DEBUG = True
+    DEBUG_PROD_NUM = 2
+
+    sites = {
+        'test': "https://magtest.ncep.noaa.gov",
+        'prod': "https://mag.ncep.noaa.gov",
+    }
 
     def setUp(self) -> None:
         super().setUp()
@@ -77,7 +79,7 @@ class MagTestTester(TestParent):
         self.driver.find_element_by_link_text(self.settings.links['area']).click()
 
     def test_GFS_NAMER_single_product(self) -> None:
-        for what_for, site in zip(self.what_fors, self.sites):
+        for what_for, site in self.sites.items():
             self.driver.get(site)
             self.setup_page()
 
@@ -87,14 +89,19 @@ class MagTestTester(TestParent):
 
             self.driver.find_element_by_id(self.settings.links['cycle']).click()
 
+            product_counter = 0
             for product in self.settings.links['products']:
-                self.test_one_product(what_for, product)
+                product_counter += 1
+                if self.DEBUG and product_counter > self.DEBUG_PROD_NUM:
+                    break
+
+                with self.subTest():
+                    self.test_one_product(what_for, product)
 
 
 if __name__ == "__main__":
     unittest.main()
 
 # To Do:
-# 2) So that we have many test cases as in compare.
+# 1) Logger - if failed subtest then make a record
 # 3) Retry load for test
-# 4) test and prod drivers in a dictionary
