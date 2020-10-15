@@ -17,7 +17,7 @@ def main():
     site = "https://magtest.ncep.noaa.gov"
     driver = get_site_with_retry(driver, site)
     driver.get(site)
-    driver.close()
+    driver.tear_down()
 
     # setting up the page
     # settings = Settings()

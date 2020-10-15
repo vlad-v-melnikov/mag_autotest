@@ -1,16 +1,20 @@
-import unittest
 import time
 import random
-import os
 import glob
 import pyautogui
 import logging
-from test_template import TestParent
+import os
+import sys
+
+# selenium
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+# my own:
 from settings import Settings
-from pprint import pprint
-from retry import retry
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
 
 
 def clear_screenshots():
@@ -19,7 +23,7 @@ def clear_screenshots():
         os.unlink(f)
 
 
-class MagTestTester(TestParent):
+class GFSScreenshotMaker:
 
     DEBUG = True
     DEBUG_PROD_NUM = 5
@@ -29,11 +33,25 @@ class MagTestTester(TestParent):
         'prod': "https://mag.ncep.noaa.gov",
     }
 
-    def setUp(self) -> None:
-        super().setUp()
-        logging.basicConfig(filename='screenshot_maker.log', format='%(asctime)s - %(levelname)s - %(message)s',
-                            level=logging.INFO)
+    logfile = "screenshot_maker.log"
+
+    def __init__(self):
         self.settings = Settings()
+        self.driver = webdriver.Chrome()
+        self.driver.maximize_window()
+
+        if not os.path.isdir('./screenshots'):
+            os.mkdir('./screenshots')
+
+        logging.root.handlers = [
+            logging.FileHandler(filename=self.logfile, mode='w'),
+            logging.StreamHandler(sys.stdout)
+        ]
+
+        logging.basicConfig(
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            level=logging.INFO,
+        )
         clear_screenshots()
 
     def click_back(self):
@@ -64,13 +82,17 @@ class MagTestTester(TestParent):
         sample = random.sample(range(len(elements)), self.settings.SAMPLE_SIZE)
         self.settings.links[product] = [elements[i].get_attribute('id') for i in sample]
 
+    def click_element(self, hour):
+        element = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.ID, hour)))
+        element.click()
+
     def test_one_hour(self, hour, what_for, product) -> None:
         try:
-            self.driver.find_element_by_id(hour).click()
+            self.click_element(hour)
             self.make_screenshot(hour, what_for, product)
             self.click_back()
         except Exception as e:
-            logging.error(f"Exception was thrown for {hour}, {what_for}, {product}, {e}")
+            logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product}")
 
     def test_one_product(self, what_for, product) -> None:
         self.driver.find_element_by_id(product).click()
@@ -86,7 +108,7 @@ class MagTestTester(TestParent):
         self.driver.find_element_by_link_text(self.settings.links['model']).click()
         self.driver.find_element_by_link_text(self.settings.links['area']).click()
 
-    def test_GFS_NAMER_single_product(self) -> None:
+    def test_gfs(self) -> None:
         for what_for, site in self.sites.items():
             self.driver.get(site)
             self.setup_page()
@@ -104,8 +126,19 @@ class MagTestTester(TestParent):
                     break
                 self.test_one_product(what_for, product)
 
+    def tear_down(self):
+        logging.info("Testing complete")
+        self.driver.close()
+
+
+def main():
+    gfs_screenshot_maker = GFSScreenshotMaker()
+    gfs_screenshot_maker.test_gfs()
+    gfs_screenshot_maker.tear_down()
+
 
 if __name__ == "__main__":
-    unittest.main()
+    main()
 
 # To Do:
+# 1) Multiple regions
