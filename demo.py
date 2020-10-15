@@ -1,40 +1,28 @@
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+import copy
 from settings import Settings
 from pprint import pprint
 import time
 from retry import retry
-from timeout_decorator import timeout, TimeoutError
 
 
-def get_site_with_retry(driver, site):
-    return driver.get(site)
+class Main:
 
+    def __init__(self):
+        self.driver = webdriver.Chrome()
+        self.site = "https://magtest.ncep.noaa.gov"
+        self.driver.set_page_load_timeout(5)
+        try:
+            self.open_site()
+        except TimeoutException as e:
+            self.driver.close()
 
-def main():
-    driver = webdriver.Chrome()
-    driver.implicitly_wait(5)
-    driver.maximize_window()
-    site = "https://magtest.ncep.noaa.gov"
-    driver = get_site_with_retry(driver, site)
-    driver.get(site)
-    driver.tear_down()
-
-    # setting up the page
-    # settings = Settings()
-    #
-    # driver.find_element_by_link_text(settings.links['section']).click()
-    # driver.find_element_by_link_text(settings.links['model']).click()
-    # driver.find_element_by_link_text(settings.links['area']).click()
-    # driver.find_element_by_id('2020101306UTC').click()
-    #
-    # results = [elem.get_attribute('id') for elem in driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
-    #
-    # for result in results:
-    #     driver.find_element_by_id(result).click()
-    #     driver.find_element_by_id('fhr_id_060').click()
-    #     time.sleep(1)
-    #     driver.find_element_by_class_name('nav_button').click()
+    @retry(TimeoutException, tries=5, delay=1)
+    def open_site(self):
+        self.driver.get(self.site)
 
 
 if __name__ == '__main__':
-    main()
+    main = Main()
+    main.driver.close()

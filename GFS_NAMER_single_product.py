@@ -5,12 +5,15 @@ import pyautogui
 import logging
 import os
 import sys
+from retry import retry
 
 # selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import TimeoutException
 
 from settings import Settings
 
@@ -38,6 +41,7 @@ class GFSScreenshotMaker:
 
     DEBUG = True
     DEBUG_PROD_NUM = 5
+    IMAGE_DELAY = 2
 
     sites = {
         'test': "https://magtest.ncep.noaa.gov",
@@ -48,24 +52,36 @@ class GFSScreenshotMaker:
 
     def __init__(self):
         self.settings = Settings()
+        log_config()
 
-        for what_for in ('prod', 'test'):
+        for what_for in ('test', 'prod'):
             self.drivers[what_for] = webdriver.Chrome()
+            self.drivers[what_for].set_page_load_timeout(5)
             self.drivers[what_for].maximize_window()
-            self.drivers[what_for].get(self.sites[what_for])
+
+            try:
+                self.open_site(what_for)
+            except TimeoutException as e:
+                logging.error(f"Exception {type(e)} was thrown while trying to open page {what_for}")
+                for driver in self.drivers.values():
+                    driver.close()
+
             self.drivers[what_for].minimize_window()
 
         if not os.path.isdir('./screenshots'):
             os.mkdir('./screenshots')
 
-        log_config()
         clear_screenshots()
+
+    @retry(TimeoutException, tries=5, delay=1)
+    def open_site(self, what_for):
+        self.drivers[what_for].get(self.sites[what_for])
 
     def click_back(self, purpose: str):
         self.drivers[purpose].find_element_by_xpath("//button[contains(text(), 'Back')]").click()
 
     def make_screenshot(self, hour, what_for, product):
-        time.sleep(1)  # let the image load
+        time.sleep(self.IMAGE_DELAY)  # let the image load
         screenshot_region = self.settings.SCREENSHOT_REGION
         region = screenshot_region
         pyautogui.screenshot('screenshots/' +
@@ -86,29 +102,45 @@ class GFSScreenshotMaker:
 
     def set_hour_ids(self, product, purpose) -> None:
         self.drivers[purpose].find_element_by_id(product).click()
-        time.sleep(1)
+        time.sleep(self.IMAGE_DELAY)
         elements = self.drivers[purpose].find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         sample = random.sample(range(len(elements)), self.settings.SAMPLE_SIZE)
         self.settings.links[product] = [elements[i].get_attribute('id') for i in sample]
 
-    def click_element(self, hour, purpose: str):
-        element = WebDriverWait(self.drivers[purpose], 5).until(EC.presence_of_element_located((By.ID, hour)))
+    def click_hour(self, hour, what_for: str):
+        action = ActionChains(self.drivers[what_for])
+        time.sleep(1)
+        element = WebDriverWait(self.drivers[what_for], 5).until(EC.element_to_be_clickable((By.ID, hour)))
+        action.move_to_element(element).perform()
+        time.sleep(2)
         element.click()
 
     def screenshot_one_hour(self, hour, what_for, product) -> None:
         try:
-            self.click_element(hour, what_for)
+            self.click_hour(hour, what_for)
             self.make_screenshot(hour, what_for, product)
             self.click_back(what_for)
         except Exception as e:
-            logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product}")
+            logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking hour")
+
+    def click_product(self, what_for, product):
+        action = ActionChains(self.drivers[what_for])
+        element = self.drivers[what_for].find_element_by_id(product)
+        action.move_to_element(element).perform()
+        time.sleep(1)
+        element.click()
 
     def iterate_one_product(self, product) -> None:
         for hour in self.settings.links[product]:
-            for what_for in ('prod', 'test'):
+            for what_for in ('test', 'prod'):
+                print(what_for, product, hour)
                 self.drivers[what_for].maximize_window()
-                self.drivers[what_for].find_element_by_id(product).click()
-                self.screenshot_one_hour(hour, what_for, product)
+                try:
+                    self.click_product(what_for, product)
+                    self.screenshot_one_hour(hour, what_for, product)
+                except Exception as e:
+                    logging.error(
+                        f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking product")
                 self.drivers[what_for].minimize_window()
 
     def setup_page(self, what_for: str) -> None:
