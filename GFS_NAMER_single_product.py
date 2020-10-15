@@ -4,6 +4,7 @@ import random
 import os
 import glob
 import pyautogui
+import logging
 from test_template import TestParent
 from settings import Settings
 from pprint import pprint
@@ -21,7 +22,7 @@ def clear_screenshots():
 class MagTestTester(TestParent):
 
     DEBUG = True
-    DEBUG_PROD_NUM = 2
+    DEBUG_PROD_NUM = 5
 
     sites = {
         'test': "https://magtest.ncep.noaa.gov",
@@ -30,8 +31,22 @@ class MagTestTester(TestParent):
 
     def setUp(self) -> None:
         super().setUp()
+        logging.basicConfig(filename='screenshot_maker.log', format='%(asctime)s - %(levelname)s - %(message)s',
+                            level=logging.INFO)
         self.settings = Settings()
         clear_screenshots()
+
+    def click_back(self):
+        self.driver.find_element_by_xpath("//button[contains(text(), 'Back')]").click()
+
+    def make_screenshot(self, hour, what_for, product):
+        time.sleep(1)  # let the image load
+        screenshot_region = self.settings.SCREENSHOT_REGION
+        region = screenshot_region
+        pyautogui.screenshot('screenshots/' +
+                             what_for + '_' +
+                             product + '_' +
+                             hour + '.png', region=region)
 
     def set_cycle_ids(self) -> None:
         if 'cycle' not in self.settings.links:
@@ -49,20 +64,13 @@ class MagTestTester(TestParent):
         sample = random.sample(range(len(elements)), self.settings.SAMPLE_SIZE)
         self.settings.links[product] = [elements[i].get_attribute('id') for i in sample]
 
-    @retry((NoSuchElementException, StaleElementReferenceException), tries=3, delay=1)
-    def click_hour(self, hour):
-        self.driver.find_element_by_id(hour).click()
-
     def test_one_hour(self, hour, what_for, product) -> None:
-        self.click_hour(hour)
-        time.sleep(1)  # let the image load
-        screenshot_region = self.settings.SCREENSHOT_REGION
-        region = screenshot_region
-        pyautogui.screenshot('screenshots/' +
-                             what_for + '_' +
-                             product + '_' +
-                             hour + '.png', region=region)
-        self.driver.find_element_by_class_name('nav_button').click()
+        try:
+            self.driver.find_element_by_id(hour).click()
+            self.make_screenshot(hour, what_for, product)
+            self.click_back()
+        except Exception as e:
+            logging.error(f"Exception was thrown for {hour}, {what_for}, {product}, {e}")
 
     def test_one_product(self, what_for, product) -> None:
         self.driver.find_element_by_id(product).click()
@@ -94,14 +102,10 @@ class MagTestTester(TestParent):
                 product_counter += 1
                 if self.DEBUG and product_counter > self.DEBUG_PROD_NUM:
                     break
-
-                with self.subTest():
-                    self.test_one_product(what_for, product)
+                self.test_one_product(what_for, product)
 
 
 if __name__ == "__main__":
     unittest.main()
 
 # To Do:
-# 1) Logger - if failed subtest then make a record
-# 3) Retry load for test
