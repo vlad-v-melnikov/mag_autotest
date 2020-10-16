@@ -1,15 +1,15 @@
 class Settings:
     SCREENSHOT_REGION = [30, 215, 1000, 800]
     # SCREENSHOT_REGION = [30, 100, 1000, 1100]
-    SAMPLE_SIZE = 1
+    HOUR_SAMPLE_SIZE = 1
 
-    links = {
-        'section': 'MODEL GUIDANCE',
+    plan = {
+        'section': 'Model%20Guidance',
         'model': 'GFS',
-        'area': 'NAMER',
-        'cycle': '2020101606UTC'
-        # 'products': [
-        #      'precip_p01',
-        #      'precip_p60',
-        #  ],
+        'cycle': '2020101606UTC',
+        'area':
+            {
+                'NAMER': ['precip_p01', 'precip_p03', 'precip_p06', 'precip_p12'],
+                'CONUS': ['precip_p01', 'precip_p03', 'precip_p06', 'precip_p12'],
+            }
     }

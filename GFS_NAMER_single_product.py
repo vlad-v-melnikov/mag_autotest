@@ -6,6 +6,7 @@ import logging
 import os
 import sys
 from retry import retry
+from pprint import pprint
 
 # selenium
 from selenium import webdriver
@@ -40,7 +41,8 @@ def log_config():
 class GFSScreenshotMaker:
 
     DEBUG = True
-    DEBUG_PROD_NUM = 3
+    DEBUG_AREA_NUM = 2
+    DEBUG_PROD_NUM = 2
     IMAGE_DELAY = 2
 
     sites = {
@@ -84,7 +86,8 @@ class GFSScreenshotMaker:
 
     @retry(TimeoutException, tries=5, delay=1)
     def click_back(self):
-        self.driver.find_element_by_xpath("//button[contains(text(), 'Back')]").click()
+        element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Back')]")))
+        element.click()
 
     def switch_to_window(self, what_for: str):
         self.driver.switch_to.window(self.handles[what_for])
@@ -98,36 +101,51 @@ class GFSScreenshotMaker:
                              product + '_' +
                              hour + '.png', region=region)
 
-    def set_cycle_ids(self, what_for: str) -> None:
-        if 'cycle' not in self.settings.links:
+    def set_area_ids(self, what_for: str) -> None:
+        if 'area' not in self.settings.plan.keys():
             self.driver.switch_to.window(self.handles[what_for])
-            self.settings.links['cycle'] = \
-                self.driver.find_element_by_xpath("//a[contains(@class, 'cycle_link')]").get_attribute('id')
+            elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
+            self.settings.plan['area'] = {}
+            for element in elements:
+                area_name = element.get_attribute('class')
+                self.settings.plan['area'][area_name] = []
 
-    def set_product_ids(self, what_for: str) -> None:
-        if 'products' not in self.settings.links:
-            self.driver.switch_to.window(self.handles[what_for])
-            self.settings.links['products'] = \
-                [elem.get_attribute('id') for elem in
-                 self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
+    def set_cycle_id(self, what_for: str) -> None:
+        if 'cycle' in self.settings.plan.keys():
+            return
 
-    def set_hour_ids(self, product, what_for) -> None:
+        self.driver.switch_to.window(self.handles[what_for])
+        element_id = next(iter(self.settings.plan['area']))
+        self.driver.find_element_by_class_name(element_id).click()
+        self.settings.plan['cycle'] = \
+            self.driver.find_element_by_xpath("//a[contains(@class, 'cycle_link')]").get_attribute('id')
+
+    def set_product_ids(self, what_for: str, area_name: str) -> None:
+        if len(self.settings.plan['area'][area_name]) > 0:
+            return
+
+        self.driver.switch_to.window(self.handles[what_for])
+        self.driver.find_element_by_class_name(area_name).click()
+        elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
+        self.settings.plan['area'][area_name] = elements
+
+    def set_hour_ids(self, area_name, product, what_for) -> None:
         self.switch_to_window(what_for)
         self.driver.find_element_by_id(product).click()
         time.sleep(2)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
-        sample = random.sample(range(len(elements)), self.settings.SAMPLE_SIZE)
-        self.settings.links[product] = [elements[i].get_attribute('id') for i in sample]
+        sample = random.sample(range(len(elements)), self.settings.HOUR_SAMPLE_SIZE)
+        self.settings.plan[(area_name, product)] = [elements[i].get_attribute('id') for i in sample]
+        print(area_name, product)
+        pprint(self.settings.plan[(area_name, product)])
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour, what_for: str):
         action = ActionChains(self.driver)
-        if what_for == 'test':
-            time.sleep(1)
+        time.sleep(1)
         element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.ID, hour)))
         action.move_to_element(element).perform()
-        if what_for == 'test':
-            time.sleep(2)
+        time.sleep(2)
         element.click()
 
     def screenshot_one_hour(self, hour, what_for, product) -> None:
@@ -144,14 +162,13 @@ class GFSScreenshotMaker:
         action = ActionChains(self.driver)
         element = self.driver.find_element_by_id(product)
         action.move_to_element(element).perform()
-        if what_for == 'test':
-            time.sleep(1)
+        time.sleep(1)
         element.click()
 
-    def iterate_one_product(self, product) -> None:
-        for hour in self.settings.links[product]:
+    def iterate_one_product(self, area_name, product) -> None:
+        for hour in self.settings.plan[(area_name, product)]:
             for what_for in ('prod', 'test'):
-                print(what_for, product, hour)
+                print(what_for, area_name, product, hour)
                 try:
                     self.click_product(what_for, product)
                     self.screenshot_one_hour(hour, what_for, product)
@@ -159,34 +176,49 @@ class GFSScreenshotMaker:
                     logging.error(
                         f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking product")
 
-    def setup_page(self, handle) -> None:
-        self.driver.switch_to.window(handle)
-        self.driver.find_element_by_link_text(self.settings.links['section']).click()
-        self.driver.find_element_by_link_text(self.settings.links['model']).click()
-        self.driver.find_element_by_link_text(self.settings.links['area']).click()
+    def setup_page(self, what_for) -> None:
+        self.switch_to_window(what_for)
+        self.reset_to_area(what_for)
 
-    def iterate_products(self):
-        product_counter = 0
-        for product in self.settings.links['products']:
-            product_counter += 1
-            if self.DEBUG and product_counter > self.DEBUG_PROD_NUM:
-                break
+    def iterate_products(self, area_name):
+        for product in self.settings.plan['area'][area_name]:
+            self.set_hour_ids(area_name, product, 'prod')
+            self.iterate_one_product(area_name, product)
 
-            self.set_hour_ids(product, 'prod')
-            self.iterate_one_product(product)
+    @retry(TimeoutException, tries=5, delay=1)
+    def reset_to_area(self, what_for, area_name=''):
+        section = self.settings.plan['section'].lower()
+        model = self.settings.plan['model'].lower()
+        site = self.sites[what_for]
+        url = f"{site}/model-guidance-model-area.php?group={section}&model={model}&area={area_name.lower()}"
+        self.driver.get(url)
+
+    def iterate_areas(self):
+        for area_name in self.settings.plan['area'].keys():
+            self.switch_to_window('test')
+            self.reset_to_area('test', area_name)
+            self.driver.find_element_by_class_name(area_name).click()
+            self.switch_to_window('prod')
+            self.reset_to_area('prod', area_name)
+            self.driver.find_element_by_class_name(area_name).click()
+
+            self.iterate_products(area_name)
 
     def test_gfs(self) -> None:
-        for handle in self.handles.values():
-            self.setup_page(handle)
+        for what_for in self.handles.keys():
+            self.setup_page(what_for)
 
-        self.set_cycle_ids('test')
-        self.set_product_ids('prod')
+        # 1
+        self.set_area_ids('prod')
 
-        for what_for, handle in self.handles.items():
-            self.driver.switch_to.window(handle)
-            self.driver.find_element_by_id(self.settings.links['cycle']).click()
+        # 2
+        self.set_cycle_id('test')
 
-        self.iterate_products()
+        # 3
+        for area in self.settings.plan['area'].keys():
+            self.set_product_ids('prod', area)
+
+        self.iterate_areas()
 
     def tear_down(self):
         logging.info("Testing class destroyed. Windows closed.")
