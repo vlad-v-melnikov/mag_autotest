@@ -40,7 +40,7 @@ def log_config():
 class GFSScreenshotMaker:
 
     DEBUG = True
-    DEBUG_PROD_NUM = 5
+    DEBUG_PROD_NUM = 3
     IMAGE_DELAY = 2
 
     sites = {
@@ -107,12 +107,15 @@ class GFSScreenshotMaker:
         sample = random.sample(range(len(elements)), self.settings.SAMPLE_SIZE)
         self.settings.links[product] = [elements[i].get_attribute('id') for i in sample]
 
+    @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour, what_for: str):
         action = ActionChains(self.drivers[what_for])
-        time.sleep(1)
+        if what_for == 'test':
+            time.sleep(1)
         element = WebDriverWait(self.drivers[what_for], 5).until(EC.element_to_be_clickable((By.ID, hour)))
         action.move_to_element(element).perform()
-        time.sleep(2)
+        if what_for == 'test':
+            time.sleep(2)
         element.click()
 
     def screenshot_one_hour(self, hour, what_for, product) -> None:
@@ -127,12 +130,13 @@ class GFSScreenshotMaker:
         action = ActionChains(self.drivers[what_for])
         element = self.drivers[what_for].find_element_by_id(product)
         action.move_to_element(element).perform()
-        time.sleep(1)
+        if what_for == 'test':
+            time.sleep(1)
         element.click()
 
     def iterate_one_product(self, product) -> None:
         for hour in self.settings.links[product]:
-            for what_for in ('test', 'prod'):
+            for what_for in ('prod', 'test'):
                 print(what_for, product, hour)
                 self.drivers[what_for].maximize_window()
                 try:
