@@ -48,37 +48,46 @@ class GFSScreenshotMaker:
         'prod': "https://mag.ncep.noaa.gov",
     }
 
-    drivers = {}
+    handles = {}
 
     def __init__(self):
         self.settings = Settings()
         log_config()
+        clear_screenshots()
 
-        for what_for in ('test', 'prod'):
-            self.drivers[what_for] = webdriver.Chrome()
-            self.drivers[what_for].set_page_load_timeout(5)
-            self.drivers[what_for].maximize_window()
+        self.driver = webdriver.Chrome()
+        self.driver.set_page_load_timeout(5)
+        self.driver.maximize_window()
 
-            try:
-                self.open_site(what_for)
-            except TimeoutException as e:
-                logging.error(f"Exception {type(e)} was thrown while trying to open page {what_for}")
-                for driver in self.drivers.values():
-                    driver.close()
-
-            self.drivers[what_for].minimize_window()
+        # open sites
+        try:
+            self.open_test_site()
+            self.open_prod_site()
+        except TimeoutException as e:
+            logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
 
         if not os.path.isdir('./screenshots'):
             os.mkdir('./screenshots')
 
-        clear_screenshots()
+    def __del__(self):
+        self.tear_down()
 
     @retry(TimeoutException, tries=5, delay=1)
-    def open_site(self, what_for):
-        self.drivers[what_for].get(self.sites[what_for])
+    def open_test_site(self):
+        self.driver.get(self.sites['test'])
+        self.handles['test'] = self.driver.window_handles[0]
 
-    def click_back(self, purpose: str):
-        self.drivers[purpose].find_element_by_xpath("//button[contains(text(), 'Back')]").click()
+    @retry(TimeoutException, tries=5, delay=1)
+    def open_prod_site(self):
+        self.driver.execute_script(f"window.open('https://mag.ncep.noaa.gov', 'new window')")
+        self.handles['prod'] = self.driver.window_handles[1]
+
+    @retry(TimeoutException, tries=5, delay=1)
+    def click_back(self):
+        self.driver.find_element_by_xpath("//button[contains(text(), 'Back')]").click()
+
+    def switch_to_window(self, what_for: str):
+        self.driver.switch_to.window(self.handles[what_for])
 
     def make_screenshot(self, hour, what_for, product):
         time.sleep(self.IMAGE_DELAY)  # let the image load
@@ -89,30 +98,33 @@ class GFSScreenshotMaker:
                              product + '_' +
                              hour + '.png', region=region)
 
-    def set_cycle_ids(self, purpose: str) -> None:
+    def set_cycle_ids(self, what_for: str) -> None:
         if 'cycle' not in self.settings.links:
+            self.driver.switch_to.window(self.handles[what_for])
             self.settings.links['cycle'] = \
-                self.drivers[purpose].find_element_by_xpath("//a[contains(@class, 'cycle_link')]").get_attribute('id')
+                self.driver.find_element_by_xpath("//a[contains(@class, 'cycle_link')]").get_attribute('id')
 
-    def set_product_ids(self, purpose: str) -> None:
+    def set_product_ids(self, what_for: str) -> None:
         if 'products' not in self.settings.links:
+            self.driver.switch_to.window(self.handles[what_for])
             self.settings.links['products'] = \
                 [elem.get_attribute('id') for elem in
-                 self.drivers[purpose].find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
+                 self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
 
-    def set_hour_ids(self, product, purpose) -> None:
-        self.drivers[purpose].find_element_by_id(product).click()
-        time.sleep(self.IMAGE_DELAY)
-        elements = self.drivers[purpose].find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
+    def set_hour_ids(self, product, what_for) -> None:
+        self.switch_to_window(what_for)
+        self.driver.find_element_by_id(product).click()
+        time.sleep(2)
+        elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         sample = random.sample(range(len(elements)), self.settings.SAMPLE_SIZE)
         self.settings.links[product] = [elements[i].get_attribute('id') for i in sample]
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour, what_for: str):
-        action = ActionChains(self.drivers[what_for])
+        action = ActionChains(self.driver)
         if what_for == 'test':
             time.sleep(1)
-        element = WebDriverWait(self.drivers[what_for], 5).until(EC.element_to_be_clickable((By.ID, hour)))
+        element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.ID, hour)))
         action.move_to_element(element).perform()
         if what_for == 'test':
             time.sleep(2)
@@ -122,13 +134,15 @@ class GFSScreenshotMaker:
         try:
             self.click_hour(hour, what_for)
             self.make_screenshot(hour, what_for, product)
-            self.click_back(what_for)
+            self.click_back()
         except Exception as e:
-            logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking hour")
+            logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking hour or "
+                          f"clicking 'Back'")
 
     def click_product(self, what_for, product):
-        action = ActionChains(self.drivers[what_for])
-        element = self.drivers[what_for].find_element_by_id(product)
+        self.switch_to_window(what_for)
+        action = ActionChains(self.driver)
+        element = self.driver.find_element_by_id(product)
         action.move_to_element(element).perform()
         if what_for == 'test':
             time.sleep(1)
@@ -138,21 +152,18 @@ class GFSScreenshotMaker:
         for hour in self.settings.links[product]:
             for what_for in ('prod', 'test'):
                 print(what_for, product, hour)
-                self.drivers[what_for].maximize_window()
                 try:
                     self.click_product(what_for, product)
                     self.screenshot_one_hour(hour, what_for, product)
                 except Exception as e:
                     logging.error(
                         f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking product")
-                self.drivers[what_for].minimize_window()
 
-    def setup_page(self, what_for: str) -> None:
-        self.drivers[what_for].maximize_window()
-        self.drivers[what_for].find_element_by_link_text(self.settings.links['section']).click()
-        self.drivers[what_for].find_element_by_link_text(self.settings.links['model']).click()
-        self.drivers[what_for].find_element_by_link_text(self.settings.links['area']).click()
-        self.drivers[what_for].minimize_window()
+    def setup_page(self, handle) -> None:
+        self.driver.switch_to.window(handle)
+        self.driver.find_element_by_link_text(self.settings.links['section']).click()
+        self.driver.find_element_by_link_text(self.settings.links['model']).click()
+        self.driver.find_element_by_link_text(self.settings.links['area']).click()
 
     def iterate_products(self):
         product_counter = 0
@@ -165,27 +176,29 @@ class GFSScreenshotMaker:
             self.iterate_one_product(product)
 
     def test_gfs(self) -> None:
-        for what_for in self.drivers.keys():
-            self.setup_page(what_for)
+        for handle in self.handles.values():
+            self.setup_page(handle)
 
         self.set_cycle_ids('test')
         self.set_product_ids('prod')
 
-        for what_for, driver in self.drivers.items():
-            driver.find_element_by_id(self.settings.links['cycle']).click()
+        for what_for, handle in self.handles.items():
+            self.driver.switch_to.window(handle)
+            self.driver.find_element_by_id(self.settings.links['cycle']).click()
 
         self.iterate_products()
 
     def tear_down(self):
-        logging.info("Testing complete")
-        for driver in self.drivers.values():
-            driver.close()
+        logging.info("Testing class destroyed. Windows closed.")
+        for handle in self.handles.values():
+            self.driver.switch_to.window(handle)
+            self.driver.close()
 
 
 def main():
     gfs_screenshot_maker = GFSScreenshotMaker()
     gfs_screenshot_maker.test_gfs()
-    gfs_screenshot_maker.tear_down()
+    print("Testing complete")
 
 
 if __name__ == "__main__":

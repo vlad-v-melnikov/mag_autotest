@@ -7,6 +7,7 @@ class Settings:
         'section': 'MODEL GUIDANCE',
         'model': 'GFS',
         'area': 'NAMER',
+        'cycle': '2020101606UTC'
         # 'products': [
         #      'precip_p01',
         #      'precip_p60',
