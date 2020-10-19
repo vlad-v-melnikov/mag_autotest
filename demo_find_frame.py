@@ -12,6 +12,7 @@ def get_bottom(y):
         y += 1
     return y
 
+
 filename = './screenshots/test_precip_p01_fhr_id_106.png'
 orig_image = Image.open(filename).convert('RGB')
 orig_pix_map = orig_image.load()
@@ -35,6 +36,9 @@ for y in range(height):
         break
 
 print(box)
+image_box = orig_image.crop(box)
+image_box.save('./screenshots/test_precip_p01_fhr_id_106_box.png')
+
 
 
 

@@ -98,12 +98,6 @@ class GFSScreenshotMaker:
                                      what_for + '_' +
                                      product + '_' +
                                      hour + '.png')
-        # screenshot_region = self.settings.SCREENSHOT_REGION
-        # region = screenshot_region
-        # pyautogui.screenshot('screenshots/' +
-        #                      what_for + '_' +
-        #                      product + '_' +
-        #                      hour + '.png', region=region)
 
     def set_area_ids(self, what_for: str) -> None:
         if 'area' not in self.settings.plan.keys():
@@ -138,10 +132,11 @@ class GFSScreenshotMaker:
         self.driver.find_element_by_id(product).click()
         time.sleep(2)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
-        sample = random.sample(range(len(elements)), self.settings.HOUR_SAMPLE_SIZE)
-        self.settings.plan[(area_name, product)] = [elements[i].get_attribute('id') for i in sample]
-        print(area_name, product)
-        pprint(self.settings.plan[(area_name, product)])
+        if self.settings.HOUR_SAMPLE_SIZE:
+            elements = random.sample(elements, self.settings.HOUR_SAMPLE_SIZE)
+        self.settings.plan[(area_name, product)] = [element.get_attribute('id') for element in elements]
+        # print(area_name, product)
+        # pprint(self.settings.plan[(area_name, product)])
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour, what_for: str):
@@ -241,5 +236,5 @@ if __name__ == "__main__":
     main()
 
 # To Do:
-# 0) Single driver, several windows
-# 1) Multiple regions
+# 1) Image diff: within the frame
+# 2)
