@@ -9,7 +9,6 @@ class Settings:
         'cycle': '2020101606UTC',
         'area':
             {
-                'NAMER': ['precip_p01', 'precip_p03', 'precip_p06', 'precip_p12'],
-                'CONUS': ['precip_p01', 'precip_p03', 'precip_p06', 'precip_p12'],
+                'NAMER': ['precip_p01'],
             }
     }

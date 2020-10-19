@@ -43,7 +43,7 @@ class GFSScreenshotMaker:
     DEBUG = True
     DEBUG_AREA_NUM = 2
     DEBUG_PROD_NUM = 2
-    IMAGE_DELAY = 2
+    IMAGE_DELAY = 1
 
     sites = {
         'test': "https://magtest.ncep.noaa.gov",
@@ -94,12 +94,16 @@ class GFSScreenshotMaker:
 
     def make_screenshot(self, hour, what_for, product):
         time.sleep(self.IMAGE_DELAY)  # let the image load
-        screenshot_region = self.settings.SCREENSHOT_REGION
-        region = screenshot_region
-        pyautogui.screenshot('screenshots/' +
-                             what_for + '_' +
-                             product + '_' +
-                             hour + '.png', region=region)
+        self.driver.save_screenshot('screenshots/' +
+                                     what_for + '_' +
+                                     product + '_' +
+                                     hour + '.png')
+        # screenshot_region = self.settings.SCREENSHOT_REGION
+        # region = screenshot_region
+        # pyautogui.screenshot('screenshots/' +
+        #                      what_for + '_' +
+        #                      product + '_' +
+        #                      hour + '.png', region=region)
 
     def set_area_ids(self, what_for: str) -> None:
         if 'area' not in self.settings.plan.keys():
