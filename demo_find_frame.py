@@ -7,7 +7,7 @@ def get_right(x, y):
     return x
 
 
-def get_bottom(y):
+def get_bottom(x, y):
     while orig_pix_map[x, y] == color:
         y += 1
     return y
@@ -29,7 +29,7 @@ for y in range(height):
             box.append(x)
             box.append(y)
             box.append(get_right(x, y))
-            box.append(get_bottom(y))
+            box.append(get_bottom(x, y))
             done = True
             break
     if done:
@@ -37,7 +37,7 @@ for y in range(height):
 
 print(box)
 image_box = orig_image.crop(box)
-image_box.save('./screenshots/test_precip_p01_fhr_id_106_box.png')
+image_box.save('./screenshots/prod_precip_p01_fhr_id_088_box.png')
 
 
 
