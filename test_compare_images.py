@@ -3,13 +3,19 @@ from PIL import Image, ImageChops
 import glob
 import logging
 from settings import Settings
+from datetime import datetime
 
 
 class TestCompareImages(unittest.TestCase):
 
     def setUp(self):
         self.settings = Settings()
-        logging.basicConfig(filename='image_compare.log', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+        now = datetime.now()
+        log_time = now.strftime("%d%m%Y%H%M%S")
+        logging.basicConfig(filename=f'image_compare_{log_time}.log',
+                            format='%(asctime)s - %(levelname)s - %(message)s',
+                            level=logging.INFO)
 
     def test_screens(self):
         screens = zip(glob.glob('screenshots/prod_*.png'), glob.glob('screenshots/test_*.png'))

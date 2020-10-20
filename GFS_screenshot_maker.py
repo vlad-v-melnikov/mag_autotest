@@ -15,6 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
+from datetime import datetime
 
 from settings import Settings
 
@@ -26,16 +27,10 @@ def clear_screenshots():
 
 
 def log_config():
-    logfile = "screenshot_maker.log"
-    logging.root.handlers = [
-        logging.FileHandler(filename=logfile, mode='w'),
-        logging.StreamHandler(sys.stdout)
-    ]
-
-    logging.basicConfig(
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        level=logging.INFO,
-    )
+    now = datetime.now()
+    log_time = now.strftime("%d/%m/%Y %H:%M:%S")
+    logging.basicConfig(filename=f'screenshot_maker_{log_time}.log', format='%(asctime)s - %(levelname)s - %(message)s',
+                        level=logging.INFO)
 
 
 class GFSScreenshotMaker:
