@@ -2,13 +2,13 @@ import unittest
 from PIL import Image, ImageChops
 import glob
 import logging
+from settings import Settings
 
 
 class TestCompareImages(unittest.TestCase):
 
-    COLOR = (102, 102, 102)
-
     def setUp(self):
+        self.settings = Settings()
         logging.basicConfig(filename='image_compare.log', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
     def test_screens(self):
@@ -29,12 +29,12 @@ class TestCompareImages(unittest.TestCase):
 
     def find_frame(self, orig_image) -> Image:
         def get_right(x, y):
-            while orig_pix_map[x, y] == self.COLOR:
+            while orig_pix_map[x, y] == self.settings.compare['box_color']:
                 x += 1
             return x
 
         def get_bottom(x, y):
-            while orig_pix_map[x, y] == self.COLOR:
+            while orig_pix_map[x, y] == self.settings.compare['box_color']:
                 y += 1
             return y
 
@@ -46,8 +46,7 @@ class TestCompareImages(unittest.TestCase):
 
         for y in range(height):
             for x in range(width):
-                if orig_pix_map[x, y] == self.COLOR:
-                    print(x, y)
+                if orig_pix_map[x, y] == self.settings.compare['box_color']:
                     box.append(x)
                     box.append(y)
                     box.append(get_right(x, y))
@@ -56,6 +55,11 @@ class TestCompareImages(unittest.TestCase):
                     break
             if done:
                 break
+        if 'padding_offset' in self.settings.compare.keys():
+            box[0] += self.settings.compare['padding_offset']
+            box[1] += self.settings.compare['padding_offset']
+            box[2] -= self.settings.compare['padding_offset']
+            box[3] -= self.settings.compare['padding_offset']
 
         return orig_image.crop(box)
 
