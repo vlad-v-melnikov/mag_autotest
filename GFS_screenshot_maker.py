@@ -61,7 +61,6 @@ class GFSScreenshotMaker:
         self.driver.set_page_load_timeout(5)
         self.driver.maximize_window()
 
-        # open sites
         try:
             self.open_test_site()
             self.open_prod_site()
@@ -135,8 +134,6 @@ class GFSScreenshotMaker:
         if self.settings.HOUR_SAMPLE_SIZE:
             elements = random.sample(elements, self.settings.HOUR_SAMPLE_SIZE)
         self.settings.plan[(area_name, product)] = [element.get_attribute('id') for element in elements]
-        # print(area_name, product)
-        # pprint(self.settings.plan[(area_name, product)])
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour, what_for: str):
@@ -167,13 +164,14 @@ class GFSScreenshotMaker:
     def iterate_one_product(self, area_name, product) -> None:
         for hour in self.settings.plan[(area_name, product)]:
             for what_for in ('prod', 'test'):
-                print(what_for, area_name, product, hour)
+                print(f"Processing {what_for} {area_name} {product} {hour}... ", end='')
                 try:
                     self.click_product(what_for, product)
                     self.screenshot_one_hour(hour, what_for, product)
                 except Exception as e:
                     logging.error(
                         f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking product")
+                print("Done.")
 
     def setup_page(self, what_for) -> None:
         self.switch_to_window(what_for)
@@ -207,20 +205,17 @@ class GFSScreenshotMaker:
         for what_for in self.handles.keys():
             self.setup_page(what_for)
 
-        # 1
         self.set_area_ids('prod')
-
-        # 2
         self.set_cycle_id('test')
 
-        # 3
+        print("Using cycle", self.settings.plan['cycle'])
+
         for area in self.settings.plan['area'].keys():
             self.set_product_ids('prod', area)
 
         self.iterate_areas()
 
     def tear_down(self):
-        logging.info("Testing class destroyed. Windows closed.")
         for handle in self.handles.values():
             self.driver.switch_to.window(handle)
             self.driver.close()
@@ -237,4 +232,4 @@ if __name__ == "__main__":
 
 # To Do:
 # 1) Image diff: within the frame
-# 2)
+# 2) Print out to track in console what's going on
