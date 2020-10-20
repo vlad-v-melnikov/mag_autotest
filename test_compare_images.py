@@ -12,7 +12,7 @@ class TestCompareImages(unittest.TestCase):
         self.settings = Settings()
 
         now = datetime.now()
-        log_time = now.strftime("%d%m%Y%H%M%S")
+        log_time = now.strftime("%Y%m%d%H%M%S")
         logging.basicConfig(filename=f'image_compare_{log_time}.log',
                             format='%(asctime)s - %(levelname)s - %(message)s',
                             level=logging.INFO)

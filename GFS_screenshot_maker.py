@@ -28,7 +28,7 @@ def clear_screenshots():
 
 def log_config():
     now = datetime.now()
-    log_time = now.strftime("%d/%m/%Y %H:%M:%S")
+    log_time = now.strftime("%Y%m%d%H%M%S")
     logging.basicConfig(filename=f'screenshot_maker_{log_time}.log', format='%(asctime)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
 
