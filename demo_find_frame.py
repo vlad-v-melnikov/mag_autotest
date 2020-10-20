@@ -13,7 +13,7 @@ def get_bottom(x, y):
     return y
 
 
-filename = './screenshots/test_precip_p01_fhr_id_106.png'
+filename = './screenshots/prod_precip_p60_fhr_id_288.png'
 orig_image = Image.open(filename).convert('RGB')
 orig_pix_map = orig_image.load()
 width, height = orig_image.size
@@ -23,7 +23,7 @@ color = (102, 102, 102)
 done = False
 
 for y in range(height):
-    for x in range(width):
+    for x in range(50):
         if orig_pix_map[x, y] == color:
             print(x, y)
             box.append(x)
