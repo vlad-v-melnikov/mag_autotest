@@ -35,9 +35,6 @@ def log_config():
 
 class GFSScreenshotMaker:
 
-    DEBUG = True
-    DEBUG_AREA_NUM = 2
-    DEBUG_PROD_NUM = 2
     IMAGE_DELAY = 1
 
     sites = {
@@ -226,5 +223,5 @@ if __name__ == "__main__":
     main()
 
 # To Do:
-# 1) Image diff: within the frame
-# 2) Print out to track in console what's going on
+# 1) Number of products and areas
+# 2) Next area
