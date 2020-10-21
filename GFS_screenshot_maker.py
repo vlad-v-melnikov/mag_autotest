@@ -37,11 +37,6 @@ class GFSScreenshotMaker:
 
     IMAGE_DELAY = 1
 
-    sites = {
-        'test': "https://magtest.ncep.noaa.gov",
-        'prod': "https://magtest.ncep.noaa.gov",
-    }
-
     handles = {}
 
     def __init__(self):
@@ -50,7 +45,7 @@ class GFSScreenshotMaker:
         clear_screenshots()
 
         self.driver = webdriver.Firefox()
-        self.driver.set_page_load_timeout(30)
+        self.driver.set_page_load_timeout(5)
         self.driver.maximize_window()
 
         try:
@@ -67,12 +62,12 @@ class GFSScreenshotMaker:
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_test_site(self):
-        self.driver.get(self.sites['test'])
+        self.driver.get(self.settings.sites['test'])
         self.handles['test'] = self.driver.window_handles[0]
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_prod_site(self):
-        self.driver.execute_script(f"window.open('https://magtest.ncep.noaa.gov', 'new window')")
+        self.driver.execute_script(f"window.open('{self.settings.sites['prod']}', 'new window')")
         self.handles['prod'] = self.driver.window_handles[1]
 
     @retry(TimeoutException, tries=5, delay=1)
@@ -92,14 +87,21 @@ class GFSScreenshotMaker:
                                      hour + '.png')
 
     def set_area_ids(self, what_for: str) -> None:
+        if 'area' in self.settings.plan.keys() and len(self.settings.plan['area']) > 0:
+            return
+
         print("Setting areas...")
-        if 'area' not in self.settings.plan.keys():
-            self.driver.switch_to.window(self.handles[what_for])
-            elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
-            self.settings.plan['area'] = {}
-            for element in elements:
-                area_name = element.get_attribute('class')
-                self.settings.plan['area'][area_name] = []
+        self.driver.switch_to.window(self.handles[what_for])
+        element_id = 'modtype_' + self.settings.plan['model']
+        self.driver.find_element_by_id(element_id).click()
+        time.sleep(1)
+        elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
+        if 'area_count' in self.settings.plan.keys() and self.settings.plan['area_count'] > 0:
+            elements = random.sample(elements, self.settings.plan['area_count'])
+        self.settings.plan['area'] = {}
+        for element in elements:
+            area_name = element.get_attribute('class')
+            self.settings.plan['area'][area_name] = []
         print("Done.")
 
     def set_cycle_id(self, what_for: str) -> None:
@@ -126,7 +128,7 @@ class GFSScreenshotMaker:
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_area(what_for, area_name)
         self.driver.find_element_by_class_name(area_name).click()
-        time.sleep(2)
+        time.sleep(1)
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
         if 'product_count' in self.settings.plan.keys() and self.settings.plan['product_count'] > 0:
             elements = random.sample(elements, self.settings.plan['product_count'])
@@ -194,7 +196,7 @@ class GFSScreenshotMaker:
     def reset_to_area(self, what_for, area_name=''):
         section = self.settings.plan['section'].lower()
         model = self.settings.plan['model'].lower()
-        site = self.sites[what_for]
+        site = self.settings.sites[what_for]
         url = f"{site}/model-guidance-model-area.php?group={section}&model={model}&area={area_name.lower()}"
         self.driver.get(url)
 
@@ -210,7 +212,7 @@ class GFSScreenshotMaker:
         for what_for in self.handles.keys():
             self.setup_page(what_for)
 
-        self.set_area_ids('test')
+        self.set_area_ids('prod')
         self.set_cycle_id('test')
 
         print("Using cycle", self.settings.plan['cycle'])
@@ -236,5 +238,5 @@ if __name__ == "__main__":
     main()
 
 # To Do:
-# 1) Number of products and areas
-# 2) Next area
+# 1) Sampler for areas V
+# 2) Next area - actually, I simply need to change the settings file.
