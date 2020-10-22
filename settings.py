@@ -1,12 +1,23 @@
 class Settings:
 
     plan = {
-        'section': 'Model%20Guidance',
-        'model': 'GFS',
-        'product_count': 1,
-        'hour_count': 1,
-        'area_count': 1,
-    }
+        'GFS':
+            {
+            'section': 'Model%20Guidance',
+            'model': 'GFS',
+            'product_count': 1,
+            'hour_count': 1,
+            'area_count': 1,
+            },
+        'GEFS-SPAG':
+            {
+                'section': 'Model%20Guidance',
+                'model': 'GEFS-SPAG',
+                'product_count': 1,
+                'hour_count': 1,
+                'area_count': 1,
+            }
+        }
 
     compare = {
         'box_color': (102, 102, 102),  # frame color of the box containing the image
