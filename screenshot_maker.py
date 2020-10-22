@@ -35,6 +35,7 @@ class ScreenshotMaker:
         time.sleep(self.IMAGE_DELAY)  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
+                                     self.plan['model'] + '_' +
                                      area + '_' +
                                      product + '_' +
                                      hour + '.png')

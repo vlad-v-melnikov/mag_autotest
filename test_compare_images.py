@@ -25,13 +25,14 @@ class TestCompareImages(unittest.TestCase):
             img_prod = self.find_frame(Image.open(prod).convert('RGB'))
             img_test = self.find_frame(Image.open(test).convert('RGB'))
             diff = ImageChops.difference(img_prod, img_test)
-            try:
-                with self.subTest(f"{test} does not match {prod}"):
+            with self.subTest(f"{test} does not match {prod}"):
+                try:
                     self.assertFalse(bool(diff.getbbox()))
-            except AssertionError:
-                identifier = prod[(prod.find('_') + 1):prod.find('.png')]
-                logging.info(f'{test} DOES NOT match {prod}')
-                diff.save('screenshots/diff_' + identifier + '.png')
+                except AssertionError as e:
+                    identifier = prod[(prod.find('_') + 1):prod.find('.png')]
+                    logging.info(f'{test} DOES NOT match {prod}')
+                    diff.save('screenshots/diff_' + identifier + '.png')
+                    raise e
 
     def find_frame(self, orig_image) -> Image:
         def get_right(x, y):

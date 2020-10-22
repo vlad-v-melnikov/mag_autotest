@@ -70,8 +70,9 @@ def main():
     print("Starting to test")
     wrapper = Wrapper()
 
-    gfs = ScreenshotMaker(model='GFS', driver=wrapper.driver, handles=wrapper.handles)
-    gfs.make_now()
+    gefs_spag = ScreenshotMaker(model='GEFS-SPAG', driver=wrapper.driver, handles=wrapper.handles)
+    gefs_spag.make_now()
+
 
     print("Testing complete")
 
@@ -80,4 +81,4 @@ if __name__ == "__main__":
     main()
 
 # To Do:
-#
+# After walk: next class
