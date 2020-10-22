@@ -70,7 +70,7 @@ def main():
     print("Starting to take screenshots...")
     wrapper = Wrapper()
 
-    single_model = ScreenshotMaker(model='RAP', driver=wrapper.driver, handles=wrapper.handles)
+    single_model = ScreenshotMaker(model='HREF', driver=wrapper.driver, handles=wrapper.handles)
     single_model.make_now()
 
     print("Screenshots taken")

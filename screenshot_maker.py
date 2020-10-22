@@ -11,6 +11,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 
 from settings import Settings
+import make_screenshots
 
 
 class ScreenshotMaker:
@@ -89,7 +90,7 @@ class ScreenshotMaker:
         self.plan['area'][area_name] = elements
 
     def set_hour_ids(self, area_name, product) -> None:
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_id(product).click()
         time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
@@ -176,4 +177,4 @@ class ScreenshotMaker:
         self.iterate_what_for_areas()
 
 if __name__ == "__main__":
-    print("Not a launchable file")
+    make_screenshots.main()

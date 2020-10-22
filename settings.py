@@ -84,26 +84,18 @@ class Settings:
                 'hour_count': 1,
                 'area_count': 1,
             },
-        'HRRR':
+        'HRW-ARW':
             {
                 'section': 'Model%20Guidance',
-                'model': 'HRRR',
+                'model': 'HRW-ARW',
                 'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
-        'HRRR-ARW':
+        'HRW-ARW2':
             {
                 'section': 'Model%20Guidance',
-                'model': 'HRRR-ARW',
-                'product_count': 3,
-                'hour_count': 1,
-                'area_count': 1,
-            },
-        'HRRR-ARW2':
-            {
-                'section': 'Model%20Guidance',
-                'model': 'HRRR-ARW2',
+                'model': 'HRW-ARW2',
                 'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
