@@ -1,75 +1,27 @@
 import time
 import random
-import glob
-import pyautogui
 import logging
-import os
-import sys
 from retry import retry
-from pprint import pprint
 
 # selenium
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
-from datetime import datetime
 
 from settings import Settings
-
-
-def clear_screenshots():
-    files = glob.glob('./screenshots/*.png')
-    for f in files:
-        os.unlink(f)
-
-
-def log_config():
-    now = datetime.now()
-    log_time = now.strftime("%Y%m%d%H%M%S")
-    logging.basicConfig(filename=f'logs\screenshot_maker_{log_time}.log', format='%(asctime)s - %(levelname)s - %(message)s',
-                        level=logging.INFO)
 
 
 class ScreenshotMaker:
 
     IMAGE_DELAY = 1
 
-    handles = {}
-
-    def __init__(self, model_name):
+    def __init__(self, model, driver, handles):
         self.settings = Settings()
-        self.plan = self.settings.plan[model_name]
-        log_config()
-        clear_screenshots()
-
-        self.driver = webdriver.Firefox()
-        self.driver.set_page_load_timeout(5)
-        self.driver.maximize_window()
-
-        try:
-            self.open_test_site()
-            self.open_prod_site()
-        except TimeoutException as e:
-            logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
-
-        if not os.path.isdir('./screenshots'):
-            os.mkdir('./screenshots')
-
-    def __del__(self):
-        self.tear_down()
-
-    @retry(TimeoutException, tries=5, delay=1)
-    def open_test_site(self):
-        self.driver.get(self.settings.sites['test'])
-        self.handles['test'] = self.driver.window_handles[0]
-
-    @retry(TimeoutException, tries=5, delay=1)
-    def open_prod_site(self):
-        self.driver.execute_script(f"window.open('{self.settings.sites['prod']}', 'new window')")
-        self.handles['prod'] = self.driver.window_handles[1]
+        self.plan = self.settings.plan[model]
+        self.driver = driver
+        self.handles = handles
 
     @retry(TimeoutException, tries=5, delay=1)
     def click_back(self):
@@ -221,27 +173,3 @@ class ScreenshotMaker:
             self.set_product_ids('test', area)
 
         self.iterate_what_for_areas()
-
-    def tear_down(self):
-        for handle in self.handles.values():
-            self.driver.switch_to.window(handle)
-            self.driver.close()
-
-
-def main():
-    print("Starting to test")
-
-    screenshot_maker = ScreenshotMaker('GFS')
-    screenshot_maker.make_now()
-    screenshot_maker = ScreenshotMaker('GEFS_SPAG')
-    screenshot_maker.make_now()
-
-    print("Testing complete")
-
-
-if __name__ == "__main__":
-    main()
-
-# To Do:
-# 1) Sampler for areas V
-# 2) Next area - actually, I simply need to change the settings file.
