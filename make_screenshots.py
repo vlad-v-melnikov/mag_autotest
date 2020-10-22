@@ -67,13 +67,13 @@ class Wrapper:
 
 
 def main():
-    print("Starting to test")
+    print("Starting to take screenshots...")
     wrapper = Wrapper()
 
-    single_model = ScreenshotMaker(model='GEFS-MEAN-SPRD', driver=wrapper.driver, handles=wrapper.handles)
+    single_model = ScreenshotMaker(model='RAP', driver=wrapper.driver, handles=wrapper.handles)
     single_model.make_now()
 
-    print("Testing complete")
+    print("Screenshots taken")
 
 
 if __name__ == "__main__":

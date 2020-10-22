@@ -20,17 +20,25 @@ class TestCompareImages(unittest.TestCase):
                             level=logging.INFO)
 
     def test_screens(self):
-        screens = zip(glob.glob('screenshots/prod_*.png'), glob.glob('screenshots/test_*.png'))
+        prod_screens = glob.glob('screenshots/prod_*.png')
+        test_screens = glob.glob('screenshots/test_*.png')
+        try:
+            self.assertEqual(len(test_screens), len(prod_screens), "Number of screenshots for test and prod is DIFFERENT")
+        except AssertionError as e:
+            logging.error("Number of screenshots for test and prod is DIFFERENT")
+            raise e
+
+        screens = zip(prod_screens, test_screens)
         for prod, test in screens:
             img_prod = self.find_frame(Image.open(prod).convert('RGB'))
             img_test = self.find_frame(Image.open(test).convert('RGB'))
             diff = ImageChops.difference(img_prod, img_test)
-            with self.subTest(f"{test} does not match {prod}"):
+            with self.subTest(f"{test} DOES NOT MATCH {prod}"):
                 try:
                     self.assertFalse(bool(diff.getbbox()))
                 except AssertionError as e:
                     identifier = prod[(prod.find('_') + 1):prod.find('.png')]
-                    logging.info(f'{test} DOES NOT match {prod}')
+                    logging.error(f'{test} DOES NOT match {prod}')
                     diff.save('screenshots/diff_' + identifier + '.png')
                     raise e
 

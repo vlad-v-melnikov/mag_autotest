@@ -6,9 +6,17 @@ class Settings:
         'use_padding': True,
     }
 
+    delays = {}
+
     sites = {
         'test': "https://magtest.ncep.noaa.gov",
         'prod': "https://mag.ncep.noaa.gov",
+
+        'area_from': 'prod',
+        'cycle_from': 'prod',
+        'products_from': 'prod',
+
+        'order_of_iteration': ['test', 'prod']
     }
 
     plan = {
@@ -16,7 +24,7 @@ class Settings:
             {
             'section': 'Model%20Guidance',
             'model': 'GFS',
-            'product_count': 1,
+            'product_count': 3,
             'hour_count': 1,
             'area_count': 1,
             },
@@ -24,7 +32,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'GEFS-SPAG',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -40,7 +48,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'NAEFS',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -48,7 +56,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'NAM',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -56,15 +64,15 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'NAM-HIRES',
-                'product_count': 1,
+                'product_count': 5,
                 'hour_count': 1,
-                'area_count': 1,
+                'area_count': 2,
             },
         'FIREWX':
             {
                 'section': 'Model%20Guidance',
                 'model': 'FIREWX',
-                'product_count': 1,
+                'product_count': 5,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -72,7 +80,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'RAP',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -80,7 +88,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'HRRR',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -88,7 +96,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'HRRR-ARW',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -96,7 +104,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'HRRR-ARW2',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -104,7 +112,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'SREF',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -112,7 +120,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'HREF',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -120,7 +128,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'NBM',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -128,7 +136,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'ESTOFS',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -136,7 +144,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'ICE-DRIFT',
-                'product_count': 1,
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },

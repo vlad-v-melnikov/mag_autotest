@@ -100,7 +100,7 @@ class ScreenshotMaker:
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour, what_for: str):
         action = ActionChains(self.driver)
-        time.sleep(1)
+        time.sleep(2)
         element = self.driver.find_element_by_id(hour)
         action.move_to_element(element).perform()
         time.sleep(1)
@@ -116,7 +116,7 @@ class ScreenshotMaker:
                           f"clicking 'Back'")
 
     def click_product(self, product):
-        time.sleep(1)
+        time.sleep(2)
         action = ActionChains(self.driver)
         element = self.driver.find_element_by_id(product)
         action.move_to_element(element).perform()
@@ -154,7 +154,7 @@ class ScreenshotMaker:
         self.driver.get(url)
 
     def iterate_what_for_areas(self):
-        for what_for in ('test', 'prod'):
+        for what_for in self.settings.sites['order_of_iteration']:
             self.switch_to_window(what_for)
             for area_name in self.plan['area'].keys():
                 self.reset_to_area(what_for, area_name)
@@ -165,12 +165,15 @@ class ScreenshotMaker:
         for what_for in self.handles.keys():
             self.setup_page(what_for)
 
-        self.set_area_ids('prod')
-        self.set_cycle_id('test')
+        self.set_area_ids(self.settings.sites['area_from'])
+        self.set_cycle_id(self.settings.sites['cycle_from'])
 
         print("Using cycle", self.plan['cycle'])
 
         for area in self.plan['area'].keys():
-            self.set_product_ids('test', area)
+            self.set_product_ids(self.settings.sites['products_from'], area)
 
         self.iterate_what_for_areas()
+
+if __name__ == "__main__":
+    print("Not a launchable file")
