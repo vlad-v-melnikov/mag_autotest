@@ -2,7 +2,8 @@ class Settings:
 
     compare = {
         'box_color': (102, 102, 102),  # frame color of the box containing the image
-        'padding_offset': [70, 45, 50, 50]  # to ignore header and footer text in the image - comment out if not needed
+        'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
+        'use_padding': True,
     }
 
     sites = {
@@ -27,11 +28,11 @@ class Settings:
                 'hour_count': 1,
                 'area_count': 1,
             },
-        'GEFS-MEAN-SPREAD':
+        'GEFS-MEAN-SPRD':
             {
                 'section': 'Model%20Guidance',
-                'model': 'GEFS-MEAN-SPREAD',
-                'product_count': 1,
+                'model': 'GEFS-MEAN-SPRD',
+                'product_count': 3,
                 'hour_count': 1,
                 'area_count': 1,
             },

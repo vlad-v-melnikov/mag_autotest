@@ -91,7 +91,7 @@ class ScreenshotMaker:
     def set_hour_ids(self, area_name, product) -> None:
         time.sleep(1)
         self.driver.find_element_by_id(product).click()
-        time.sleep(2)
+        time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() and self.plan['hour_count'] > 0:
             elements = random.sample(elements, self.plan['hour_count'])
@@ -103,7 +103,7 @@ class ScreenshotMaker:
         time.sleep(1)
         element = self.driver.find_element_by_id(hour)
         action.move_to_element(element).perform()
-        time.sleep(2)
+        time.sleep(1)
         element.click()
 
     def screenshot_one_hour(self, area, hour, what_for, product) -> None:

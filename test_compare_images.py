@@ -62,7 +62,7 @@ class TestCompareImages(unittest.TestCase):
                     break
             if done:
                 break
-        if 'padding_offset' in self.settings.compare.keys():
+        if self.settings.compare['use_padding']:
             box[0] += self.settings.compare['padding_offset'][0]
             box[1] += self.settings.compare['padding_offset'][1]
             box[2] -= self.settings.compare['padding_offset'][2]

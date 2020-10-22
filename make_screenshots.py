@@ -70,9 +70,8 @@ def main():
     print("Starting to test")
     wrapper = Wrapper()
 
-    gefs_spag = ScreenshotMaker(model='GEFS-SPAG', driver=wrapper.driver, handles=wrapper.handles)
-    gefs_spag.make_now()
-
+    single_model = ScreenshotMaker(model='GEFS-MEAN-SPRD', driver=wrapper.driver, handles=wrapper.handles)
+    single_model.make_now()
 
     print("Testing complete")
 
