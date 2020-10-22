@@ -11,8 +11,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 
 from settings import Settings
-import make_screenshots
-
 
 class ScreenshotMaker:
 
@@ -177,4 +175,5 @@ class ScreenshotMaker:
         self.iterate_what_for_areas()
 
 if __name__ == "__main__":
-    make_screenshots.main()
+    print("Not an application")
+    exit(0)
