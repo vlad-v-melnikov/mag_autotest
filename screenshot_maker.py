@@ -49,7 +49,7 @@ class ScreenshotMaker:
         self.driver.find_element_by_id(element_id).click()
         time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
-        if 'area_count' in self.plan.keys() and self.plan['area_count'] > 0:
+        if 'area_count' in self.plan.keys() and 0 < self.plan['area_count'] <= len(elements):
             elements = random.sample(elements, self.plan['area_count'])
         self.plan['area'] = {}
         for element in elements:
@@ -81,18 +81,20 @@ class ScreenshotMaker:
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_area(what_for, area_name)
         self.driver.find_element_by_class_name(area_name).click()
-        time.sleep(1)
+        time.sleep(2)
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
-        if 'product_count' in self.plan.keys() and self.plan['product_count'] > 0:
+        if 'product_count' in self.plan.keys() \
+                and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area_name] = elements
 
     def set_hour_ids(self, area_name, product) -> None:
-        time.sleep(3)
+        time.sleep(1)
         self.driver.find_element_by_id(product).click()
         time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
-        if 'hour_count' in self.plan.keys() and self.plan['hour_count'] > 0:
+        if 'hour_count' in self.plan.keys() \
+                and 0 < self.plan['hour_count'] <= len(elements):
             elements = random.sample(elements, self.plan['hour_count'])
         self.plan[(area_name, product)] = [element.get_attribute('id') for element in elements]
 

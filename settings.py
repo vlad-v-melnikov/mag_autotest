@@ -12,9 +12,9 @@ class Settings:
         'test': "https://magtest.ncep.noaa.gov",
         'prod': "https://mag.ncep.noaa.gov",
 
-        'area_from': 'prod',
-        'cycle_from': 'prod',
-        'products_from': 'prod',
+        'area_from': 'test',
+        'cycle_from': 'test',
+        'products_from': 'test',
 
         'order_of_iteration': ['test', 'prod']
     }
@@ -84,6 +84,14 @@ class Settings:
                 'hour_count': 1,
                 'area_count': 1,
             },
+        'HRRR':
+            {
+                'section': 'Model%20Guidance',
+                'model': 'HRRR',
+                'product_count': 3,
+                'hour_count': 1,
+                'area_count': 1,
+            },
         'HRW-ARW':
             {
                 'section': 'Model%20Guidance',
@@ -128,7 +136,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'ESTOFS',
-                'product_count': 3,
+                'product_count': 2,
                 'hour_count': 1,
                 'area_count': 1,
             },
@@ -136,7 +144,7 @@ class Settings:
             {
                 'section': 'Model%20Guidance',
                 'model': 'ICE-DRIFT',
-                'product_count': 3,
+                'product_count': 1,
                 'hour_count': 1,
                 'area_count': 1,
             },
