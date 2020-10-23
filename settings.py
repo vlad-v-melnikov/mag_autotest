@@ -12,9 +12,9 @@ class Settings:
         'test': "https://magtest.ncep.noaa.gov",
         'prod': "https://mag.ncep.noaa.gov",
 
-        'area_from': 'test',
+        'area_from': 'prod',
         'cycle_from': 'test',
-        'products_from': 'test',
+        'products_from': 'prod',
 
         'order_of_iteration': ['test', 'prod']
     }
