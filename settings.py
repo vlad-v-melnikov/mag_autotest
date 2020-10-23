@@ -87,6 +87,10 @@ class Settings:
         'HRRR':
             {
                 'section': 'Model%20Guidance',
+                'area':
+                    {
+                        'CONUS':['precip_p01', '500_vort_ht,1000_500_thick,700_rh_ht,850_temp_ht']
+                    },
                 'model': 'HRRR',
                 'product_count': 3,
                 'hour_count': 1,
