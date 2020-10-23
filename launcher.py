@@ -28,13 +28,17 @@ def log_config():
 
 class Wrapper:
     handles = {}
+    driver = {
+        'Firefox': webdriver.Firefox,
+        'Chrome': webdriver.Chrome,
+    }
 
     def __init__(self):
         self.settings = Settings()
         log_config()
         clear_screenshots()
 
-        self.driver = webdriver.Firefox()
+        self.driver = self.driver[self.settings.driver]()
         self.driver.set_page_load_timeout(5)
         self.driver.maximize_window()
 

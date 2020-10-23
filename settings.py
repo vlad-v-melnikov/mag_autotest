@@ -3,7 +3,7 @@ class Settings:
     compare = {
         'box_color': (102, 102, 102),  # frame color of the box containing the image
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
-        'use_padding': False,
+        'use_padding': True,
     }
 
     delays = {}
@@ -18,6 +18,8 @@ class Settings:
 
         'order_of_iteration': ['test', 'prod']
     }
+
+    driver = 'Firefox'
 
     plan = {
         'GFS':

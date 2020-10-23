@@ -7,11 +7,12 @@ from datetime import datetime
 
 class TestCompareImages(unittest.TestCase):
 
-    X_TOP_LIMITER = 50
+    X_RIGHT_LIMITER_SINGLE = 50
 
     def setUp(self):
         self.settings = Settings()
-        self.COLOR = self.settings.compare['box_color']
+        self.COLOR_SINGLE = self.settings.compare['box_color']
+        self.COLOR_FOUR = {'Chrome': (0, 0, 0), 'Firefox': (76, 76, 76)}
 
         now = datetime.now()
         log_time = now.strftime("%Y%m%d%H%M%S")
@@ -43,25 +44,62 @@ class TestCompareImages(unittest.TestCase):
                     raise e
 
     def find_frame(self, orig_image, img_name) -> Image:
+        orig_pix_map = orig_image.load()
+        width, height = orig_image.size
+
+        #setting
+        target = {
+            'top': 1,
+            'left': 1,
+            'bottom': height,
+            'right': self.X_RIGHT_LIMITER_SINGLE,
+            'color': self.COLOR_SINGLE
+        }
+
+        #finding single
+        box = self.search_for_it(target, orig_pix_map)
+
+        #finding_four:
+        if len(box) == 0:
+            img_width = 1024
+            tolerance = 20
+            target = {
+                'top': 1,
+                'left': int(width/2 - img_width/2 - tolerance),
+                'bottom': height,
+                'right': int(width/2 - img_width/2 + tolerance),
+                'color': self.COLOR_FOUR[self.settings.driver]
+            }
+            box = self.search_for_it(target, orig_pix_map, four_images=True)
+            # target = orig_image.crop((target['left'], target['top'], target['right'], target['bottom']))
+            # target.save('screenshots/target.png')
+            # to_save = orig_image.crop(box)
+            # to_save.save('screenshots/box.png')
+
+        try:
+            self.assertEqual(len(box), 4, f"Could not find borders of the frame for {img_name}.")
+        except AssertionError as e:
+            logging.error(f"Could not find borders of the frame for {img_name}.")
+            raise e
+
+        return orig_image.crop(box)
+
+    def search_for_it(self, target: dict, orig_pix_map, four_images=False) -> list:
         def get_right(x, y):
-            while orig_pix_map[x, y] == self.COLOR:
+            while orig_pix_map[x, y] == target['color']:
                 x += 1
             return x
 
         def get_bottom(x, y):
-            while orig_pix_map[x, y] == self.COLOR:
+            while orig_pix_map[x, y] == target['color']:
                 y += 1
             return y
 
-        orig_pix_map = orig_image.load()
-        width, height = orig_image.size
-
         box = []
         done = False
-
-        for y in range(1, height):
-            for x in range(1, self.X_TOP_LIMITER):
-                if orig_pix_map[x, y] == self.COLOR:
+        for y in range(target['top'], target['bottom']):
+            for x in range(target['left'], target['right']):
+                if orig_pix_map[x, y] == target['color']:
                     box.append(x)
                     box.append(y)
                     box.append(get_right(x, y))
@@ -71,19 +109,13 @@ class TestCompareImages(unittest.TestCase):
             if done:
                 break
 
-        if self.settings.compare['use_padding']:
+        if self.settings.compare['use_padding'] and len(box) > 0 and not four_images:
             box[0] += self.settings.compare['padding_offset'][0]
             box[1] += self.settings.compare['padding_offset'][1]
             box[2] -= self.settings.compare['padding_offset'][2]
             box[3] -= self.settings.compare['padding_offset'][3]
+        return box
 
-        try:
-            self.assertEqual(len(box), 4, f"Could not find borders of the frame for {img_name}.")
-        except AssertionError as e:
-            logging.error(f"Could not find borders of the frame for {img_name}.")
-            raise e
-
-        return orig_image.crop(box)
 
 if __name__ == "__main__":
     unittest.main()
