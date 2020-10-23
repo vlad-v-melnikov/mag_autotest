@@ -70,8 +70,9 @@ class ScreenshotMaker:
         element_id = 'modarea_' + next(iter(self.plan['area']))
         self.driver.find_element_by_id(element_id).click()
         time.sleep(1)
-        self.plan['cycle'] = \
-            self.driver.find_element_by_xpath("//a[contains(@class, 'cycle_link')]").get_attribute('id')
+        # cycle is previous to the last one
+        cycles = self.driver.find_elements_by_xpath("//a[contains(@class, 'cycle_link')]")
+        self.plan['cycle'] = cycles[1].get_attribute('id') if len(cycles) > 1 else cycles[0].get_attribute('id')
         print("Done.")
 
     def set_product_ids(self, what_for: str, area_name: str) -> None:
@@ -89,9 +90,8 @@ class ScreenshotMaker:
         self.plan['area'][area_name] = elements
 
     def set_hour_ids(self, area_name, product) -> None:
-        time.sleep(1)
-        self.driver.find_element_by_id(product).click()
-        time.sleep(1)
+        self.click_product(product)
+        self.click_cycle()
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() \
                 and 0 < self.plan['hour_count'] <= len(elements):
@@ -116,20 +116,29 @@ class ScreenshotMaker:
             logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking hour or "
                           f"clicking 'Back'")
 
-    def click_product(self, product):
-        time.sleep(2)
+    def hover_and_click_id(self, id):
+        time.sleep(1)
         action = ActionChains(self.driver)
-        element = self.driver.find_element_by_id(product)
+        element = self.driver.find_element_by_id(id)
         action.move_to_element(element).perform()
         time.sleep(1)
         element.click()
+        time.sleep(1)
 
-    def iterate_one_product(self, what_for, area_name, product) -> None:
+    def click_product(self, product):
+        self.hover_and_click_id(product)
+
+    def click_cycle(self):
+        self.hover_and_click_id(self.plan['cycle'])
+
+    def iterate_one_product(self, what_for, area_name, product, hours_just_set) -> None:
         for hour in self.plan[(area_name, product)]:
             print(f"Processing {what_for} {area_name} {product} {hour}... ", end='')
             try:
-                self.click_product(product)
-                print(f"Clicked {what_for} {area_name} {product} {hour}... ")
+                if not hours_just_set:
+                    self.click_product(product)
+                    self.click_cycle()
+                print(f"Clicked {what_for} {area_name} {product} {hour} for cycle {self.plan['cycle']}... ")
                 self.screenshot_one_hour(area_name, hour, what_for, product)
             except Exception as e:
                 logging.error(
@@ -141,10 +150,12 @@ class ScreenshotMaker:
         self.reset_to_area(what_for)
 
     def iterate_products(self, what_for, area_name):
+        hours_just_set = False
         for product in self.plan['area'][area_name]:
             if (area_name, product) not in self.plan.keys():
                 self.set_hour_ids(area_name, product)
-            self.iterate_one_product(what_for, area_name, product)
+                hours_just_set = True
+            self.iterate_one_product(what_for, area_name, product, hours_just_set)
 
     @retry(TimeoutException, tries=5, delay=2)
     def reset_to_area(self, what_for, area_name=''):

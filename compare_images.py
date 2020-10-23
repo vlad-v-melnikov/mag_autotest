@@ -30,8 +30,8 @@ class TestCompareImages(unittest.TestCase):
 
         screens = zip(prod_screens, test_screens)
         for prod, test in screens:
-            img_prod = self.find_frame(Image.open(prod).convert('RGB'))
-            img_test = self.find_frame(Image.open(test).convert('RGB'))
+            img_prod = self.find_frame(Image.open(prod).convert('RGB'), prod)
+            img_test = self.find_frame(Image.open(test).convert('RGB'), test)
             diff = ImageChops.difference(img_prod, img_test)
             with self.subTest(f"{test} DOES NOT MATCH {prod}"):
                 try:
@@ -42,7 +42,7 @@ class TestCompareImages(unittest.TestCase):
                     diff.save('screenshots/diff_' + identifier + '.png')
                     raise e
 
-    def find_frame(self, orig_image) -> Image:
+    def find_frame(self, orig_image, img_name) -> Image:
         def get_right(x, y):
             while orig_pix_map[x, y] == self.COLOR:
                 x += 1
@@ -70,11 +70,18 @@ class TestCompareImages(unittest.TestCase):
                     break
             if done:
                 break
+
         if self.settings.compare['use_padding']:
             box[0] += self.settings.compare['padding_offset'][0]
             box[1] += self.settings.compare['padding_offset'][1]
             box[2] -= self.settings.compare['padding_offset'][2]
             box[3] -= self.settings.compare['padding_offset'][3]
+
+        try:
+            self.assertEqual(len(box), 4, f"Could not find borders of the frame for {img_name}.")
+        except AssertionError as e:
+            logging.error(f"Could not find borders of the frame for {img_name}.")
+            raise e
 
         return orig_image.crop(box)
 

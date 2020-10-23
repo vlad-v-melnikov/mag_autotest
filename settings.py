@@ -3,7 +3,7 @@ class Settings:
     compare = {
         'box_color': (102, 102, 102),  # frame color of the box containing the image
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
-        'use_padding': True,
+        'use_padding': False,
     }
 
     delays = {}
@@ -91,6 +91,7 @@ class Settings:
                     {
                         'CONUS':['precip_p01', '500_vort_ht,1000_500_thick,700_rh_ht,850_temp_ht']
                     },
+                'cycle': '2020102309UTC',
                 'model': 'HRRR',
                 'product_count': 3,
                 'hour_count': 1,
