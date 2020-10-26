@@ -11,6 +11,7 @@ from datetime import datetime
 # internal
 from settings import Settings
 from screenshot_maker import ScreenshotMaker
+from SREF_cluster import SREFCluster
 
 
 def clear_screenshots():
@@ -71,12 +72,12 @@ class Wrapper:
 
 
 def main():
-    model = 'GFS'
+    model = 'SREF-CLUSTER'
 
-    print("Starting to take screenshots...")
+    print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
 
-    single_model = ScreenshotMaker(model=model, driver=wrapper.driver, handles=wrapper.handles)
+    single_model = SREFCluster(model=model, driver=wrapper.driver, handles=wrapper.handles)
     single_model.make_now()
 
     print("Screenshots taken")

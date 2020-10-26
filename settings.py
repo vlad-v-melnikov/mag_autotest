@@ -3,33 +3,32 @@ class Settings:
     compare = {
         'box_color': (102, 102, 102),  # frame color of the box containing the image
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
-        'use_padding': True,
+        'use_padding': False,
     }
 
     delays = {}
-
-    sites = {
-        'test': "https://magtest.ncep.noaa.gov",
-        'prod': "https://mag.ncep.noaa.gov",
-
-        'area_from': 'prod',
-        'cycle_from': 'test',
-        'products_from': 'prod',
-
-        'order_of_iteration': ['test', 'prod']
-    }
-
-    driver = 'Firefox'
-
     plan = {
-        'GFS':
+        'SREF-CLUSTER':
             {
+                'section': 'Model%20Guidance',
+                'model': 'SREF-CLUSTER',
+                'product_count': 1,
+                'hour_count': 3,
+                'area_count': 1,
+                'cluster_count': 1,
+            },
+        'GFS':
+        {
+            'area':
+                {
+                    'NAMER': ['precip_p01']
+                },
             'section': 'Model%20Guidance',
             'model': 'GFS',
-            'product_count': 0,
+            'product_count': 3,
             'hour_count': 1,
             'area_count': 1,
-            },
+        },
         'GEFS-SPAG':
             {
                 'section': 'Model%20Guidance',
@@ -156,3 +155,18 @@ class Settings:
                 'area_count': 1,
             },
         }
+
+    sites = {
+        'test': "https://magtest.ncep.noaa.gov",
+        'prod': "https://mag.ncep.noaa.gov",
+
+        'area_from': 'prod',
+        'cycle_from': 'test',
+        'products_from': 'prod',
+        'cluster_from': 'prod',
+
+        'order_of_iteration': ['test', 'prod']
+    }
+
+    driver = 'Firefox'
+

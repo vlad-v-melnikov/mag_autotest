@@ -31,7 +31,8 @@ class ScreenshotMaker:
     def switch_to_window(self, what_for: str):
         self.driver.switch_to.window(self.handles[what_for])
 
-    def make_screenshot(self, area, hour, what_for, product):
+    def make_screenshot(self, **kwargs):
+        area, hour, what_for, product = kwargs.values()
         time.sleep(self.IMAGE_DELAY)  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
@@ -40,7 +41,8 @@ class ScreenshotMaker:
                                      product + '_' +
                                      hour + '.png')
 
-    def set_area_ids(self, what_for: str) -> None:
+    def set_area_ids(self) -> None:
+        what_for = self.settings.sites['area_from']
         if 'area' in self.plan.keys() and len(self.plan['area']) > 0:
             return
 
@@ -58,7 +60,8 @@ class ScreenshotMaker:
             self.plan['area'][area_name] = []
         print("Done.")
 
-    def set_cycle_id(self, what_for: str) -> None:
+    def set_cycle_id(self) -> None:
+        what_for = self.settings.sites['cycle_from']
         if 'cycle' in self.plan.keys():
             return
 
@@ -102,15 +105,16 @@ class ScreenshotMaker:
         self.plan[(area_name, product)] = [element.get_attribute('id') for element in elements]
 
     @retry(TimeoutException, tries=3, delay=2)
-    def click_hour(self, hour, what_for: str):
+    def click_hour(self, hour):
         action = ActionChains(self.driver)
-        time.sleep(2)
+        time.sleep(1)
         element = self.driver.find_element_by_id(hour)
         action.move_to_element(element).perform()
         time.sleep(1)
         element.click()
 
-    def screenshot_one_hour(self, area, hour, what_for, product) -> None:
+    def screenshot_one_hour(self, **kwargs) -> None:
+        area, hour, what_for, product = kwargs.values()
         try:
             self.click_hour(hour, what_for)
             self.make_screenshot(area, hour, what_for, product)
@@ -142,7 +146,7 @@ class ScreenshotMaker:
                     self.click_product(product)
                     self.click_cycle()
                 print(f"Clicked {what_for} {area_name} {product} {hour} for cycle {self.plan['cycle']}... ")
-                self.screenshot_one_hour(area_name, hour, what_for, product)
+                self.screenshot_one_hour(name=area_name, hour=hour, what_for=what_for, product=product)
             except Exception as e:
                 logging.error(
                     f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking product")
@@ -180,9 +184,8 @@ class ScreenshotMaker:
         for what_for in self.handles.keys():
             self.setup_page(what_for)
 
-        self.set_area_ids(self.settings.sites['area_from'])
-        self.set_cycle_id(self.settings.sites['cycle_from'])
-
+        self.set_area_ids()
+        self.set_cycle_id()
         print("Using cycle", self.plan['cycle'])
 
         for area in self.plan['area'].keys():
