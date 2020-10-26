@@ -71,7 +71,7 @@ class Wrapper:
 
 
 def main():
-    model = 'HRRR'
+    model = 'GFS'
 
     print("Starting to take screenshots...")
     wrapper = Wrapper()
@@ -86,4 +86,4 @@ if __name__ == "__main__":
     main()
 
 # To Do:
-# After walk: next class
+#

@@ -26,7 +26,7 @@ class Settings:
             {
             'section': 'Model%20Guidance',
             'model': 'GFS',
-            'product_count': 3,
+            'product_count': 0,
             'hour_count': 1,
             'area_count': 1,
             },

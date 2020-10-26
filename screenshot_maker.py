@@ -2,6 +2,7 @@ import time
 import random
 import logging
 from retry import retry
+from datetime import date
 
 # selenium
 from selenium.webdriver.common.by import By
@@ -70,8 +71,10 @@ class ScreenshotMaker:
         element_id = 'modarea_' + next(iter(self.plan['area']))
         self.driver.find_element_by_id(element_id).click()
         time.sleep(1)
-        # cycle is previous to the last one
-        cycles = self.driver.find_elements_by_xpath("//a[contains(@class, 'cycle_link')]")
+        # cycle is previous to the last one except for single element. Has to contain today's date
+        date_today = date.today().strftime("%Y%m%d")
+        cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
+                                                    f"and (contains(@id, {date_today}))]")
         self.plan['cycle'] = cycles[1].get_attribute('id') if len(cycles) > 1 else cycles[0].get_attribute('id')
         print("Done.")
 

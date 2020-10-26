@@ -47,7 +47,7 @@ class TestCompareImages(unittest.TestCase):
         orig_pix_map = orig_image.load()
         width, height = orig_image.size
 
-        #setting
+        # setting
         target = {
             'top': 1,
             'left': 1,
@@ -56,10 +56,10 @@ class TestCompareImages(unittest.TestCase):
             'color': self.COLOR_SINGLE
         }
 
-        #finding single
+        # finding single
         box = self.search_for_it(target, orig_pix_map)
 
-        #finding_four:
+        # finding_four:
         if len(box) == 0:
             img_width = 1024
             tolerance = 20
