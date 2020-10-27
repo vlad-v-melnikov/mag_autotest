@@ -60,3 +60,6 @@ class Panels(ScreenshotMaker):
 if __name__ == "__main__":
     print("Not an application")
     exit(0)
+
+# To Do:
+# 1) Test for all areas, one product, one hour. Attention to cycles.
