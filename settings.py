@@ -5,17 +5,15 @@ class Settings:
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
         'use_padding': False,
     }
-
-    delays = {}
     plan = {
         'SREF-CLUSTER':
             {
                 'section': 'Model%20Guidance',
                 'model': 'SREF-CLUSTER',
-                'product_count': 1,
-                'hour_count': 3,
                 'area_count': 1,
-                'cluster_count': 1,
+                'product_count': 2,
+                'hour_count': 1,
+                'cluster_count': 2,
             },
         'GFS':
         {
@@ -155,6 +153,8 @@ class Settings:
                 'area_count': 1,
             },
         }
+
+    delays = {}
 
     sites = {
         'test': "https://magtest.ncep.noaa.gov",
