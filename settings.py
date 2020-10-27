@@ -6,9 +6,17 @@ class Settings:
         'use_padding': False,
     }
     plan = {
+        'PANELS':
+            {
+                'section': 'Model Guidance',
+                'model': 'PANELS',
+                'area_count': 1,
+                'product_count': 1,
+                'hour_count': 1,
+            },
         'SREF-CLUSTER':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'SREF-CLUSTER',
                 'area_count': 1,
                 'product_count': 2,
@@ -21,7 +29,7 @@ class Settings:
                 {
                     'NAMER': ['precip_p01']
                 },
-            'section': 'Model%20Guidance',
+            'section': 'Model Guidance',
             'model': 'GFS',
             'product_count': 3,
             'hour_count': 1,
@@ -29,7 +37,7 @@ class Settings:
         },
         'GEFS-SPAG':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'GEFS-SPAG',
                 'product_count': 3,
                 'hour_count': 1,
@@ -37,7 +45,7 @@ class Settings:
             },
         'GEFS-MEAN-SPRD':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'GEFS-MEAN-SPRD',
                 'product_count': 3,
                 'hour_count': 1,
@@ -45,7 +53,7 @@ class Settings:
             },
         'NAEFS':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'NAEFS',
                 'product_count': 3,
                 'hour_count': 1,
@@ -53,7 +61,7 @@ class Settings:
             },
         'NAM':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'NAM',
                 'product_count': 3,
                 'hour_count': 1,
@@ -61,7 +69,7 @@ class Settings:
             },
         'NAM-HIRES':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'NAM-HIRES',
                 'product_count': 5,
                 'hour_count': 1,
@@ -69,7 +77,7 @@ class Settings:
             },
         'FIREWX':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'FIREWX',
                 'product_count': 5,
                 'hour_count': 1,
@@ -77,7 +85,7 @@ class Settings:
             },
         'RAP':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'RAP',
                 'product_count': 3,
                 'hour_count': 1,
@@ -85,7 +93,7 @@ class Settings:
             },
         'HRRR':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'area':
                     {
                         'CONUS':['precip_p01', '500_vort_ht,1000_500_thick,700_rh_ht,850_temp_ht']
@@ -98,7 +106,7 @@ class Settings:
             },
         'HRW-ARW':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'HRW-ARW',
                 'product_count': 3,
                 'hour_count': 1,
@@ -106,7 +114,7 @@ class Settings:
             },
         'HRW-ARW2':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'HRW-ARW2',
                 'product_count': 3,
                 'hour_count': 1,
@@ -114,7 +122,7 @@ class Settings:
             },
         'SREF':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'SREF',
                 'product_count': 3,
                 'hour_count': 1,
@@ -122,7 +130,7 @@ class Settings:
             },
         'HREF':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'HREF',
                 'product_count': 3,
                 'hour_count': 1,
@@ -130,7 +138,7 @@ class Settings:
             },
         'NBM':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'NBM',
                 'product_count': 3,
                 'hour_count': 1,
@@ -138,7 +146,7 @@ class Settings:
             },
         'ESTOFS':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'ESTOFS',
                 'product_count': 2,
                 'hour_count': 1,
@@ -146,7 +154,7 @@ class Settings:
             },
         'ICE-DRIFT':
             {
-                'section': 'Model%20Guidance',
+                'section': 'Model Guidance',
                 'model': 'ICE-DRIFT',
                 'product_count': 1,
                 'hour_count': 1,

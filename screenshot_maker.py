@@ -166,7 +166,7 @@ class ScreenshotMaker:
 
     @retry(TimeoutException, tries=5, delay=2)
     def reset_to_area(self, what_for, area_name=''):
-        section = self.plan['section'].lower()
+        section = self.plan['section'].lower().replace(' ', '%20')
         model = self.plan['model'].lower()
         site = self.settings.sites[what_for]
         url = f"{site}/model-guidance-model-area.php?group={section}&model={model}&area={area_name.lower()}"
