@@ -2,6 +2,7 @@ import glob
 import logging
 import os
 from retry import retry
+import time
 
 # selenium
 from selenium import webdriver
@@ -14,6 +15,10 @@ from screenshot_maker import ScreenshotMaker
 from sref_cluster import SREFCluster
 from panels import Panels
 
+CLASS_MAP = {
+        'PANELS': Panels,
+        'SREF-CLUSTER': SREFCluster,
+    }
 
 def clear_screenshots():
     files = glob.glob('./screenshots/*.png')
@@ -64,27 +69,26 @@ class Wrapper:
         self.handles['prod'] = self.driver.window_handles[1]
 
     def tear_down(self):
-        print('67', self.driver.window_handles)
-        for handle in self.driver.window_handles:
+        for handle in self.handles.values():
             self.driver.switch_to.window(handle)
             self.driver.close()
 
-    def __del__(self):
-        print('73', self.driver.window_handles)
-        self.tear_down()
-
 
 def main():
-    model = 'SREF-CLUSTER'
+    model = 'PANELS'
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
-    single_model = SREFCluster(model=model, driver=wrapper.driver, handles=wrapper.handles)
+
+    if model in CLASS_MAP.keys():
+        single_model = CLASS_MAP[model](model=model, driver=wrapper.driver, handles=wrapper.handles)
+    else:
+        single_model = ScreenshotMaker(model=model, driver=wrapper.driver, handles=wrapper.handles)
+
     single_model.make_now()
 
-    print('86', wrapper.driver.window_handles)
-
     print("Screenshots taken")
+    wrapper.tear_down()
 
 
 if __name__ == "__main__":

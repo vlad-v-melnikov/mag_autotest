@@ -15,7 +15,7 @@ from settings import Settings
 
 class ScreenshotMaker:
 
-    IMAGE_DELAY = 1
+    IMAGE_DELAY = 2
 
     def __init__(self, model, driver, handles):
         self.settings = Settings()
@@ -204,6 +204,7 @@ class ScreenshotMaker:
             self.set_product_ids(self.settings.sites['products_from'], area)
 
         self.iterate_what_for_areas()
+
 
 if __name__ == "__main__":
     print("Not an application")

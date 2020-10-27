@@ -1,6 +1,7 @@
 import time
 import logging
 from datetime import date
+from retry import retry
 
 from screenshot_maker import ScreenshotMaker
 
@@ -21,13 +22,17 @@ class Panels(ScreenshotMaker):
 
     def set_cycle_id_panels(self, area_name, product):
         self.click_product(product)
-        time.sleep(1)
+        cycles = self.get_cycles()
+        self.plan[('cycle', area_name, product)] = cycles[1].get_attribute('id') if len(cycles) > 1 \
+            else cycles[0].get_attribute('id')
+
+    @retry(AssertionError, tries=3, delay=1)
+    def get_cycles(self) -> list:
         date_today = date.today().strftime("%Y%m%d")
         cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
                                                     f"and (contains(@id, {date_today}))]")
-        self.plan[('cycle', area_name, product)] = cycles[1].get_attribute('id') if len(cycles) > 1 \
-            else cycles[0].get_attribute('id')
-        print(self.plan[('cycle', area_name, product)])
+        assert len(cycles) > 0
+        return cycles
 
     def click_cycle(self, **kwargs):
         area, product = kwargs.values()
@@ -38,7 +43,6 @@ class Panels(ScreenshotMaker):
                           f"while clicking cycle")
 
     def iterate_one_product(self, what_for, area_name, product, hours_just_set) -> None:
-        print(self.plan[(area_name, product)])
         for hour in self.plan[(area_name, product)]:
             print(f"Processing {what_for} {area_name} {product} {hour}... ", end='')
             if not hours_just_set:

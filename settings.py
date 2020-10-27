@@ -5,12 +5,13 @@ class Settings:
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
         'use_padding': False,
     }
+
     plan = {
         'PANELS':
             {
                 'section': 'Model Guidance',
                 'model': 'PANELS',
-                'area_count': 1,
+                'area_count': 0,
                 'product_count': 1,
                 'hour_count': 1,
             },
@@ -165,7 +166,7 @@ class Settings:
     delays = {}
 
     sites = {
-        'test': "https://magtest.ncep.noaa.gov",
+        'test': "https://mag.ncep.noaa.gov",
         'prod': "https://mag.ncep.noaa.gov",
 
         'area_from': 'prod',
