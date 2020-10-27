@@ -5,18 +5,13 @@ from retry import retry
 from datetime import date
 
 # selenium
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 
-from settings import Settings
 from screenshot_maker import ScreenshotMaker
 
 
 class SREFCluster(ScreenshotMaker):
-    IMAGE_DELAY = 1
 
     def __init__(self, model, driver, handles):
         super().__init__(model, driver, handles)

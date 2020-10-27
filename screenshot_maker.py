@@ -25,8 +25,11 @@ class ScreenshotMaker:
 
     @retry(TimeoutException, tries=5, delay=1)
     def click_back(self):
-        element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Back')]")))
-        element.click()
+        try:
+            element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Back')]")))
+            element.click()
+        except Exception as e:
+            logging.error(f"Exception {type(e)} while clicking 'Back' button")
 
     def switch_to_window(self, what_for: str):
         self.driver.switch_to.window(self.handles[what_for])
@@ -73,7 +76,7 @@ class ScreenshotMaker:
         # click on the area
         element_id = 'modarea_' + next(iter(self.plan['area']))
         self.driver.find_element_by_id(element_id).click()
-        time.sleep(1)
+        time.sleep(2)
         # cycle is previous to the last one except for single element. Has to contain today's date
         date_today = date.today().strftime("%Y%m%d")
         cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
@@ -97,7 +100,7 @@ class ScreenshotMaker:
 
     def set_hour_ids(self, area_name, product) -> None:
         self.click_product(product)
-        self.click_cycle()
+        self.click_cycle(area=area_name, product=product)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() \
                 and 0 < self.plan['hour_count'] <= len(elements):
@@ -106,22 +109,21 @@ class ScreenshotMaker:
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
-        action = ActionChains(self.driver)
-        time.sleep(1)
-        element = self.driver.find_element_by_id(hour)
-        action.move_to_element(element).perform()
-        time.sleep(1)
-        element.click()
+        try:
+            action = ActionChains(self.driver)
+            time.sleep(1)
+            element = self.driver.find_element_by_id(hour)
+            action.move_to_element(element).perform()
+            time.sleep(1)
+            element.click()
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown for {hour} while clicking hour")
 
     def screenshot_one_hour(self, **kwargs) -> None:
         area, hour, what_for, product = kwargs.values()
-        try:
-            self.click_hour(hour, what_for)
-            self.make_screenshot(area, hour, what_for, product)
-            self.click_back()
-        except Exception as e:
-            logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking hour or "
-                          f"clicking 'Back'")
+        self.click_hour(hour)
+        self.make_screenshot(area=area, hour=hour, what_for=what_for, product=product)
+        self.click_back()
 
     def hover_and_click_id(self, id):
         time.sleep(1)
@@ -133,10 +135,17 @@ class ScreenshotMaker:
         time.sleep(1)
 
     def click_product(self, product):
-        self.hover_and_click_id(product)
+        try:
+            self.hover_and_click_id(product)
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown for {product} while clicking product")
 
-    def click_cycle(self):
-        self.hover_and_click_id(self.plan['cycle'])
+    def click_cycle(self, **kwargs):
+        cycle = self.plan['cycle']
+        try:
+            self.hover_and_click_id(cycle)
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown for {cycle} while clicking cycle")
 
     def iterate_one_product(self, what_for, area_name, product, hours_just_set) -> None:
         for hour in self.plan[(area_name, product)]:
@@ -180,13 +189,16 @@ class ScreenshotMaker:
                 self.driver.find_element_by_class_name(area_name).click()
                 self.iterate_products(what_for, area_name)
 
+    def set_common(self):
+        self.set_area_ids()
+        self.set_cycle_id()
+        print("Using cycle", self.plan['cycle'])
+
     def make_now(self) -> None:
         for what_for in self.handles.keys():
             self.setup_page(what_for)
 
-        self.set_area_ids()
-        self.set_cycle_id()
-        print("Using cycle", self.plan['cycle'])
+        self.set_common()
 
         for area in self.plan['area'].keys():
             self.set_product_ids(self.settings.sites['products_from'], area)

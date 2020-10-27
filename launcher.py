@@ -11,7 +11,8 @@ from datetime import datetime
 # internal
 from settings import Settings
 from screenshot_maker import ScreenshotMaker
-from SREF_cluster import SREFCluster
+from sref_cluster import SREFCluster
+from panels import Panels
 
 
 def clear_screenshots():
@@ -63,11 +64,13 @@ class Wrapper:
         self.handles['prod'] = self.driver.window_handles[1]
 
     def tear_down(self):
-        for handle in self.handles.values():
+        print('67', self.driver.window_handles)
+        for handle in self.driver.window_handles:
             self.driver.switch_to.window(handle)
             self.driver.close()
 
     def __del__(self):
+        print('73', self.driver.window_handles)
         self.tear_down()
 
 
@@ -76,9 +79,10 @@ def main():
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
-
     single_model = SREFCluster(model=model, driver=wrapper.driver, handles=wrapper.handles)
     single_model.make_now()
+
+    print('86', wrapper.driver.window_handles)
 
     print("Screenshots taken")
 
