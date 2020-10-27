@@ -11,9 +11,9 @@ class Settings:
                 'section': 'Model%20Guidance',
                 'model': 'SREF-CLUSTER',
                 'area_count': 1,
-                'product_count': 2,
+                'product_count': 1,
                 'hour_count': 1,
-                'cluster_count': 2,
+                'cluster_count': 1,
             },
         'GFS':
         {
