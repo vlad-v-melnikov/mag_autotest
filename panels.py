@@ -15,27 +15,33 @@ class Panels(ScreenshotMaker):
         hours_just_set = False
         for product in self.plan['area'][area_name]:
             if (area_name, product) not in self.plan.keys():
+                self.click_product(product)
                 self.set_cycle_id_panels(area_name, product)
                 self.set_hour_ids(area_name, product)
                 hours_just_set = True
             self.iterate_one_product(what_for, area_name, product, hours_just_set)
 
     def set_cycle_id_panels(self, area_name, product):
-        self.click_product(product)
-        cycles = self.get_cycles()
+        time.sleep(1)
+        cycles = self.get_cycles(area_name, product)
         self.plan[('cycle', area_name, product)] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')
 
-    @retry(AssertionError, tries=3, delay=1)
-    def get_cycles(self) -> list:
+    @retry(AssertionError, tries=2, delay=1)
+    def get_cycles(self, area, product) -> list:
         date_today = date.today().strftime("%Y%m%d")
         cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
                                                     f"and (contains(@id, {date_today}))]")
-        assert len(cycles) > 0
+        try:
+            assert len(cycles) > 0, f"No cycles set for {self.plan['model']}, {area}, {product}"
+        except AssertionError as e:
+            logging.error(f"Exception {type(e)} was thrown while setting cycles for {self.plan['model']}, {area}, {product}")
+            raise e
         return cycles
 
     def click_cycle(self, **kwargs):
         area, product = kwargs.values()
+        time.sleep(1)
         try:
             self.hover_and_click_id(self.plan[('cycle', area, product)])
         except Exception as e:
@@ -53,9 +59,8 @@ class Panels(ScreenshotMaker):
             self.screenshot_one_hour(name=area_name, hour=hour, what_for=what_for, product=product)
             print("Done.")
 
-    def set_common(self):
+    def set_common_for_all_areas(self):
         self.set_area_ids()
-
 
 if __name__ == "__main__":
     print("Not an application")

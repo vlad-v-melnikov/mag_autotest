@@ -1,5 +1,19 @@
 class Settings:
 
+    sites = {
+        'test': "https://magtest.ncep.noaa.gov",
+        'prod': "https://mag.ncep.noaa.gov",
+
+        'area_from': 'prod',
+        'cycle_from': 'test',
+        'products_from': 'prod',
+        'cluster_from': 'prod',
+
+        'order_of_iteration': ['test', 'prod']
+    }
+
+    driver = 'Firefox'
+
     compare = {
         'box_color': (102, 102, 102),  # frame color of the box containing the image
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
@@ -11,7 +25,7 @@ class Settings:
             {
                 'section': 'Model Guidance',
                 'model': 'PANELS',
-                'area_count': 0,
+                'area_count': 3,
                 'product_count': 1,
                 'hour_count': 1,
             },
@@ -164,18 +178,4 @@ class Settings:
         }
 
     delays = {}
-
-    sites = {
-        'test': "https://mag.ncep.noaa.gov",
-        'prod': "https://mag.ncep.noaa.gov",
-
-        'area_from': 'prod',
-        'cycle_from': 'test',
-        'products_from': 'prod',
-        'cluster_from': 'prod',
-
-        'order_of_iteration': ['test', 'prod']
-    }
-
-    driver = 'Firefox'
 

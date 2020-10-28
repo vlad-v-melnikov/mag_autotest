@@ -90,8 +90,8 @@ class ScreenshotMaker:
 
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_area(what_for, area_name)
-        self.driver.find_element_by_class_name(area_name).click()
-        time.sleep(2)
+        self.click_area(area_name)
+
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
         if 'product_count' in self.plan.keys() \
                 and 0 < self.plan['product_count'] <= len(elements):
@@ -99,7 +99,6 @@ class ScreenshotMaker:
         self.plan['area'][area_name] = elements
 
     def set_hour_ids(self, area_name, product) -> None:
-        self.click_product(product)
         self.click_cycle(area=area_name, product=product)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() \
@@ -109,13 +108,9 @@ class ScreenshotMaker:
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
+        time.sleep(1)
         try:
-            action = ActionChains(self.driver)
-            time.sleep(1)
-            element = self.driver.find_element_by_id(hour)
-            action.move_to_element(element).perform()
-            time.sleep(1)
-            element.click()
+            self.hover_and_click_id(hour)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {hour} while clicking hour")
 
@@ -141,11 +136,24 @@ class ScreenshotMaker:
             logging.error(f"Exception {type(e)} was thrown for {product} while clicking product")
 
     def click_cycle(self, **kwargs):
+        time.sleep(1)
         cycle = self.plan['cycle']
         try:
             self.hover_and_click_id(cycle)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {cycle} while clicking cycle")
+
+    def click_model(self):
+        try:
+            self.hover_and_click_id('modtype_' + self.plan['model'])
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown while clicking {self.plan['model']}")
+
+    def click_area(self, area):
+        try:
+            self.hover_and_click_id('modarea_' + area)
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown while clicking {area}")
 
     def iterate_one_product(self, what_for, area_name, product, hours_just_set) -> None:
         for hour in self.plan[(area_name, product)]:
@@ -180,28 +188,32 @@ class ScreenshotMaker:
         site = self.settings.sites[what_for]
         url = f"{site}/model-guidance-model-area.php?group={section}&model={model}&area={area_name.lower()}"
         self.driver.get(url)
+        time.sleep(1)
+        self.click_model()
 
     def iterate_what_for_areas(self):
         for what_for in self.settings.sites['order_of_iteration']:
             self.switch_to_window(what_for)
             for area_name in self.plan['area'].keys():
                 self.reset_to_area(what_for, area_name)
-                self.driver.find_element_by_class_name(area_name).click()
+                self.click_area(area_name)
                 self.iterate_products(what_for, area_name)
 
-    def set_common(self):
+    def set_common_for_all_areas(self):
         self.set_area_ids()
         self.set_cycle_id()
         print("Using cycle", self.plan['cycle'])
+
+    def set_for_each_area(self):
+        for area in self.plan['area'].keys():
+            self.set_product_ids(self.settings.sites['products_from'], area)
 
     def make_now(self) -> None:
         for what_for in self.handles.keys():
             self.setup_page(what_for)
 
-        self.set_common()
-
-        for area in self.plan['area'].keys():
-            self.set_product_ids(self.settings.sites['products_from'], area)
+        self.set_common_for_all_areas()
+        self.set_for_each_area()
 
         self.iterate_what_for_areas()
 
