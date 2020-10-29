@@ -75,7 +75,7 @@ class Wrapper:
 
 
 def main():
-    model = 'PANELS'
+    model = 'SREF-CLUSTER'
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()

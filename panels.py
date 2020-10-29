@@ -27,23 +27,11 @@ class Panels(ScreenshotMaker):
         self.plan[('cycle', area_name, product)] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')
 
-    @retry(AssertionError, tries=3, delay=1, backoff=2)
-    def get_cycles(self, area, product) -> list:
-        date_today = date.today().strftime("%Y%m%d")
-        cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
-                                                    f"and (contains(@id, {date_today}))]")
-        try:
-            assert len(cycles) > 0, f"No cycles set for {self.plan['model']}, {area}, {product}"
-        except AssertionError as e:
-            logging.error(f"Exception {type(e)} was thrown while setting cycles for {self.plan['model']}, {area}, {product}")
-            raise e
-        return cycles
-
     def click_cycle(self, **kwargs):
         area, product = kwargs.values()
         time.sleep(2)
         try:
-            self.hover_and_click_id(self.plan[('cycle', area, product)])
+            self.hover_and_click(self.plan[('cycle', area, product)])
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {self.plan[('cycle', area, product)]} "
                           f"while clicking cycle")

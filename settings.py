@@ -14,12 +14,6 @@ class Settings:
 
     driver = 'Firefox'
 
-    compare = {
-        'box_color': (102, 102, 102),  # frame color of the box containing the image
-        'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
-        'use_padding': False,
-    }
-
     plan = {
         'PANELS':
             {
@@ -33,22 +27,18 @@ class Settings:
             {
                 'section': 'Model Guidance',
                 'model': 'SREF-CLUSTER',
-                'area_count': 1,
+                'area_count': 0,
                 'product_count': 1,
                 'hour_count': 1,
                 'cluster_count': 1,
             },
         'GFS':
         {
-            'area':
-                {
-                    'NAMER': ['precip_p01']
-                },
             'section': 'Model Guidance',
             'model': 'GFS',
+            'area_count': 1,
             'product_count': 1,
             'hour_count': 1,
-            'area_count': 1,
         },
         'GEFS-SPAG':
             {
@@ -176,6 +166,12 @@ class Settings:
                 'area_count': 1,
             },
         }
+    compare = {
+        'box_color': (102, 102, 102),  # frame color of the box containing the image
+        'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
+        'use_padding': False,
+    }
+
 
     delays = {}
 

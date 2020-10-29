@@ -19,7 +19,7 @@ class SREFCluster(ScreenshotMaker):
     def set_hour_ids(self, area_name, product) -> None:
         super().set_hour_ids(area_name, product)
         for hour in self.plan[(area_name, product)]:
-            self.driver.find_element_by_id(hour).click()
+            self.click_hour(hour)
             time.sleep(1)
             self.set_cluster_ids(area_name, product, hour)
 
@@ -30,29 +30,27 @@ class SREFCluster(ScreenshotMaker):
             elements = random.sample(elements, self.plan['cluster_count'])
         self.plan[(area_name, product, hour)] = [element.text for element in elements]
 
-    @retry(TimeoutException, tries=3, delay=2)
+    @retry(TimeoutException, tries=3, delay=1)
     def click_cluster(self, cluster):
-        action = ActionChains(self.driver)
-        element = self.driver.find_element_by_link_text(cluster)
-        action.move_to_element(element).perform()
-        time.sleep(1)
-        element.click()
+        try:
+            self.hover_and_click(cluster, 'link_text')
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown for {cluster} while clicking this cluster")
 
     def screenshot_one_hour(self, **kwargs) -> None:
         area, hour, what_for, product, cluster = kwargs.values()
         try:
             self.click_hour(hour)
-            time.sleep(1)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking hour")
 
         all_tabs_before = self.driver.window_handles
+        time.sleep(1)
         try:
             self.click_cluster(cluster)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking cluster")
             raise e
-        time.sleep(1)
 
         # switching to new tab and closing it after screenshot
         new_tab = list(set(self.driver.window_handles) - set(all_tabs_before))[0]

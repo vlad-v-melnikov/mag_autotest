@@ -46,11 +46,12 @@ class ScreenshotMaker:
                                      hour + '.png')
 
     def set_area_ids(self) -> None:
+        print("Setting areas...")
         what_for = self.settings.sites['area_from']
         if 'area' in self.plan.keys() and len(self.plan['area']) > 0:
+            print("Done.")
             return
 
-        print("Setting areas...")
         self.driver.switch_to.window(self.handles[what_for])
         element_id = 'modtype_' + self.plan['model']
         self.driver.find_element_by_id(element_id).click()
@@ -65,19 +66,17 @@ class ScreenshotMaker:
         print("Done.")
 
     def set_cycle_id(self) -> None:
+        print("Setting cycle...")
         what_for = self.settings.sites['cycle_from']
         if 'cycle' in self.plan.keys():
+            print("Done.")
             return
 
-        print("Setting cycle...")
         self.driver.switch_to.window(self.handles[what_for])
-        # click on the model
-        element_id = 'modtype_' + self.plan['model']
-        self.driver.find_element_by_id(element_id).click()
-        # click on the area
-        element_id = 'modarea_' + next(iter(self.plan['area']))
-        self.driver.find_element_by_id(element_id).click()
-        time.sleep(2)
+        self.click_model()
+        self.click_area(next(iter(self.plan['area'])))
+        time.sleep(1)
+
         # cycle is previous to the last one except for single element. Has to contain today's date
         date_today = date.today().strftime("%Y%m%d")
         cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
@@ -86,20 +85,28 @@ class ScreenshotMaker:
         print("Done.")
 
     def set_product_ids(self, what_for: str, area_name: str) -> None:
+        print(f"Setting product ids for {area_name}")
         if len(self.plan['area'][area_name]) > 0:
+            print("Done by prescribed plan.")
             return
 
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_base(what_for)
         self.click_area(area_name)
 
+        time.sleep(1)
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
+
+        assert len(elements) > 0, "Empty products"
+
         if 'product_count' in self.plan.keys() \
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area_name] = elements
+        print("Done by randomizer.")
 
     def set_hour_ids(self, area_name, product) -> None:
+        self.click_product(product)
         self.click_cycle(area=area_name, product=product)
         time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
@@ -110,9 +117,9 @@ class ScreenshotMaker:
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
-        time.sleep(2)
+        time.sleep(1)
         try:
-            self.hover_and_click_id(hour)
+            self.hover_and_click(hour)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {hour} while clicking hour")
 
@@ -122,10 +129,15 @@ class ScreenshotMaker:
         self.make_screenshot(area=area, hour=hour, what_for=what_for, product=product)
         self.click_back()
 
-    def hover_and_click_id(self, id):
-        element = self.driver.find_element_by_id(id)
+    def hover_and_click(self, identifier, type='id'):
+        type_mapper = {
+            'id': self.driver.find_element_by_id,
+            'link_text': self.driver.find_element_by_link_text
+        }
+
+        element = type_mapper[type](identifier)
         color = Color.from_string(element.value_of_css_property('color')).hex
-        if color == '#0000ff':  # blue
+        if color == '#0000ff':  # blue, not selected
             action = ActionChains(self.driver)
             action.move_to_element(element).perform()
             time.sleep(1)
@@ -134,7 +146,7 @@ class ScreenshotMaker:
 
     def click_product(self, product):
         try:
-            self.hover_and_click_id(product)
+            self.hover_and_click(product)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {product} while clicking product")
 
@@ -142,20 +154,20 @@ class ScreenshotMaker:
         time.sleep(1)
         cycle = self.plan['cycle']
         try:
-            self.hover_and_click_id(cycle)
+            self.hover_and_click(cycle)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {cycle} while clicking cycle")
         time.sleep(1)
 
     def click_model(self):
         try:
-            self.hover_and_click_id('modtype_' + self.plan['model'])
+            self.hover_and_click('modtype_' + self.plan['model'])
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown while clicking {self.plan['model']}")
 
     def click_area(self, area):
         try:
-            self.hover_and_click_id('modarea_' + area)
+            self.hover_and_click('modarea_' + area)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown while clicking {area}")
 
