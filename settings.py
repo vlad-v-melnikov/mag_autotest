@@ -33,13 +33,13 @@ class Settings:
                 'cluster_count': 1,
             },
         'GFS':
-        {
-            'section': 'Model Guidance',
-            'model': 'GFS',
-            'area_count': 1,
-            'product_count': 1,
-            'hour_count': 1,
-        },
+            {
+                'section': 'Model Guidance',
+                'model': 'GFS',
+                'area_count': 1,
+                'product_count': 1,
+                'hour_count': 1,
+            },
         'GEFS-SPAG':
             {
                 'section': 'Model Guidance',
