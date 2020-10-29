@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.color import Color
+
 import time
 from retry import retry
 
@@ -18,7 +20,6 @@ class Main:
     @retry(TimeoutException, tries=5, delay=1)
     def open_site(self):
         self.driver.get(self.site)
-        self.driver.maximize_window()
 
     def close_all(self):
         for handle in self.driver.window_handles:
@@ -27,7 +28,8 @@ class Main:
 
     def hover_and_click_id(self, id):
         element = self.driver.find_element_by_id(id)
-        if not element.is_selected():
+        color = Color.from_string(element.value_of_css_property('color')).hex
+        if color == '#0000ff': # blue
             print('Hover and click', id)
             action = ActionChains(self.driver)
             action.move_to_element(element).perform()
@@ -37,7 +39,7 @@ class Main:
 
     def experiment(self):
         self.hover_and_click_id('modtype_PANELS')
-        time.sleep(3)
+        time.sleep(2)
         self.hover_and_click_id('modtype_PANELS')
 
 

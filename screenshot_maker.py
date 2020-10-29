@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.color import Color
 
 from settings import Settings
 
@@ -100,6 +101,7 @@ class ScreenshotMaker:
 
     def set_hour_ids(self, area_name, product) -> None:
         self.click_cycle(area=area_name, product=product)
+        time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() \
                 and 0 < self.plan['hour_count'] <= len(elements):
@@ -108,7 +110,7 @@ class ScreenshotMaker:
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
-        time.sleep(1)
+        time.sleep(2)
         try:
             self.hover_and_click_id(hour)
         except Exception as e:
@@ -121,12 +123,14 @@ class ScreenshotMaker:
         self.click_back()
 
     def hover_and_click_id(self, id):
-        action = ActionChains(self.driver)
         element = self.driver.find_element_by_id(id)
-        action.move_to_element(element).perform()
-        time.sleep(1)
-        element.click()
-        time.sleep(1)
+        color = Color.from_string(element.value_of_css_property('color')).hex
+        if color == '#0000ff':  # blue
+            action = ActionChains(self.driver)
+            action.move_to_element(element).perform()
+            time.sleep(1)
+            element.click()
+            time.sleep(1)
 
     def click_product(self, product):
         try:
@@ -185,8 +189,10 @@ class ScreenshotMaker:
     def reset_to_base(self, what_for):
         section = self.plan['section'].lower().replace(' ', '%20')
         site = self.settings.sites[what_for]
-        url = f"{site}/model-guidance-model-area.php?group={section}"
-        self.driver.get(url)
+        url = f"{site}/model-guidance-model-area.php?group={section}#"
+
+        if url != self.driver.current_url:
+            self.driver.get(url)
         self.click_model()
 
     def iterate_what_for_areas(self):

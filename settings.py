@@ -25,7 +25,7 @@ class Settings:
             {
                 'section': 'Model Guidance',
                 'model': 'PANELS',
-                'area_count': 6,
+                'area_count': 1,
                 'product_count': 1,
                 'hour_count': 1,
             },

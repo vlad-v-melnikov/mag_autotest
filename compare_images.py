@@ -23,8 +23,10 @@ class TestCompareImages(unittest.TestCase):
     def test_screens(self):
         prod_screens = glob.glob('screenshots/prod_*.png')
         test_screens = glob.glob('screenshots/test_*.png')
+        print(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
         try:
-            self.assertEqual(len(test_screens), len(prod_screens), "Number of screenshots for test and prod is DIFFERENT")
+            self.assertEqual(len(test_screens), len(prod_screens),
+                             "Number of screenshots for test and prod is DIFFERENT")
         except AssertionError as e:
             logging.error("Number of screenshots for test and prod is DIFFERENT")
             raise e
