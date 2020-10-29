@@ -1,7 +1,7 @@
 class Settings:
 
     sites = {
-        'test': "https://magtest.ncep.noaa.gov",
+        'test': "https://mag.ncep.noaa.gov",
         'prod': "https://mag.ncep.noaa.gov",
 
         'area_from': 'prod',
@@ -25,7 +25,7 @@ class Settings:
             {
                 'section': 'Model Guidance',
                 'model': 'PANELS',
-                'area_count': 3,
+                'area_count': 6,
                 'product_count': 1,
                 'hour_count': 1,
             },

@@ -22,7 +22,7 @@ class Panels(ScreenshotMaker):
             self.iterate_one_product(what_for, area_name, product, hours_just_set)
 
     def set_cycle_id_panels(self, area_name, product):
-        time.sleep(1)
+        time.sleep(2)
         cycles = self.get_cycles(area_name, product)
         self.plan[('cycle', area_name, product)] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')

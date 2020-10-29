@@ -89,7 +89,7 @@ class ScreenshotMaker:
             return
 
         self.driver.switch_to.window(self.handles[what_for])
-        self.reset_to_area(what_for, area_name)
+        self.reset_to_base(what_for)
         self.click_area(area_name)
 
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
@@ -121,7 +121,6 @@ class ScreenshotMaker:
         self.click_back()
 
     def hover_and_click_id(self, id):
-        time.sleep(1)
         action = ActionChains(self.driver)
         element = self.driver.find_element_by_id(id)
         action.move_to_element(element).perform()
@@ -142,6 +141,7 @@ class ScreenshotMaker:
             self.hover_and_click_id(cycle)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {cycle} while clicking cycle")
+        time.sleep(1)
 
     def click_model(self):
         try:
@@ -171,7 +171,7 @@ class ScreenshotMaker:
 
     def setup_page(self, what_for) -> None:
         self.switch_to_window(what_for)
-        self.reset_to_area(what_for)
+        self.reset_to_base(what_for)
 
     def iterate_products(self, what_for, area_name):
         hours_just_set = False
@@ -182,20 +182,18 @@ class ScreenshotMaker:
             self.iterate_one_product(what_for, area_name, product, hours_just_set)
 
     @retry(TimeoutException, tries=5, delay=2)
-    def reset_to_area(self, what_for, area_name=''):
+    def reset_to_base(self, what_for):
         section = self.plan['section'].lower().replace(' ', '%20')
-        model = self.plan['model'].lower()
         site = self.settings.sites[what_for]
-        url = f"{site}/model-guidance-model-area.php?group={section}&model={model}&area={area_name.lower()}"
+        url = f"{site}/model-guidance-model-area.php?group={section}"
         self.driver.get(url)
-        time.sleep(1)
         self.click_model()
 
     def iterate_what_for_areas(self):
         for what_for in self.settings.sites['order_of_iteration']:
             self.switch_to_window(what_for)
             for area_name in self.plan['area'].keys():
-                self.reset_to_area(what_for, area_name)
+                self.reset_to_base(what_for)
                 self.click_area(area_name)
                 self.iterate_products(what_for, area_name)
 
