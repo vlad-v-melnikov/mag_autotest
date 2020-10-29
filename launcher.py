@@ -11,7 +11,7 @@ from datetime import datetime
 
 # internal
 from settings import Settings
-from screenshot_maker import ScreenshotMaker
+from gfs_like import GfsLike
 from sref_cluster import SREFCluster
 from panels import Panels
 
@@ -75,7 +75,7 @@ class Wrapper:
 
 
 def main():
-    model = 'SREF-CLUSTER'
+    model = 'GFS'
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
@@ -83,7 +83,7 @@ def main():
     if model in CLASS_MAP.keys():
         single_model = CLASS_MAP[model](model=model, driver=wrapper.driver, handles=wrapper.handles)
     else:
-        single_model = ScreenshotMaker(model=model, driver=wrapper.driver, handles=wrapper.handles)
+        single_model = GfsLike(model=model, driver=wrapper.driver, handles=wrapper.handles)
 
     single_model.make_now()
 

@@ -8,27 +8,27 @@ from datetime import date
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 
-from screenshot_maker import ScreenshotMaker
+from gfs_like import GfsLike
 
 
-class SREFCluster(ScreenshotMaker):
+class SREFCluster(GfsLike):
 
     def __init__(self, model, driver, handles):
         super().__init__(model, driver, handles)
 
-    def set_hour_ids(self, area_name, product) -> None:
-        super().set_hour_ids(area_name, product)
-        for hour in self.plan[(area_name, product)]:
+    def set_hour_ids(self, area, product) -> None:
+        super().set_hour_ids(area, product)
+        for hour in self.plan[(area, product)]:
             self.click_hour(hour)
             time.sleep(1)
-            self.set_cluster_ids(area_name, product, hour)
+            self.set_cluster_ids(area, product, hour)
 
-    def set_cluster_ids(self, area_name, product, hour):
+    def set_cluster_ids(self, area, product, hour):
         elements = self.driver.find_elements_by_xpath("//a[contains(@onclick, 'open_cluster_page')]")
         if 'cluster_count' in self.plan.keys() \
                 and 0 < self.plan['cluster_count'] <= len(elements):
             elements = random.sample(elements, self.plan['cluster_count'])
-        self.plan[(area_name, product, hour)] = [element.text for element in elements]
+        self.plan[(area, product, hour)] = [element.text for element in elements]
 
     @retry(TimeoutException, tries=3, delay=1)
     def click_cluster(self, cluster):
@@ -70,16 +70,16 @@ class SREFCluster(ScreenshotMaker):
                                     hour + '_' +
                                     cluster.replace(' ', '-') + '.png')
 
-    def iterate_one_product(self, what_for, area_name, product, hours_just_set) -> None:
-        for hour in self.plan[(area_name, product)]:
-            for cluster in self.plan[(area_name, product, hour)]:
-                print(f"Processing {what_for} {area_name} {product} {hour} {cluster}... ", end='')
+    def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
+        for hour in self.plan[(area, product)]:
+            for cluster in self.plan[(area, product, hour)]:
+                print(f"Processing {what_for} {area} {product} {hour} {cluster}... ", end='')
                 if not hours_just_set:
                     self.click_product(product)
-                    self.click_cycle()
+                    self.click_cycle(area=area)
                 print(
-                    f"Clicked {what_for} {area_name} {product} {hour} for cycle {self.plan['cycle']} {cluster}... ")
-                self.screenshot_one_hour(area=area_name, hour=hour, what_for=what_for, product=product,
+                    f"Clicked {what_for} {area} {product} {hour} for cycle {self.plan['cycle']} {cluster}... ")
+                self.screenshot_one_hour(area=area, hour=hour, what_for=what_for, product=product,
                                          cluster=cluster)
                 print("Done.")
 

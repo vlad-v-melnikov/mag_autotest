@@ -14,7 +14,7 @@ from selenium.webdriver.support.color import Color
 
 from settings import Settings
 
-class ScreenshotMaker:
+class GfsLike:
 
     IMAGE_DELAY = 2
 
@@ -53,48 +53,54 @@ class ScreenshotMaker:
             return
 
         self.driver.switch_to.window(self.handles[what_for])
-        element_id = 'modtype_' + self.plan['model']
-        self.driver.find_element_by_id(element_id).click()
+        self.click_model()
         time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
+        assert len(elements) > 0, 'No areas found'
+
         if 'area_count' in self.plan.keys() and 0 < self.plan['area_count'] <= len(elements):
             elements = random.sample(elements, self.plan['area_count'])
         self.plan['area'] = {}
         for element in elements:
-            area_name = element.get_attribute('class')
-            self.plan['area'][area_name] = []
+            area = element.get_attribute('class')
+            self.plan['area'][area] = []
         print("Done.")
 
-    def set_cycle_id(self) -> None:
-        print("Setting cycle...")
-        what_for = self.settings.sites['cycle_from']
-        if 'cycle' in self.plan.keys():
-            print("Done.")
+    def set_cycle_id(self, area) -> None:
+        print(f"Setting cycle for {area}")
+        # test this
+        if f'{area}_cycle' in self.plan['area'].keys:
+            print("Done by prescribed cycle.")
             return
 
+        what_for = self.settings.sites['cycle_from']
         self.driver.switch_to.window(self.handles[what_for])
-        self.click_model()
-        self.click_area(next(iter(self.plan['area'])))
+        self.reset_to_base(what_for)
+        self.click_area(area)
         time.sleep(1)
 
         # cycle is previous to the last one except for single element. Has to contain today's date
         date_today = date.today().strftime("%Y%m%d")
         cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
                                                     f"and (contains(@id, {date_today}))]")
-        self.plan['cycle'] = cycles[1].get_attribute('id') if len(cycles) > 1 else cycles[0].get_attribute('id')
-        print("Done.")
+        assert len(cycles) > 0, 'No cycles found'
+        self.plan['area'][f'{area}_cycle'] = cycles[1].get_attribute('id') if len(cycles) > 1 \
+            else cycles[0].get_attribute('id')
 
-    def set_product_ids(self, what_for: str, area_name: str) -> None:
-        print(f"Setting product ids for {area_name}")
-        if len(self.plan['area'][area_name]) > 0:
+        print(f"Done for cycle {self.plan['area'][f'{area}_cycle']} for area {area}.")
+
+    def set_product_ids(self, area: str) -> None:
+        print(f"Setting product ids for {area}")
+        if len(self.plan['area'][area]) > 0:
             print("Done by prescribed plan.")
             return
 
+        what_for = self.settings.sites['products_from']
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_base(what_for)
-        self.click_area(area_name)
-
+        self.click_area(area)
         time.sleep(1)
+
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
 
         assert len(elements) > 0, "Empty products"
@@ -102,18 +108,18 @@ class ScreenshotMaker:
         if 'product_count' in self.plan.keys() \
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
-        self.plan['area'][area_name] = elements
+        self.plan['area'][area] = elements
         print("Done by randomizer.")
 
-    def set_hour_ids(self, area_name, product) -> None:
+    def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
-        self.click_cycle(area=area_name, product=product)
+        self.click_cycle(area=area)
         time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() \
                 and 0 < self.plan['hour_count'] <= len(elements):
             elements = random.sample(elements, self.plan['hour_count'])
-        self.plan[(area_name, product)] = [element.get_attribute('id') for element in elements]
+        self.plan[(area, product)] = [element.get_attribute('id') for element in elements]
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
@@ -151,8 +157,9 @@ class ScreenshotMaker:
             logging.error(f"Exception {type(e)} was thrown for {product} while clicking product")
 
     def click_cycle(self, **kwargs):
+        area = kwargs['area']
         time.sleep(1)
-        cycle = self.plan['cycle']
+        cycle = self.plan['area'][f'{area}_cycle']
         try:
             self.hover_and_click(cycle)
         except Exception as e:
@@ -171,31 +178,28 @@ class ScreenshotMaker:
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown while clicking {area}")
 
-    def iterate_one_product(self, what_for, area_name, product, hours_just_set) -> None:
-        for hour in self.plan[(area_name, product)]:
-            print(f"Processing {what_for} {area_name} {product} {hour}... ", end='')
-            try:
-                if not hours_just_set:
-                    self.click_product(product)
-                    self.click_cycle()
-                print(f"Clicked {what_for} {area_name} {product} {hour} for cycle {self.plan['cycle']}... ")
-                self.screenshot_one_hour(name=area_name, hour=hour, what_for=what_for, product=product)
-            except Exception as e:
-                logging.error(
-                    f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking product")
+    def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
+        for hour in self.plan[(area, product)]:
+            print(f"Processing {what_for} {area} {product} {hour}... ", end='')
+            if not hours_just_set:
+                self.click_product(product)
+                self.click_cycle(area=area)
+            print(f"Clicked {what_for} {area} {product} {hour} for "
+                  f"cycle {self.plan['area'][f'{area}_cycle']}... ")
+            self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
             print("Done.")
 
     def setup_page(self, what_for) -> None:
         self.switch_to_window(what_for)
         self.reset_to_base(what_for)
 
-    def iterate_products(self, what_for, area_name):
+    def iterate_products(self, what_for, area):
         hours_just_set = False
-        for product in self.plan['area'][area_name]:
-            if (area_name, product) not in self.plan.keys():
-                self.set_hour_ids(area_name, product)
+        for product in self.plan['area'][area]:
+            if (area, product) not in self.plan.keys():
+                self.set_hour_ids(area, product)
                 hours_just_set = True
-            self.iterate_one_product(what_for, area_name, product, hours_just_set)
+            self.iterate_one_product(what_for, area, product, hours_just_set)
 
     @retry(TimeoutException, tries=5, delay=2)
     def reset_to_base(self, what_for):
@@ -210,19 +214,18 @@ class ScreenshotMaker:
     def iterate_what_for_areas(self):
         for what_for in self.settings.sites['order_of_iteration']:
             self.switch_to_window(what_for)
-            for area_name in self.plan['area'].keys():
+            for area in self.plan['area'].keys():
                 self.reset_to_base(what_for)
-                self.click_area(area_name)
-                self.iterate_products(what_for, area_name)
+                self.click_area(area)
+                self.iterate_products(what_for, area)
 
     def set_common_for_all_areas(self):
         self.set_area_ids()
-        self.set_cycle_id()
-        print("Using cycle", self.plan['cycle'])
 
     def set_for_each_area(self):
         for area in self.plan['area'].keys():
-            self.set_product_ids(self.settings.sites['products_from'], area)
+            self.set_product_ids(area)
+            self.set_cycle_id(area)
 
     def make_now(self) -> None:
         for what_for in self.handles.keys():

@@ -34,6 +34,10 @@ class Settings:
             },
         'GFS':
             {
+                'area': {
+                    'NAMER': [],
+                    'NAMER_cycle': '2020102900UTC',
+                },
                 'section': 'Model Guidance',
                 'model': 'GFS',
                 'area_count': 1,
