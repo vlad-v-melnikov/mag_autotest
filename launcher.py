@@ -1,21 +1,9 @@
-import glob
-import logging
-import os
-from retry import retry
-import time
-
-# selenium
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from datetime import datetime
-
-# internal
-from settings import Settings
 from wrapper import Wrapper
 from gfs_like import GfsLike
 from sref_cluster import SREFCluster
 from panels import Panels
 from storm_tracks import StormTracks
+from cycle_matcher import CycleMatcher
 
 CLASS_MAP = {
         'PANELS': Panels,
@@ -24,7 +12,7 @@ CLASS_MAP = {
     }
 
 
-def screenshots_main():
+def take_screenshots():
     model = 'ICE-DRIFT'
 
     print(f"Starting to take screenshots for {model}...")
@@ -40,11 +28,18 @@ def screenshots_main():
     wrapper.tear_down()
     print("\nScreenshots taken")
 
-def cycle_match_checker_main():
-    pass
+
+def match_cycles():
+    print(f"Starting to match cycles for test and prod...")
+    wrapper = Wrapper()
+    cycle_matcher = CycleMatcher(driver=wrapper.driver, handles=wrapper.handles)
+    cycle_matcher.match_now()
+    wrapper.tear_down()
+    print("\nDone matching cycles")
+
 
 if __name__ == "__main__":
-    screenshots_main()
+    match_cycles()
 
 # To Do:
 #
