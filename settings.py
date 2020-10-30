@@ -14,11 +14,23 @@ class Settings:
 
     driver = 'Firefox'
     plan = {
+        'STORM-TRACKS':
+            {
+                'area': {
+                    'ALASKA': [],
+                    'CONUS': [],
+                },
+                'section': 'Model Guidance',
+                'model': 'STORM-TRACKS',
+                'area_count': 0,
+                'product_count': 2,
+                'hour_count': 2,
+            },
         'PANELS':
             {
                 'section': 'Model Guidance',
                 'model': 'PANELS',
-                'area_count': 3,
+                'area_count': 2,
                 'product_count': 2,
                 'hour_count': 1,
             },

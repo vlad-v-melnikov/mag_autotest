@@ -77,7 +77,7 @@ class Wrapper:
 
 
 def main():
-    model = 'GFS'
+    model = 'STORM-TRACKS'
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
