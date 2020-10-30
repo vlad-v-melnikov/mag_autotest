@@ -14,10 +14,12 @@ from settings import Settings
 from gfs_like import GfsLike
 from sref_cluster import SREFCluster
 from panels import Panels
+from storm_tracks import StormTracks
 
 CLASS_MAP = {
         'PANELS': Panels,
         'SREF-CLUSTER': SREFCluster,
+        'STORM-TRACKS': StormTracks,
     }
 
 def clear_screenshots():
