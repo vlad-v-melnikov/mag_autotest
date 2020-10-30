@@ -2,11 +2,13 @@ from settings import Settings
 from gfs_like import GfsLike
 from pprint import pprint
 import time
+from datetime import date
 
 
 class CycleMatcher:
     excluded_areas = ['PANELS', 'HRW-NMMB', 'HIRES-FV3']
-    cycles = {}
+    cycles_test = {}
+    cycles_prod = {}
 
     def __init__(self, driver, handles):
         self.settings = Settings()
@@ -17,7 +19,21 @@ class CycleMatcher:
     def save_cycles(self, what_for, dude):
         print(f"Saving cycles for {dude.plan['model']}")
         elements = dude.get_all_cycles()
-        self.cycles[(what_for, dude.plan['model'])] = [element.get_attribute('id') for element in elements]
+        if what_for == 'test':
+            self.cycles_test[dude.plan['model']] = [element.get_attribute('id') for element in elements]
+        else:
+            self.cycles_prod[dude.plan['model']] = [element.get_attribute('id') for element in elements]
+
+    def has_today(self):
+        no_today = []
+        date_today = date.today().strftime("%Y%m%d")
+        for model, times in self.cycles_test.items():
+            date_only = [one_time[:8] for one_time in times]
+            if date_today not in date_only:
+                no_today.append(model)
+
+        print("No today's date in:")
+        pprint(no_today)
 
     def match_now(self):
         what_for = 'test'
@@ -39,4 +55,6 @@ class CycleMatcher:
             dude.click_back()
 
         print()
-        pprint(self.cycles)
+        self.has_today()
+
+

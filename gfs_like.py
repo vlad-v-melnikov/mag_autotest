@@ -54,7 +54,6 @@ class GfsLike:
 
         self.driver.switch_to.window(self.handles[what_for])
         self.click_model()
-        time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
         assert len(elements) > 0, 'No areas found'
 
