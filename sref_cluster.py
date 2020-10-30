@@ -76,9 +76,9 @@ class SREFCluster(GfsLike):
                 print(f"Processing {what_for} {area} {product} {hour} {cluster}... ", end='')
                 if not hours_just_set:
                     self.click_product(product)
-                    self.click_cycle(area=area)
-                print(
-                    f"Clicked {what_for} {area} {product} {hour} for cycle {self.plan['cycle']} {cluster}... ")
+                    self.click_cycle(area=area, product=product)
+                print(f"Clicked {what_for} {area} {product} {hour} "
+                      f"for cycle {self.plan['area_cycle'][area]} {cluster}... ")
                 self.screenshot_one_hour(area=area, hour=hour, what_for=what_for, product=product,
                                          cluster=cluster)
                 print("Done.")

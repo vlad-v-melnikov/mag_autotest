@@ -75,7 +75,7 @@ class Wrapper:
 
 
 def main():
-    model = 'GFS'
+    model = 'PANELS'
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
@@ -87,7 +87,7 @@ def main():
 
     single_model.make_now()
 
-    print("Screenshots taken")
+    print("\nScreenshots taken")
     wrapper.tear_down()
 
 

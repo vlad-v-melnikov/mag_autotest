@@ -68,9 +68,9 @@ class GfsLike:
 
     def set_cycle_id(self, area) -> None:
         print(f"Setting cycle for {area}")
-        # test this
-        if f'{area}_cycle' in self.plan['area'].keys:
-            print("Done by prescribed cycle.")
+        if 'area_cycle' in self.plan.keys() \
+                and area in self.plan['area_cycle'].keys():
+            print("Set by prescribed cycle.")
             return
 
         what_for = self.settings.sites['cycle_from']
@@ -84,15 +84,17 @@ class GfsLike:
         cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
                                                     f"and (contains(@id, {date_today}))]")
         assert len(cycles) > 0, 'No cycles found'
-        self.plan['area'][f'{area}_cycle'] = cycles[1].get_attribute('id') if len(cycles) > 1 \
+        if 'area_cycle' not in self.plan.keys():
+            self.plan['area_cycle'] = {}
+        self.plan['area_cycle'][area] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')
 
-        print(f"Done for cycle {self.plan['area'][f'{area}_cycle']} for area {area}.")
+        print(f"Set now for cycle {self.plan['area_cycle'][area]} for area {area}.")
 
     def set_product_ids(self, area: str) -> None:
         print(f"Setting product ids for {area}")
         if len(self.plan['area'][area]) > 0:
-            print("Done by prescribed plan.")
+            print("Set by prescribed plan.")
             return
 
         what_for = self.settings.sites['products_from']
@@ -109,11 +111,11 @@ class GfsLike:
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area] = elements
-        print("Done by randomizer.")
+        print("Set by randomizer.")
 
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
-        self.click_cycle(area=area)
+        self.click_cycle(area=area, product=product)
         time.sleep(1)
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() \
@@ -159,7 +161,7 @@ class GfsLike:
     def click_cycle(self, **kwargs):
         area = kwargs['area']
         time.sleep(1)
-        cycle = self.plan['area'][f'{area}_cycle']
+        cycle = self.plan['area_cycle'][area]
         try:
             self.hover_and_click(cycle)
         except Exception as e:
@@ -183,9 +185,9 @@ class GfsLike:
             print(f"Processing {what_for} {area} {product} {hour}... ", end='')
             if not hours_just_set:
                 self.click_product(product)
-                self.click_cycle(area=area)
+                self.click_cycle(area=area, product=product)
             print(f"Clicked {what_for} {area} {product} {hour} for "
-                  f"cycle {self.plan['area'][f'{area}_cycle']}... ")
+                  f"cycle {self.plan['area_cycle'][area]}... ")
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
             print("Done.")
 
@@ -221,11 +223,13 @@ class GfsLike:
 
     def set_common_for_all_areas(self):
         self.set_area_ids()
+        print()
 
     def set_for_each_area(self):
         for area in self.plan['area'].keys():
             self.set_product_ids(area)
             self.set_cycle_id(area)
+            print()
 
     def make_now(self) -> None:
         for what_for in self.handles.keys():

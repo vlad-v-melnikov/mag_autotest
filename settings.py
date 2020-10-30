@@ -1,8 +1,8 @@
 class Settings:
 
     sites = {
-        'test': "https://mag.ncep.noaa.gov",
-        'prod': "https://mag.ncep.noaa.gov",
+        'test': "https://magtest.ncep.noaa.gov",
+        'prod': "https://magtest.ncep.noaa.gov",
 
         'area_from': 'prod',
         'cycle_from': 'test',
@@ -13,34 +13,29 @@ class Settings:
     }
 
     driver = 'Firefox'
-
     plan = {
         'PANELS':
             {
                 'section': 'Model Guidance',
                 'model': 'PANELS',
-                'area_count': 1,
-                'product_count': 1,
+                'area_count': 3,
+                'product_count': 2,
                 'hour_count': 1,
             },
         'SREF-CLUSTER':
             {
                 'section': 'Model Guidance',
                 'model': 'SREF-CLUSTER',
-                'area_count': 0,
+                'area_count': 3,
                 'product_count': 1,
                 'hour_count': 1,
                 'cluster_count': 1,
             },
         'GFS':
             {
-                'area': {
-                    'NAMER': [],
-                    'NAMER_cycle': '2020102900UTC',
-                },
                 'section': 'Model Guidance',
                 'model': 'GFS',
-                'area_count': 1,
+                'area_count': 2,
                 'product_count': 1,
                 'hour_count': 1,
             },
@@ -105,13 +100,14 @@ class Settings:
                 'section': 'Model Guidance',
                 'area':
                     {
-                        'CONUS':['precip_p01', '500_vort_ht,1000_500_thick,700_rh_ht,850_temp_ht']
+                        'CONUS': [],
+                        'ALASKA': [],
+                        'US-NC': [],
                     },
-                'cycle': '2020102309UTC',
                 'model': 'HRRR',
-                'product_count': 3,
+                'area_count': 0,
+                'product_count': 2,
                 'hour_count': 1,
-                'area_count': 1,
             },
         'HRW-ARW':
             {
@@ -170,6 +166,7 @@ class Settings:
                 'area_count': 1,
             },
         }
+
     compare = {
         'box_color': (102, 102, 102),  # frame color of the box containing the image
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box

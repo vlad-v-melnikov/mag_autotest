@@ -22,10 +22,18 @@ class Panels(GfsLike):
             self.iterate_one_product(what_for, area, product, hours_just_set)
 
     def set_cycle_id_panels(self, area, product):
+        # no manual setting of cycles for panels
+        print(f"Setting cycle for {area} {product}")
+
         time.sleep(2)
-        cycles = self.get_cycles(area, product)
+        date_today = date.today().strftime("%Y%m%d")
+        cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
+                                                    f"and (contains(@id, {date_today}))]")
+        assert len(cycles) > 0, 'No cycles found'
         self.plan[('cycle', area, product)] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')
+
+        print(f"Set now for cycle {self.plan[('cycle', area, product)]} for area {area}.")
 
     def click_cycle(self, **kwargs):
         area, product = kwargs.values()
@@ -49,6 +57,11 @@ class Panels(GfsLike):
 
     def set_common_for_all_areas(self):
         self.set_area_ids()
+
+    def set_for_each_area(self):
+        for area in self.plan['area'].keys():
+            self.set_product_ids(area)
+            print()
 
 if __name__ == "__main__":
     print("Not an application")
