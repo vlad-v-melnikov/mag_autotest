@@ -79,17 +79,25 @@ class GfsLike:
         self.click_area(area)
         time.sleep(1)
 
-        # cycle is previous to the last one except for single element. Has to contain today's date
-        date_today = date.today().strftime("%Y%m%d")
-        cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
-                                                    f"and (contains(@id, {date_today}))]")
-        assert len(cycles) > 0, 'No cycles found'
+        cycles = self.get_all_cycles()
+
         if 'area_cycle' not in self.plan.keys():
             self.plan['area_cycle'] = {}
         self.plan['area_cycle'][area] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')
 
         print(f"Set now for cycle {self.plan['area_cycle'][area]} for area {area}.")
+
+    def get_all_cycles(self):
+        # cycle is previous to the last one except for single element. Has to contain today's date
+        if self.settings.sites['today_only']:
+            date_today = date.today().strftime("%Y%m%d")
+            cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
+                                                        f"and (contains(@id, {date_today}))]")
+        else:
+            cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link')]")
+        assert len(cycles) > 0, 'No cycles found'
+        return cycles
 
     def set_product_ids(self, area: str) -> None:
         print(f"Setting product ids for {area}")

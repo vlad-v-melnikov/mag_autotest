@@ -76,8 +76,8 @@ class Wrapper:
             self.driver.close()
 
 
-def main():
-    model = 'STORM-TRACKS'
+def screenshots_main():
+    model = 'ICE-DRIFT'
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
@@ -92,9 +92,11 @@ def main():
     print("\nScreenshots taken")
     wrapper.tear_down()
 
+def cycle_match_checker_main():
+    pass
 
 if __name__ == "__main__":
-    main()
+    screenshots_main()
 
 # To Do:
 #

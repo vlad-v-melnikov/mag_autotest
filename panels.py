@@ -27,13 +27,11 @@ class Panels(GfsLike):
 
         self.click_product(product)
         time.sleep(2)
-        date_today = date.today().strftime("%Y%m%d")
-        cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
-                                                    f"and (contains(@id, {date_today}))]")
-        assert len(cycles) > 0, 'No cycles found'
+
+        cycles = self.get_all_cycles()
         self.plan[('cycle', area, product)] = self.find_cycle(cycles)
 
-        print(f"Set now for cycle {self.plan[('cycle', area, product)]} for area {area}.")
+        print(f"Set cycle {self.plan[('cycle', area, product)]} for area {area}.")
 
     def find_cycle(self, cycles: list):
         return cycles[1].get_attribute('id') if len(cycles) > 1 else cycles[0].get_attribute('id')
