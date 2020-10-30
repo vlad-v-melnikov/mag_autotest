@@ -25,6 +25,7 @@ class Panels(GfsLike):
         # no manual setting of cycles for panels
         print(f"Setting cycle for {area} {product}")
 
+        self.click_product(product)
         time.sleep(2)
         date_today = date.today().strftime("%Y%m%d")
         cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
