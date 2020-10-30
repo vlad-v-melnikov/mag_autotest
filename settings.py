@@ -1,8 +1,8 @@
 class Settings:
 
     sites = {
-        'test': "https://magtest.ncep.noaa.gov",
-        'prod': "https://magtest.ncep.noaa.gov",
+        'test': "https://mag.ncep.noaa.gov",
+        'prod': "https://mag.ncep.noaa.gov",
 
         'area_from': 'prod',
         'cycle_from': 'test',
@@ -36,7 +36,7 @@ class Settings:
                 'section': 'Model Guidance',
                 'model': 'GFS',
                 'area_count': 2,
-                'product_count': 1,
+                'product_count': 2,
                 'hour_count': 1,
             },
         'GEFS-SPAG':

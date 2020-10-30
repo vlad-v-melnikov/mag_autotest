@@ -75,7 +75,7 @@ class Wrapper:
 
 
 def main():
-    model = 'PANELS'
+    model = 'GFS'
 
     print(f"Starting to take screenshots for {model}...")
     wrapper = Wrapper()
