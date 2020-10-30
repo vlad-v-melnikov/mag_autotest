@@ -2,9 +2,9 @@ class Settings:
 
     sites = {
         'test': "https://magtest.ncep.noaa.gov",
-        'prod': "https://magtest.ncep.noaa.gov",
+        'prod': "https://mag.ncep.noaa.gov",
 
-        'area_from': 'prod',
+        'area_from': 'test',
         'cycle_from': 'test',
         'products_from': 'prod',
         'cluster_from': 'prod',
@@ -158,6 +158,14 @@ class Settings:
             {
                 'section': 'Model Guidance',
                 'model': 'NBM',
+                'area_count': 1,
+                'product_count': 3,
+                'hour_count': 1,
+            },
+        'WW3':
+            {
+                'section': 'Model Guidance',
+                'model': 'WW3',
                 'area_count': 1,
                 'product_count': 3,
                 'hour_count': 1,

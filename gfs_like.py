@@ -88,6 +88,7 @@ class GfsLike:
 
         print(f"Set now for cycle {self.plan['area_cycle'][area]} for area {area}.")
 
+    @retry(AssertionError, tries=3, delay=1)
     def get_all_cycles(self):
         # cycle is previous to the last one except for single element. Has to contain today's date
         if self.settings.sites['today_only']:
