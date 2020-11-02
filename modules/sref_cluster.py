@@ -71,15 +71,21 @@ class SREFCluster(GfsLike):
     def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
         for hour in self.plan[(area, product)]:
             for cluster in self.plan[(area, product, hour)]:
-                print(f"Processing {what_for} {area} {product} {hour} {cluster}... ", end='')
+                self.print_info_string(what_for, area, cluster, product, hour)
                 if not hours_just_set:
                     self.click_product(product)
                     self.click_cycle(area=area, product=product)
-                print(f"Clicked {what_for} {area} {product} {hour} "
-                      f"for cycle {self.plan['area_cycle'][area]} {cluster}... ")
                 self.screenshot_one_hour(area=area, hour=hour, what_for=what_for, product=product,
                                          cluster=cluster)
-                print("Done.")
+
+    def calc_total(self):
+        total_products = 0
+        for area in self.plan['area']:
+            total_products += len(self.plan['area'][area])
+        hours = self.plan['hour_count'] # can be wrong if actual quantity is less
+        clusters = self.plan['cluster_count'] # can be wrong if actual quantity is less
+        total = total_products * hours * clusters * 2
+        return total
 
 
 if __name__ == "__main__":

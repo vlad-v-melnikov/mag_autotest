@@ -35,10 +35,10 @@ class Settings:
             {
                 'section': 'Model Guidance',
                 'model': 'SREF-CLUSTER',
-                'area_count': 3,
+                'area_count': 1,
                 'product_count': 1,
-                'hour_count': 1,
-                'cluster_count': 1,
+                'hour_count': 2,
+                'cluster_count': 3,
             },
         'GFS':
             {
