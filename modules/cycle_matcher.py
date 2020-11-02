@@ -34,7 +34,7 @@ class CycleMatcher:
         print("No today's date in:")
         pprint(no_today)
 
-    def match_now(self):
+    def check_today_now(self):
         what_for = 'test'
         first = True
 
@@ -56,4 +56,4 @@ class CycleMatcher:
         print()
         self.has_today()
 
-
+# for now, it only finds if there is a cycle for today for each of the models

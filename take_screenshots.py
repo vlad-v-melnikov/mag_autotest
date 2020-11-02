@@ -29,17 +29,5 @@ def take_screenshots():
     print("\nScreenshots taken")
 
 
-def match_cycles():
-    print(f"Starting to match cycles for test and prod...")
-    wrapper = Wrapper()
-    cycle_matcher = CycleMatcher(driver=wrapper.driver, handles=wrapper.handles)
-    cycle_matcher.match_now()
-    wrapper.tear_down()
-    print("\nDone matching cycles")
-
-
 if __name__ == "__main__":
-    match_cycles()
-
-# To Do:
-#
+    take_screenshots()
