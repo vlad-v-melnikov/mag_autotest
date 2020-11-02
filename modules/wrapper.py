@@ -16,6 +16,7 @@ def clear_screenshots():
     files = glob.glob('./screenshots/*.png')
     for f in files:
         os.unlink(f)
+    print("Cleared previous screenshots")
 
 
 def log_config():
@@ -37,9 +38,11 @@ class Wrapper:
         log_config()
         clear_screenshots()
 
+        print("Setting up web driver...", end=' ')
         self.driver = self.driver[self.settings.driver]()
         self.driver.set_page_load_timeout(5)
         self.driver.maximize_window()
+        print("Done.")
 
         try:
             self.open_test_site()
@@ -52,15 +55,21 @@ class Wrapper:
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_test_site(self):
+        print(f"Opening test site {self.settings.sites['test']}...", end=' ')
         self.driver.get(self.settings.sites['test'])
         self.handles['test'] = self.driver.window_handles[0]
+        print("Done.")
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_prod_site(self):
+        print(f"Opening prod site {self.settings.sites['prod']}...", end=' ')
         self.driver.execute_script(f"window.open('{self.settings.sites['prod']}', 'new window')")
         self.handles['prod'] = self.driver.window_handles[1]
+        print("Done.")
 
     def tear_down(self):
+        print("Closing sites...", end=' ')
         for handle in self.handles.values():
             self.driver.switch_to.window(handle)
             self.driver.close()
+        print("Done.")

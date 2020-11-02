@@ -23,6 +23,8 @@ class GfsLike:
         self.plan = self.settings.plan[model]
         self.driver = driver
         self.handles = handles
+        self.counter = 0
+        self.total = 0
 
     @retry(TimeoutException, tries=5, delay=1)
     def click_back(self):
@@ -46,10 +48,12 @@ class GfsLike:
                                      hour + '.png')
 
     def set_area_ids(self) -> None:
-        print("Setting areas...")
         what_for = self.settings.sites['area_from']
+
+        print(f"Setting areas for {self.plan['model']} from {what_for}...", end=' ')
+
         if 'area' in self.plan.keys() and len(self.plan['area']) > 0:
-            print("Done.")
+            print(f"{len(self.plan['area'])} areas prescribed in settings file. Done.")
             return
 
         self.driver.switch_to.window(self.handles[what_for])
@@ -63,10 +67,11 @@ class GfsLike:
         for element in elements:
             area = element.get_attribute('class')
             self.plan['area'][area] = []
-        print("Done.")
+
+        print(f"{len(elements)} areas chosen at random. Done.")
 
     def set_cycle_id(self, area) -> None:
-        print(f"Setting cycle for {area}")
+        print(f"Setting cycle for {area}...", end=' ')
         if 'area_cycle' in self.plan.keys() \
                 and area in self.plan['area_cycle'].keys():
             print("Set by prescribed cycle.")
@@ -85,7 +90,7 @@ class GfsLike:
         self.plan['area_cycle'][area] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')
 
-        print(f"Set now for cycle {self.plan['area_cycle'][area]} for area {area}.")
+        print(f"Set cycle {self.plan['area_cycle'][area]} for area {area}.")
 
     @retry(AssertionError, tries=3, delay=1)
     def get_all_cycles(self):
@@ -100,12 +105,14 @@ class GfsLike:
         return cycles
 
     def set_product_ids(self, area: str) -> None:
-        print(f"Setting product ids for {area}")
+        what_for = self.settings.sites['products_from']
+
+        print(f"Setting products for {area} from {what_for}...", end=' ')
+
         if len(self.plan['area'][area]) > 0:
-            print("Set by prescribed plan.")
+            print("Prescribed in settings. Done.")
             return
 
-        what_for = self.settings.sites['products_from']
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_base(what_for)
         self.click_area(area)
@@ -119,7 +126,7 @@ class GfsLike:
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area] = elements
-        print("Set by randomizer.")
+        print(f"{len(elements)} products set by randomizer. Done.")
 
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
@@ -190,18 +197,20 @@ class GfsLike:
 
     def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
         for hour in self.plan[(area, product)]:
+            self.counter += 1
+            print(f"{self.counter} out of {self.calc_total()}", end=': ')
             print(f"Processing {what_for} {area} {product} {hour}... ", end='')
             if not hours_just_set:
                 self.click_product(product)
                 self.click_cycle(area=area, product=product)
-            print(f"Clicked {what_for} {area} {product} {hour} for "
-                  f"cycle {self.plan['area_cycle'][area]}... ")
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
             print("Done.")
 
     def setup_page(self, what_for) -> None:
+        print(f"Setting up page for {what_for}...", end=' ')
         self.switch_to_window(what_for)
         self.reset_to_base(what_for)
+        print("Done.")
 
     def iterate_products(self, what_for, area):
         hours_just_set = False
@@ -231,13 +240,11 @@ class GfsLike:
 
     def set_common_for_all_areas(self):
         self.set_area_ids()
-        print()
 
     def set_for_each_area(self):
         for area in self.plan['area'].keys():
             self.set_product_ids(area)
             self.set_cycle_id(area)
-            print()
 
     def make_now(self) -> None:
         for what_for in self.handles.keys():
@@ -247,6 +254,16 @@ class GfsLike:
         self.set_for_each_area()
 
         self.iterate_what_for_areas()
+
+    def calc_total(self):
+        total_products = 0
+        for area in self.plan['area']:
+            total_products += len(self.plan['area'])
+        first_area = next(iter(self.plan['area']))
+        first_product = self.plan['area'][first_area][0]
+        hours = len(self.plan[(first_area, first_product)])
+        total = total_products * hours * 2
+        return total
 
 
 if __name__ == "__main__":

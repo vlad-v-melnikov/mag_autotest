@@ -4,6 +4,7 @@ from modules.sref_cluster import SREFCluster
 from modules.panels import Panels
 from modules.storm_tracks import StormTracks
 from modules.cycle_matcher import CycleMatcher
+import sys
 
 CLASS_MAP = {
         'PANELS': Panels,
@@ -13,9 +14,13 @@ CLASS_MAP = {
 
 
 def take_screenshots():
-    model = 'ICE-DRIFT'
+    if len(sys.argv) == 1:
+        print("No model to check. Needs to be a parameter.")
+        sys.exit(0)
 
-    print(f"Starting to take screenshots for {model}...")
+    model = sys.argv[1]
+
+    print(f"Screenshots for {model}.")
     wrapper = Wrapper()
 
     if model in CLASS_MAP.keys():
@@ -26,7 +31,7 @@ def take_screenshots():
     single_model.make_now()
 
     wrapper.tear_down()
-    print("\nScreenshots taken")
+    print("Screenshots taken.")
 
 
 if __name__ == "__main__":

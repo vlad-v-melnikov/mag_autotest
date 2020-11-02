@@ -1,7 +1,7 @@
 class Settings:
 
     sites = {
-        'test': "https://magtest.ncep.noaa.gov",
+        'test': "https://mag.ncep.noaa.gov",
         'prod': "https://mag.ncep.noaa.gov",
 
         'area_from': 'test',
