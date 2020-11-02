@@ -208,7 +208,7 @@ class GfsLike:
         self.counter += 1
         info_str = f"{self.counter} out of {self.calc_total()}: " \
                    + f"Processing {output}... "
-        print(info_str, end=(' ' * 20))
+        print(info_str, end=(' ' * 50))
         if self.counter < self.calc_total():
             print('\r', end='')
         else:

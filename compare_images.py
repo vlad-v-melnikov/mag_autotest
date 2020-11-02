@@ -12,7 +12,7 @@ class TestCompareImages(unittest.TestCase):
     def setUp(self):
         self.settings = Settings()
         self.COLOR_SINGLE = self.settings.compare['box_color']
-        self.COLOR_FOUR = {'Chrome': (0, 0, 0), 'Firefox': (76, 76, 76)}
+        self.COLOR_FOUR = self.settings.compare['box_color_four']
 
         now = datetime.now()
         log_time = now.strftime("%Y%m%d%H%M%S")
@@ -55,7 +55,7 @@ class TestCompareImages(unittest.TestCase):
             'left': 1,
             'bottom': height,
             'right': self.X_RIGHT_LIMITER_SINGLE,
-            'color': self.COLOR_SINGLE
+            'color': tuple(self.COLOR_SINGLE)
         }
 
         # finding single
@@ -70,7 +70,7 @@ class TestCompareImages(unittest.TestCase):
                 'left': int(width/2 - img_width/2 - tolerance),
                 'bottom': height,
                 'right': int(width/2 - img_width/2 + tolerance),
-                'color': self.COLOR_FOUR[self.settings.driver]
+                'color': tuple(self.COLOR_FOUR[self.settings.driver])
             }
             box = self.search_for_it(target, orig_pix_map, four_images=True)
             # target = orig_image.crop((target['left'], target['top'], target['right'], target['bottom']))

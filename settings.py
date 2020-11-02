@@ -185,11 +185,10 @@ class Settings:
         }
 
     compare = {
-        'box_color': (102, 102, 102),  # frame color of the box containing the image
+        'box_color': [102, 102, 102],  # frame color of the box containing the image
+        'box_color_four': {'Chrome': [0, 0, 0], 'Firefox': [76, 76, 76]},
         'padding_offset': [70, 70, 50, 120],  # from: [left, top, right, bottom] sides of the image box
         'use_padding': False,
     }
 
-
-    delays = {}
 
