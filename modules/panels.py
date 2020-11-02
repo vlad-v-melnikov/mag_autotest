@@ -21,15 +21,10 @@ class Panels(GfsLike):
 
     def set_cycle_id_per_product(self, area, product):
         # no manual setting of cycles for panels
-        print(f"Setting cycle for {area} {product}")
-
         self.click_product(product)
         time.sleep(2)
-
         cycles = self.get_all_cycles()
         self.plan[('cycle', area, product)] = self.find_cycle(cycles)
-
-        print(f"Set cycle {self.plan[('cycle', area, product)]} for area {area}.")
 
     def find_cycle(self, cycles: list):
         return cycles[1].get_attribute('id') if len(cycles) > 1 else cycles[0].get_attribute('id')
@@ -45,14 +40,11 @@ class Panels(GfsLike):
 
     def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
         for hour in self.plan[(area, product)]:
-            print(f"Processing {what_for} {area} {product} {hour}... ", end='')
+            self.print_info_string(what_for, area, self.plan[('cycle', area, product)], product, hour)
             if not hours_just_set:
                 self.click_product(product)
                 self.click_cycle(area=area, product=product)
-            print(f"Clicked {what_for} {area} {product} {hour} for cycle "
-                  f"{self.plan[('cycle', area, product)]}... ")
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
-            print("Done.")
 
     def set_common_for_all_areas(self):
         self.set_area_ids()
@@ -60,7 +52,7 @@ class Panels(GfsLike):
     def set_for_each_area(self):
         for area in self.plan['area'].keys():
             self.set_product_ids(area)
-            print()
+
 
 if __name__ == "__main__":
     print("Not an application")

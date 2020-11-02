@@ -68,7 +68,7 @@ class GfsLike:
             area = element.get_attribute('class')
             self.plan['area'][area] = []
 
-        print(f"{len(elements)} areas chosen at random. Done.")
+        print(f"{len(elements)} areas chosen randomly.")
 
     def set_cycle_id(self, area) -> None:
         print(f"Setting cycle for {area}...", end=' ')
@@ -110,7 +110,7 @@ class GfsLike:
         print(f"Setting products for {area} from {what_for}...", end=' ')
 
         if len(self.plan['area'][area]) > 0:
-            print("Prescribed in settings. Done.")
+            print("Prescribed in settings.")
             return
 
         self.driver.switch_to.window(self.handles[what_for])
@@ -126,7 +126,7 @@ class GfsLike:
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area] = elements
-        print(f"{len(elements)} products set by randomizer. Done.")
+        print(f"{len(elements)} products set randomly.")
 
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
@@ -140,7 +140,7 @@ class GfsLike:
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
-        time.sleep(1)
+        time.sleep(1.5)
         try:
             self.hover_and_click(hour)
         except Exception as e:
@@ -197,21 +197,22 @@ class GfsLike:
 
     def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
         for hour in self.plan[(area, product)]:
-            self.counter += 1
-            total = self.calc_total()
-
-            info_str = f"{self.counter} out of {self.calc_total()}: " \
-                       + f"Processing {what_for} {area} {product} {hour}... "
-            print(info_str, end='')
-            if self.counter < self.calc_total():
-                print('\r', end='')
-            else:
-                print('\n', end='')
-
+            self.print_info_string(what_for, area, self.plan[('cycle', area, product)], product, hour)
             if not hours_just_set:
                 self.click_product(product)
                 self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
+
+    def print_info_string(self, *args):
+        output = ' '.join(args)
+        self.counter += 1
+        info_str = f"{self.counter} out of {self.calc_total()}: " \
+                   + f"Processing {output}... "
+        print(info_str, end=(' ' * 20))
+        if self.counter < self.calc_total():
+            print('\r', end='')
+        else:
+            print('\n', end='')
 
     def setup_page(self, what_for) -> None:
         print(f"Setting up page for {what_for}...", end=' ')

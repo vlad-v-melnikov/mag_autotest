@@ -17,23 +17,19 @@ class Settings:
     plan = {
         'STORM-TRACKS':
             {
-                'area': {
-                    'ALASKA': [],
-                    'CONUS': [],
-                },
                 'section': 'Model Guidance',
                 'model': 'STORM-TRACKS',
-                'area_count': 0,
-                'product_count': 2,
+                'area_count': 1,
+                'product_count': 4,
                 'hour_count': 2,
             },
         'PANELS':
             {
                 'section': 'Model Guidance',
                 'model': 'PANELS',
-                'area_count': 2,
-                'product_count': 2,
-                'hour_count': 1,
+                'area_count': 3,
+                'product_count': 1,
+                'hour_count': 2,
             },
         'SREF-CLUSTER':
             {
