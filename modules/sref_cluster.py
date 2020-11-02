@@ -2,13 +2,11 @@ import time
 import random
 import logging
 from retry import retry
-from datetime import date
 
 # selenium
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 
-from gfs_like import GfsLike
+from modules.gfs_like import GfsLike
 
 
 class SREFCluster(GfsLike):

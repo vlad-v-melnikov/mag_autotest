@@ -1,9 +1,7 @@
 import time
 import logging
-from datetime import date
-from retry import retry
 
-from gfs_like import GfsLike
+from modules.gfs_like import GfsLike
 
 
 class Panels(GfsLike):

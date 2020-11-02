@@ -47,8 +47,8 @@ class Wrapper:
         except TimeoutException as e:
             logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
 
-        if not os.path.isdir('./screenshots'):
-            os.mkdir('./screenshots')
+        if not os.path.isdir('../screenshots'):
+            os.mkdir('../screenshots')
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_test_site(self):

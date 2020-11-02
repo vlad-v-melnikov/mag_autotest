@@ -1,7 +1,6 @@
 from settings import Settings
-from gfs_like import GfsLike
+from modules.gfs_like import GfsLike
 from pprint import pprint
-import time
 from datetime import date
 
 

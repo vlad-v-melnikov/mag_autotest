@@ -1,5 +1,5 @@
-from panels import Panels
-import time
+from modules.panels import Panels
+
 
 class StormTracks(Panels):
     def find_cycle(self, cycles: list):

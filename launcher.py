@@ -1,9 +1,9 @@
-from wrapper import Wrapper
-from gfs_like import GfsLike
-from sref_cluster import SREFCluster
-from panels import Panels
-from storm_tracks import StormTracks
-from cycle_matcher import CycleMatcher
+from modules.wrapper import Wrapper
+from modules.gfs_like import GfsLike
+from modules.sref_cluster import SREFCluster
+from modules.panels import Panels
+from modules.storm_tracks import StormTracks
+from modules.cycle_matcher import CycleMatcher
 
 CLASS_MAP = {
         'PANELS': Panels,
