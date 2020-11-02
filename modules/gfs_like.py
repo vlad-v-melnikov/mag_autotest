@@ -198,13 +198,20 @@ class GfsLike:
     def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
         for hour in self.plan[(area, product)]:
             self.counter += 1
-            print(f"{self.counter} out of {self.calc_total()}", end=': ')
-            print(f"Processing {what_for} {area} {product} {hour}... ", end='')
+            total = self.calc_total()
+
+            info_str = f"{self.counter} out of {self.calc_total()}: " \
+                       + f"Processing {what_for} {area} {product} {hour}... "
+            print(info_str, end='')
+            if self.counter < self.calc_total():
+                print('\r', end='')
+            else:
+                print('\n', end='')
+
             if not hours_just_set:
                 self.click_product(product)
                 self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
-            print("Done.")
 
     def setup_page(self, what_for) -> None:
         print(f"Setting up page for {what_for}...", end=' ')
@@ -254,11 +261,12 @@ class GfsLike:
         self.set_for_each_area()
 
         self.iterate_what_for_areas()
+        print("Processing complete.")
 
     def calc_total(self):
         total_products = 0
         for area in self.plan['area']:
-            total_products += len(self.plan['area'])
+            total_products += len(self.plan['area'][area])
         first_area = next(iter(self.plan['area']))
         first_product = self.plan['area'][first_area][0]
         hours = len(self.plan[(first_area, first_product)])

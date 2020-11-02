@@ -49,8 +49,8 @@ class Settings:
                 'section': 'Model Guidance',
                 'model': 'GFS',
                 'area_count': 2,
-                'product_count': 2,
-                'hour_count': 1,
+                'product_count': 1,
+                'hour_count': 2,
             },
         'GEFS-SPAG':
             {

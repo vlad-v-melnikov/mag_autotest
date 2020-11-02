@@ -5,6 +5,7 @@ from modules.panels import Panels
 from modules.storm_tracks import StormTracks
 from modules.cycle_matcher import CycleMatcher
 import sys
+import argparse
 
 CLASS_MAP = {
         'PANELS': Panels,
@@ -14,11 +15,10 @@ CLASS_MAP = {
 
 
 def take_screenshots():
-    if len(sys.argv) == 1:
-        print("No model to check. Needs to be a parameter.")
-        sys.exit(0)
-
-    model = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('model', help="Model name to take screenshots")
+    args = parser.parse_args()
+    model = args.model
 
     print(f"Screenshots for {model}.")
     wrapper = Wrapper()
