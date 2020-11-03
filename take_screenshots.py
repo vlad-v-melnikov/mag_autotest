@@ -3,8 +3,6 @@ from modules.gfs_like import GfsLike
 from modules.sref_cluster import SREFCluster
 from modules.panels import Panels
 from modules.storm_tracks import StormTracks
-from modules.today_checker import TodayChecker
-import sys
 import argparse
 
 CLASS_MAP = {
@@ -21,7 +19,7 @@ def take_screenshots():
     model = args.model
 
     print(f"Screenshots for {model}.")
-    wrapper = Wrapper()
+    wrapper = Wrapper(model=model)
 
     if model in CLASS_MAP.keys():
         single_model = CLASS_MAP[model](model=model, driver=wrapper.driver, handles=wrapper.handles)

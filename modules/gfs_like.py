@@ -233,9 +233,6 @@ class GfsLike:
         section = self.plan['section'].lower().replace(' ', '%20')
         site = self.settings.sites[what_for]
         url = f"{site}/model-guidance-model-area.php?group={section}#"
-        print()
-        print(url)
-        print()
 
         if url != self.driver.current_url:
             self.driver.get(url)

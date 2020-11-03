@@ -12,11 +12,12 @@ from datetime import datetime
 from settings import Settings
 
 
-def clear_screenshots():
-    files = glob.glob('./screenshots/*.png')
+def clear_screenshots(model):
+    files = glob.glob(f'./screenshots/*{model}*.png')
     for f in files:
         os.unlink(f)
-    print("Cleared previous screenshots")
+    if len(files) > 0:
+        print("Cleared previous screenshots for", model)
 
 
 def log_config():
@@ -33,11 +34,11 @@ class Wrapper:
         'Chrome': webdriver.Chrome,
     }
 
-    def __init__(self, clear=True):
+    def __init__(self, model, clear=True):
         self.settings = Settings()
         log_config()
         if clear:
-            clear_screenshots()
+            clear_screenshots(model)
 
         print("Setting up web driver...", end=' ')
         self.driver = self.driver[self.settings.driver]()
