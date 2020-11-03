@@ -3,11 +3,11 @@ import os
 
 
 def clear_screenshots():
-    files = glob(f'./screenshots/*.png')
+    files = glob(f'./logs/*.log')
     for f in files:
         os.unlink(f)
     if len(files) > 0:
-        print(f"Deleted {len(files)} files. Screenshot folder is now empty.")
+        print(f"Deleted {len(files)} logs. Log folder is now empty.")
 
 
 if __name__ == '__main__':
