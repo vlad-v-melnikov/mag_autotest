@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+import sys
 from retry import retry
 
 # selenium
@@ -36,6 +37,10 @@ class Wrapper:
 
     def __init__(self, model, clear=True, filename='settings_default.json'):
         self.settings = Settings(filename)
+        if model not in self.settings.plan.keys():
+            print(f"Model name {model} not found. Exiting.")
+            sys.exit(0)
+
         log_config()
         if clear:
             clear_screenshots(model)

@@ -140,7 +140,6 @@ class GfsLike:
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
-        time.sleep(1.5)
         try:
             self.hover_and_click(hour)
         except Exception as e:
