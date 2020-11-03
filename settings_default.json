@@ -14,35 +14,6 @@
   },
   "driver": "Firefox",
   "plan": {
-    "SREF-CLUSTER": {
-      "section": "Model Guidance",
-      "model": "SREF-CLUSTER",
-      "area_count": 1,
-      "product_count": 1,
-      "hour_count": 2,
-      "cluster_count": 3
-    },
-    "HRRR": {
-      "section": "Model Guidance",
-      "model": "HRRR",
-      "area_count": 2,
-      "product_count": 2,
-      "hour_count": 1
-    },
-    "STORM-TRACKS": {
-      "section": "Model Guidance",
-      "model": "STORM-TRACKS",
-      "area_count": 1,
-      "product_count": 2,
-      "hour_count": 2
-    },
-    "PANELS": {
-      "section": "Model Guidance",
-      "model": "PANELS",
-      "area_count": 3,
-      "product_count": 1,
-      "hour_count": 2
-    },
     "GFS": {
       "section": "Model Guidance",
       "model": "GFS",
@@ -68,6 +39,13 @@
       "section": "Model Guidance",
       "model": "NAEFS",
       "area_count": 1,
+      "product_count": 3,
+      "hour_count": 1
+    },
+    "PANELS": {
+      "section": "Model Guidance",
+      "model": "PANELS",
+      "area_count": 2,
       "product_count": 3,
       "hour_count": 1
     },
@@ -97,6 +75,13 @@
       "model": "RAP",
       "area_count": 1,
       "product_count": 3,
+      "hour_count": 1
+    },
+    "HRRR": {
+      "section": "Model Guidance",
+      "model": "HRRR",
+      "area_count": 2,
+      "product_count": 2,
       "hour_count": 1
     },
     "HRW-ARW": {
@@ -134,6 +119,14 @@
       "product_count": 3,
       "hour_count": 1
     },
+    "SREF-CLUSTER": {
+      "section": "Model Guidance",
+      "model": "SREF-CLUSTER",
+      "area_count": 1,
+      "product_count": 1,
+      "hour_count": 2,
+      "cluster_count": 3
+    },
     "WW3": {
       "section": "Model Guidance",
       "model": "WW3",
@@ -154,6 +147,13 @@
       "area_count": 1,
       "product_count": 1,
       "hour_count": 1
+    },
+    "STORM-TRACKS": {
+      "section": "Model Guidance",
+      "model": "STORM-TRACKS",
+      "area_count": 1,
+      "product_count": 2,
+      "hour_count": 2
     }
   },
   "compare": {

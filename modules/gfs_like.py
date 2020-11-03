@@ -18,8 +18,8 @@ class GfsLike:
 
     IMAGE_DELAY = 2
 
-    def __init__(self, model, driver, handles):
-        self.settings = Settings()
+    def __init__(self, model, driver, handles, filename='settings_default.json'):
+        self.settings = Settings(filename)
         self.plan = self.settings.plan[model]
         self.driver = driver
         self.handles = handles
@@ -208,11 +208,12 @@ class GfsLike:
         self.counter += 1
         info_str = f"{self.counter} out of {self.calc_total()}: " \
                    + f"Processing {output}... "
-        print(info_str, end=(' ' * 50))
-        if self.counter < self.calc_total():
-            print('\r', end='')
-        else:
-            print('\n', end='')
+        print(info_str)
+        # print(info_str, end=(' ' * 50))
+        # if self.counter < self.calc_total():
+        #     print('\r', end='')
+        # else:
+        #     print('\n', end='')
 
     def setup_page(self, what_for) -> None:
         print(f"Setting up page for {what_for}...", end=' ')
@@ -268,9 +269,7 @@ class GfsLike:
         total_products = 0
         for area in self.plan['area']:
             total_products += len(self.plan['area'][area])
-        first_area = next(iter(self.plan['area']))
-        first_product = self.plan['area'][first_area][0]
-        hours = len(self.plan[(first_area, first_product)])
+        hours = self.plan['hour_count']
         total = total_products * hours * 2
         return total
 

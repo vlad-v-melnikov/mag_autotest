@@ -34,8 +34,8 @@ class Wrapper:
         'Chrome': webdriver.Chrome,
     }
 
-    def __init__(self, model, clear=True):
-        self.settings = Settings()
+    def __init__(self, model, clear=True, filename='settings_default.json'):
+        self.settings = Settings(filename)
         log_config()
         if clear:
             clear_screenshots(model)

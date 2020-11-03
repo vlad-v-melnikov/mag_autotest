@@ -11,8 +11,8 @@ from modules.gfs_like import GfsLike
 
 class SREFCluster(GfsLike):
 
-    def __init__(self, model, driver, handles):
-        super().__init__(model, driver, handles)
+    def __init__(self, model, driver, handles, filename='settings_default.json'):
+        super().__init__(model, driver, handles, filename=filename)
 
     def set_hour_ids(self, area, product) -> None:
         super().set_hour_ids(area, product)
@@ -82,8 +82,8 @@ class SREFCluster(GfsLike):
         total_products = 0
         for area in self.plan['area']:
             total_products += len(self.plan['area'][area])
-        hours = self.plan['hour_count'] # can be wrong if actual quantity is less
-        clusters = self.plan['cluster_count'] # can be wrong if actual quantity is less
+        hours = self.plan['hour_count']
+        clusters = self.plan['cluster_count']
         total = total_products * hours * clusters * 2
         return total
 

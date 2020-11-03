@@ -6,8 +6,8 @@ from modules.gfs_like import GfsLike
 
 class Panels(GfsLike):
 
-    def __init__(self, model, driver, handles):
-        super().__init__(model, driver, handles)
+    # def __init__(self, model, driver, handles, filename='settings_default.json'):
+    #     super().__init__(model, driver, handles, filename)
 
     def iterate_products(self, what_for, area):
         hours_just_set = False
