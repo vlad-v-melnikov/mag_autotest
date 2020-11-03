@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://magtest.ncep.noaa.gov",
+    "test": "https://mag.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -12,7 +12,9 @@
     ],
     "today_only": false
   },
+  
   "driver": "Firefox",
+
   "plan": {
     "GFS": {
       "section": "Model Guidance",
@@ -25,7 +27,7 @@
       "section": "Model Guidance",
       "model": "GEFS-SPAG",
       "area_count": 1,
-      "product_count": 3,
+      "product_count": 0,
       "hour_count": 1
     },
     "GEFS-MEAN-SPRD": {
@@ -53,7 +55,7 @@
       "section": "Model Guidance",
       "model": "NAM",
       "area_count": 1,
-      "product_count": 3,
+      "product_count": 0,
       "hour_count": 1
     },
     "NAM-HIRES": {
@@ -156,6 +158,7 @@
       "hour_count": 2
     }
   },
+  
   "compare": {
     "box_color": [
       102,
@@ -180,6 +183,6 @@
       50,
       120
     ],
-    "use_padding": false
+    "use_padding": true
   }
 }

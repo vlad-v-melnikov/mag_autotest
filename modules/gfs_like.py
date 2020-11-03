@@ -16,7 +16,7 @@ from modules.settings import Settings
 
 class GfsLike:
 
-    IMAGE_DELAY = 2
+    IMAGE_DELAY = 1
 
     def __init__(self, model, driver, handles, filename='settings_default.json'):
         self.settings = Settings(filename)
@@ -152,6 +152,7 @@ class GfsLike:
         self.click_back()
 
     def hover_and_click(self, identifier, type='id'):
+        delay = 0.5
         type_mapper = {
             'id': self.driver.find_element_by_id,
             'link_text': self.driver.find_element_by_link_text
@@ -162,9 +163,9 @@ class GfsLike:
         if color == '#0000ff':  # blue, not selected
             action = ActionChains(self.driver)
             action.move_to_element(element).perform()
-            time.sleep(1)
+            time.sleep(delay)
             element.click()
-            time.sleep(1)
+            time.sleep(delay)
 
     def click_product(self, product):
         try:

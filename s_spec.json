@@ -12,12 +12,17 @@
     ],
     "today_only": false
   },
+  
   "driver": "Firefox",
+
   "plan": {
     "GFS": {
+      "area": {
+        "WEST-ATL": []
+      },
       "section": "Model Guidance",
       "model": "GFS",
-      "area_count": 1,
+      "area_count": 0,
       "product_count": 2,
       "hour_count": 1
     },
