@@ -9,7 +9,7 @@ from selenium.common.exceptions import TimeoutException
 from datetime import datetime
 
 # internal
-from settings import Settings
+from modules.settings import Settings
 
 
 def clear_screenshots(model):

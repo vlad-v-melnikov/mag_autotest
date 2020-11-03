@@ -1,4 +1,4 @@
-from settings import Settings
+from modules.settings import Settings
 
 
 def main():

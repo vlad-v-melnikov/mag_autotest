@@ -1,4 +1,4 @@
-from settings import Settings
+from modules.settings import Settings
 from modules.gfs_like import GfsLike
 from pprint import pprint
 from datetime import date

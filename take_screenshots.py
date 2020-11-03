@@ -13,15 +13,7 @@ CLASS_MAP = {
 
 
 def take_screenshots():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('model',
-                        help="Model name to take screenshots")
-    parser.add_argument('-s', '--settings',
-                        help="Name of the json settings file different from default_settings.json")
-    args = parser.parse_args()
-    model = args.model
-    filename = args.settings if args.settings else 'settings_default.json'
-
+    model, filename = parse_arguments()
     print(f"Screenshots for {model}.")
     wrapper = Wrapper(model=model, filename=filename)
 
@@ -34,6 +26,18 @@ def take_screenshots():
 
     wrapper.tear_down()
     print("Screenshots taken.")
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('model',
+                        help="Model name to take screenshots")
+    parser.add_argument('-s', '--settings',
+                        help="Name of the json settings file different from default_settings.json")
+    args = parser.parse_args()
+    model = args.model
+    filename = args.settings if args.settings else 'settings_default.json'
+    return model, filename
 
 
 if __name__ == "__main__":
