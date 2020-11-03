@@ -4,7 +4,7 @@ from pprint import pprint
 from datetime import date
 
 
-class CycleMatcher:
+class TodayChecker:
     excluded_areas = ['PANELS', 'HRW-NMMB', 'HIRES-FV3']
     cycles_test = {}
     cycles_prod = {}
@@ -14,6 +14,7 @@ class CycleMatcher:
         self.models = self.settings.plan
         self.driver = driver
         self.handles = handles
+        self.settings.sites['test'] = 'https://magtest.ncep.noaa.gov'  # forcing test
 
     def save_cycles(self, what_for, dude):
         print(f"Saving cycles for {dude.plan['model']}")
@@ -31,7 +32,7 @@ class CycleMatcher:
             if date_today not in date_only:
                 no_today.append(model)
 
-        print("No today's date in:")
+        print(f"No today's date {date.today().strftime('%Y/%m/%d')} in:")
         pprint(no_today)
 
     def find_area_id(self):

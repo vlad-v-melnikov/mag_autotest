@@ -3,7 +3,7 @@ from modules.gfs_like import GfsLike
 from modules.sref_cluster import SREFCluster
 from modules.panels import Panels
 from modules.storm_tracks import StormTracks
-from modules.cycle_matcher import CycleMatcher
+from modules.today_checker import TodayChecker
 import sys
 import argparse
 
