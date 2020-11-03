@@ -9,7 +9,7 @@ from selenium.common.exceptions import TimeoutException
 from datetime import datetime
 
 # internal
-from keep.settings_old import Settings
+from settings import Settings
 
 
 def clear_screenshots():
@@ -33,10 +33,11 @@ class Wrapper:
         'Chrome': webdriver.Chrome,
     }
 
-    def __init__(self):
+    def __init__(self, clear=True):
         self.settings = Settings()
         log_config()
-        clear_screenshots()
+        if clear:
+            clear_screenshots()
 
         print("Setting up web driver...", end=' ')
         self.driver = self.driver[self.settings.driver]()

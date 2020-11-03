@@ -2,7 +2,7 @@ import unittest
 from PIL import Image, ImageChops
 import glob
 import logging
-from keep.settings_old import Settings
+from settings import Settings
 from datetime import datetime
 
 class TestCompareImages(unittest.TestCase):

@@ -1,4 +1,4 @@
-from keep.settings_old import Settings
+from settings import Settings
 from modules.gfs_like import GfsLike
 from pprint import pprint
 from datetime import date
@@ -34,6 +34,12 @@ class CycleMatcher:
         print("No today's date in:")
         pprint(no_today)
 
+    def find_area_id(self):
+        element = self.driver.find_element_by_xpath(
+            "//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
+        assert element, 'No area found'
+        return element.get_attribute('class')
+
     def check_today_now(self):
         what_for = 'test'
         first = True
@@ -48,8 +54,7 @@ class CycleMatcher:
                 first = False
             dude.plan['area_count'] = 0
             dude.click_model()
-            dude.set_area_ids()
-            area = next(iter(dude.plan['area'].keys()))
+            area = self.find_area_id()
             dude.click_area(area)
             self.save_cycles(what_for, dude)
             dude.click_back()

@@ -8,7 +8,7 @@ from modules.cycle_matcher import CycleMatcher
 
 def check_today():
     print(f"Checking if today cycles are present on test...")
-    wrapper = Wrapper()
+    wrapper = Wrapper(clear=False)
     cycle_matcher = CycleMatcher(driver=wrapper.driver, handles=wrapper.handles)
     cycle_matcher.check_today_now()
     wrapper.tear_down()

@@ -1,4 +1,4 @@
-from keep.settings_old import Settings
+from settings import Settings
 
 
 def main():
