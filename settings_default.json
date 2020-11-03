@@ -1,8 +1,8 @@
 {
   "sites": {
-    "test": "https://magtest.ncep.noaa.gov",
+    "test": "https://mag.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
-    "area_from": "test",
+    "area_from": "prod",
     "cycle_from": "test",
     "products_from": "prod",
     "cluster_from": "prod",
@@ -24,13 +24,8 @@
     },
     "HRRR": {
       "section": "Model Guidance",
-      "area": {
-        "CONUS": [],
-        "ALASKA": [],
-        "US-NC": []
-      },
       "model": "HRRR",
-      "area_count": 0,
+      "area_count": 2,
       "product_count": 2,
       "hour_count": 1
     },
@@ -52,8 +47,8 @@
       "section": "Model Guidance",
       "model": "GFS",
       "area_count": 2,
-      "product_count": 1,
-      "hour_count": 2
+      "product_count": 2,
+      "hour_count": 1
     },
     "GEFS-SPAG": {
       "section": "Model Guidance",

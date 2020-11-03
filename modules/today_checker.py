@@ -14,7 +14,6 @@ class TodayChecker:
         self.models = self.settings.plan
         self.driver = driver
         self.handles = handles
-        self.settings.sites['test'] = 'https://magtest.ncep.noaa.gov'  # forcing test
 
     def save_cycles(self, what_for, dude):
         print(f"Saving cycles for {dude.plan['model']}")

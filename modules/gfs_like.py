@@ -197,7 +197,7 @@ class GfsLike:
 
     def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
         for hour in self.plan[(area, product)]:
-            self.print_info_string(what_for, area, self.plan[('cycle', area, product)], product, hour)
+            self.print_info_string(what_for, area, self.plan['area_cycle'][area], product, hour)
             if not hours_just_set:
                 self.click_product(product)
                 self.click_cycle(area=area, product=product)
@@ -233,6 +233,9 @@ class GfsLike:
         section = self.plan['section'].lower().replace(' ', '%20')
         site = self.settings.sites[what_for]
         url = f"{site}/model-guidance-model-area.php?group={section}#"
+        print()
+        print(url)
+        print()
 
         if url != self.driver.current_url:
             self.driver.get(url)
