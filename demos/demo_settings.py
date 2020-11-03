@@ -1,5 +1,4 @@
-from settings import Settings
-from pprint import pprint
+from keep.settings_old import Settings
 
 
 def main():

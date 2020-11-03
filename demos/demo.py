@@ -1,8 +1,5 @@
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-import copy
-from settings import Settings
-from pprint import pprint
 import time
 from retry import retry
 

@@ -1,12 +1,11 @@
 import json
-import os
 from pprint import pprint
 
 
 class Settings:
-    def __init__(self):
+    def __init__(self, filename='settings_default.json'):
 
-        with open('settings_demo.json') as json_file:
+        with open(filename) as json_file:
             self.settings = json.load(json_file)
 
         self.sites = self.settings['sites']

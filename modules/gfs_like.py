@@ -12,7 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.color import Color
 
-from settings import Settings
+from keep.settings_old import Settings
 
 class GfsLike:
 

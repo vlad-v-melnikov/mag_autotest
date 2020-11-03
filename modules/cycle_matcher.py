@@ -1,4 +1,4 @@
-from settings import Settings
+from keep.settings_old import Settings
 from modules.gfs_like import GfsLike
 from pprint import pprint
 from datetime import date
@@ -47,6 +47,7 @@ class CycleMatcher:
                 dude.setup_page(what_for)
                 first = False
             dude.plan['area_count'] = 0
+            dude.click_model()
             dude.set_area_ids()
             area = next(iter(dude.plan['area'].keys()))
             dude.click_area(area)
