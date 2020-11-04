@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://mag.ncep.noaa.gov",
+    "test": "https://magtest.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -19,7 +19,7 @@
     "GFS": {
       "section": "Model Guidance",
       "model": "GFS",
-      "area_count": 0,
+      "area_count": 2,
       "product_count": 1,
       "hour_count": 1
     },
@@ -27,7 +27,7 @@
       "section": "Model Guidance",
       "model": "GEFS-SPAG",
       "area_count": 1,
-      "product_count": 0,
+      "product_count": 1,
       "hour_count": 1
     },
     "GEFS-MEAN-SPRD": {
@@ -41,14 +41,14 @@
       "section": "Model Guidance",
       "model": "NAEFS",
       "area_count": 1,
-      "product_count": 3,
+      "product_count": 1,
       "hour_count": 1
     },
     "PANELS": {
       "section": "Model Guidance",
       "model": "PANELS",
-      "area_count": 2,
-      "product_count": 3,
+      "area_count": 1,
+      "product_count": 1,
       "hour_count": 1
     },
     "NAM": {

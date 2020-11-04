@@ -7,8 +7,7 @@
     "products_from": "prod",
     "cluster_from": "prod",
     "order_of_iteration": [
-      "test",
-      "prod"
+      "test"
     ],
     "today_only": false
   },
@@ -23,7 +22,7 @@
       "section": "Model Guidance",
       "model": "GFS",
       "area_count": 0,
-      "product_count": 2,
+      "product_count": 1,
       "hour_count": 1
     },
     "GEFS-SPAG": {
