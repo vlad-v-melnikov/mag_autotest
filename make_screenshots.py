@@ -4,6 +4,7 @@ from modules.sref_cluster import SREFCluster
 from modules.panels import Panels
 from modules.storm_tracks import StormTracks
 import argparse
+import time
 
 CLASS_MAP = {
         'PANELS': Panels,
@@ -13,6 +14,7 @@ CLASS_MAP = {
 
 
 def take_screenshots():
+    start_time = time.time()
     model, filename = parse_arguments()
     print(f"Screenshots for {model}.")
     wrapper = Wrapper(model=model, filename=filename)
@@ -25,7 +27,7 @@ def take_screenshots():
     single_model.make_now()
 
     wrapper.tear_down()
-    print("Screenshots taken.")
+    print(f"Screenshots taken. Running time: {(time.time() - start_time):.2f} seconds.")
 
 
 def parse_arguments():

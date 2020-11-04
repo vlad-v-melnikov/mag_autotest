@@ -84,7 +84,7 @@ class SREFCluster(GfsLike):
             total_products += len(self.plan['area'][area])
         hours = self.plan['hour_count']
         clusters = self.plan['cluster_count']
-        total = total_products * hours * clusters * 2
+        total = total_products * hours * clusters * self.get_site_count()
         return total
 
 

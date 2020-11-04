@@ -270,8 +270,11 @@ class GfsLike:
         for area in self.plan['area']:
             total_products += len(self.plan['area'][area])
         hours = self.plan['hour_count']
-        total = total_products * hours * 2
+        total = total_products * hours * self.get_site_count()
         return total
+
+    def get_site_count(self):
+        return len(self.settings.sites['order_of_iteration'])
 
 
 if __name__ == "__main__":
