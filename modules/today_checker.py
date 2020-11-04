@@ -15,8 +15,8 @@ class TodayChecker:
         self.driver = driver
         self.handles = handles
 
-    def save_cycles(self, what_for, dude):
-        print(f"Saving cycles for {dude.plan['model']}")
+    def save_cycles(self, what_for, dude, counter, total):
+        print(f"Model {counter} out of {total}: saving cycles for {dude.plan['model']}")
         elements = dude.get_all_cycles()
         if what_for == 'test':
             self.cycles_test[dude.plan['model']] = [element.get_attribute('id') for element in elements]
@@ -44,10 +44,13 @@ class TodayChecker:
         what_for = 'test'
         first = True
 
+        counter = 0
+        total = len(set(self.settings.plan.keys()) - set(self.excluded_areas))
         for model in self.settings.plan.keys():
             if model in self.excluded_areas:
                 continue
 
+            counter += 1
             dude = GfsLike(model, self.driver, self.handles)
             if first:
                 dude.setup_page(what_for)
@@ -56,7 +59,7 @@ class TodayChecker:
             dude.click_model()
             area = self.find_area_id()
             dude.click_area(area)
-            self.save_cycles(what_for, dude)
+            self.save_cycles(what_for, dude, counter, total)
             dude.click_back()
 
         print()

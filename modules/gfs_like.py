@@ -68,7 +68,7 @@ class GfsLike:
             area = element.get_attribute('class')
             self.plan['area'][area] = []
 
-        print(f"{len(elements)} areas chosen randomly.")
+        print(f"{len(elements)} area(s) chosen randomly.")
 
     def set_cycle_id(self, area) -> None:
         print(f"Setting cycle for {area}...", end=' ')
@@ -126,7 +126,7 @@ class GfsLike:
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area] = elements
-        print(f"{len(elements)} products set randomly.")
+        print(f"{len(elements)} product(s) set randomly.")
 
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
@@ -251,7 +251,11 @@ class GfsLike:
         self.set_area_ids()
 
     def set_for_each_area(self):
+        counter = 0
+        total = len(self.plan['area'].keys())
         for area in self.plan['area'].keys():
+            counter += 1
+            print(f"Area {counter} or of {total}:")
             self.set_product_ids(area)
             self.set_cycle_id(area)
 
