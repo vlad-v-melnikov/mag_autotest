@@ -12,7 +12,7 @@ CLASS_MAP = {
     }
 
 
-def take_screenshots():
+def make_screenshots():
     model, filename = parse_arguments()
     print(f"Screenshots for {model}.")
     wrapper = Wrapper(model=model, filename=filename)
@@ -41,4 +41,4 @@ def parse_arguments():
 
 
 if __name__ == "__main__":
-    take_screenshots()
+    make_screenshots()

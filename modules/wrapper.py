@@ -34,8 +34,17 @@ class Wrapper:
         'Chrome': webdriver.Chrome,
     }
 
+    def make_dirs_if_none(self):
+        if not os.path.isdir('./screenshots'):
+            print("Making directory for screenshots")
+            os.mkdir('./screenshots')
+        if not os.path.isdir('./logs'):
+            print("Making directory for logs")
+            os.mkdir('./logs')
+
     def __init__(self, model, clear=True, filename='settings_default.json'):
         self.settings = Settings(filename)
+        self.make_dirs_if_none()
         log_config()
         if clear:
             clear_screenshots(model)
@@ -51,9 +60,6 @@ class Wrapper:
             self.open_prod_site()
         except TimeoutException as e:
             logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
-
-        if not os.path.isdir('../screenshots'):
-            os.mkdir('../screenshots')
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_test_site(self):

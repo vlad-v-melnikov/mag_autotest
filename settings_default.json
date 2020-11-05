@@ -25,7 +25,7 @@
       "section": "Model Guidance",
       "model": "GEFS-SPAG",
       "area_count": 1,
-      "product_count": 3,
+      "product_count": 1,
       "hour_count": 1
     },
     "GEFS-MEAN-SPRD": {
@@ -180,6 +180,6 @@
       50,
       120
     ],
-    "use_padding": false
+    "use_padding": true
   }
 }
