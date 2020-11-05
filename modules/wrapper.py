@@ -37,11 +37,18 @@ class Wrapper:
         'Firefox': webdriver.Firefox,
         'Chrome': webdriver.Chrome,
     }
+    driver_options = {
+        'Firefox': FirefoxOptions,
+        'Chrome': ChromeOptions,
+    }
 
     def __init__(self, model, clear=True, filename='settings_default.json', headless=False):
         self.settings = Settings(filename)
         if model not in self.settings.plan.keys():
             print(f"Model name {model} not found. Exiting.")
+            sys.exit(0)
+        if self.settings.driver not in self.driver.keys():
+            print("Unsupported web driver. Exiting.")
             sys.exit(0)
 
         self.make_dirs_if_none()
@@ -50,18 +57,10 @@ class Wrapper:
             clear_screenshots(model)
 
         print("Setting up web driver...", end=' ')
-        if self.settings.driver == "Firefox":
-            options = FirefoxOptions()
-            options.headless = True
-            self.driver = self.driver[self.settings.driver](options=options)
-        elif self.settings.driver == "Chrome":
-            options = ChromeOptions()
-            options.headless = True
-            self.driver = self.driver[self.settings.driver](options=options)
-            self.driver = self.driver[self.settings.driver]()
-        else:
-            print("Unsupported web driver. Exiting.")
-            sys.exit(0)
+        options = self.driver_options[self.settings.driver]()
+        options.headless = self.settings.headless
+        self.driver = self.driver[self.settings.driver](options=options)
+
         self.driver.set_page_load_timeout(5)
         self.driver.maximize_window()
         print("Done.")

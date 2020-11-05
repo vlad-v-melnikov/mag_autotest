@@ -10,6 +10,7 @@ class Settings:
 
         self.sites = self.settings['sites']
         self.driver = self.settings['driver']
+        self.headless = self.settings['headless']
         self.plan = self.settings['plan']
         self.compare = self.settings['compare']
 
