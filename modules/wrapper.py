@@ -42,6 +42,10 @@ class Wrapper:
         'Chrome': ChromeOptions,
     }
 
+    window_width = 1920
+    window_height_chrome = 1006
+    window_height_firefox = 1080
+
     def __init__(self, model, clear=True, filename='settings_default.json', headless=False):
         self.settings = Settings(filename)
         if model not in self.settings.plan.keys():
@@ -59,10 +63,15 @@ class Wrapper:
         print("Setting up web driver...", end=' ')
         options = self.driver_options[self.settings.driver]()
         options.headless = self.settings.headless
+        if self.settings.driver == "Chrome":
+            options.add_argument(f"--window-size={self.window_width},{self.window_height_chrome}")
+        else:
+            options.add_argument(f"--width={self.window_width}")
+            options.add_argument(f"--height={self.window_height_firefox}")
         self.driver = self.driver[self.settings.driver](options=options)
-
         self.driver.set_page_load_timeout(5)
-        self.driver.maximize_window()
+        if not self.settings.headless:
+            self.driver.maximize_window()
         print("Done.")
 
         try:

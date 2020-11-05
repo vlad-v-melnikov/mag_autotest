@@ -255,7 +255,7 @@ class GfsLike:
         total = len(self.plan['area'].keys())
         for area in self.plan['area'].keys():
             counter += 1
-            print(f"Area {counter} or of {total}:")
+            print(f"Area {counter} out of {total}:")
             self.set_product_ids(area)
             self.set_cycle_id(area)
 

@@ -13,7 +13,7 @@
     "today_only": false
   },
 
-  "driver": "Firefox",
+  "driver": "Chrome",
   "headless": true,
 
   "plan": {
@@ -27,7 +27,7 @@
     "GEFS-SPAG": {
       "section": "Model Guidance",
       "model": "GEFS-SPAG",
-      "area_count": 3,
+      "area_count": 1,
       "product_count": 1,
       "hour_count": 1
     },
@@ -184,6 +184,6 @@
       50,
       120
     ],
-    "use_padding": true
+    "use_padding": false
   }
 }
