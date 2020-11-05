@@ -50,7 +50,11 @@ class Panels(GfsLike):
         self.set_area_ids()
 
     def set_for_each_area(self):
+        counter = 0
+        total = len(self.plan['area'].keys())
         for area in self.plan['area'].keys():
+            counter += 1
+            print(f"Area {counter} or of {total}:")
             self.set_product_ids(area)
 
 

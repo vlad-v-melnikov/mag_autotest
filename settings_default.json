@@ -12,7 +12,9 @@
     ],
     "today_only": false
   },
+
   "driver": "Firefox",
+
   "plan": {
     "GFS": {
       "section": "Model Guidance",
@@ -24,7 +26,7 @@
     "GEFS-SPAG": {
       "section": "Model Guidance",
       "model": "GEFS-SPAG",
-      "area_count": 1,
+      "area_count": 3,
       "product_count": 1,
       "hour_count": 1
     },
@@ -39,21 +41,21 @@
       "section": "Model Guidance",
       "model": "NAEFS",
       "area_count": 1,
-      "product_count": 3,
+      "product_count": 1,
       "hour_count": 1
     },
     "PANELS": {
       "section": "Model Guidance",
       "model": "PANELS",
-      "area_count": 2,
-      "product_count": 3,
+      "area_count": 3,
+      "product_count": 1,
       "hour_count": 1
     },
     "NAM": {
       "section": "Model Guidance",
       "model": "NAM",
       "area_count": 1,
-      "product_count": 3,
+      "product_count": 0,
       "hour_count": 1
     },
     "NAM-HIRES": {
@@ -156,6 +158,7 @@
       "hour_count": 2
     }
   },
+
   "compare": {
     "box_color": [
       102,

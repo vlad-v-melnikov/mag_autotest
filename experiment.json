@@ -7,18 +7,22 @@
     "products_from": "prod",
     "cluster_from": "prod",
     "order_of_iteration": [
-      "test",
-      "prod"
+      "test"
     ],
     "today_only": false
   },
+  
   "driver": "Firefox",
+
   "plan": {
     "GFS": {
+      "area": {
+        "WEST-ATL": []
+      },
       "section": "Model Guidance",
       "model": "GFS",
-      "area_count": 1,
-      "product_count": 2,
+      "area_count": 0,
+      "product_count": 1,
       "hour_count": 1
     },
     "GEFS-SPAG": {
@@ -124,7 +128,7 @@
       "model": "SREF-CLUSTER",
       "area_count": 1,
       "product_count": 1,
-      "hour_count": 2,
+      "hour_count": 1,
       "cluster_count": 3
     },
     "WW3": {

@@ -16,7 +16,7 @@ from modules.settings import Settings
 
 class GfsLike:
 
-    IMAGE_DELAY = 2
+    IMAGE_DELAY = 1
 
     def __init__(self, model, driver, handles, filename='settings_default.json'):
         self.settings = Settings(filename)
@@ -68,7 +68,7 @@ class GfsLike:
             area = element.get_attribute('class')
             self.plan['area'][area] = []
 
-        print(f"{len(elements)} areas chosen randomly.")
+        print(f"{len(elements)} area(s) chosen randomly.")
 
     def set_cycle_id(self, area) -> None:
         print(f"Setting cycle for {area}...", end=' ')
@@ -126,7 +126,7 @@ class GfsLike:
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area] = elements
-        print(f"{len(elements)} products set randomly.")
+        print(f"{len(elements)} product(s) set randomly.")
 
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
@@ -140,7 +140,6 @@ class GfsLike:
 
     @retry(TimeoutException, tries=3, delay=2)
     def click_hour(self, hour):
-        time.sleep(1.5)
         try:
             self.hover_and_click(hour)
         except Exception as e:
@@ -153,6 +152,7 @@ class GfsLike:
         self.click_back()
 
     def hover_and_click(self, identifier, type='id'):
+        delay = 0.5
         type_mapper = {
             'id': self.driver.find_element_by_id,
             'link_text': self.driver.find_element_by_link_text
@@ -163,9 +163,9 @@ class GfsLike:
         if color == '#0000ff':  # blue, not selected
             action = ActionChains(self.driver)
             action.move_to_element(element).perform()
-            time.sleep(1)
+            time.sleep(delay)
             element.click()
-            time.sleep(1)
+            time.sleep(delay)
 
     def click_product(self, product):
         try:
@@ -251,7 +251,11 @@ class GfsLike:
         self.set_area_ids()
 
     def set_for_each_area(self):
+        counter = 0
+        total = len(self.plan['area'].keys())
         for area in self.plan['area'].keys():
+            counter += 1
+            print(f"Area {counter} or of {total}:")
             self.set_product_ids(area)
             self.set_cycle_id(area)
 
@@ -270,8 +274,11 @@ class GfsLike:
         for area in self.plan['area']:
             total_products += len(self.plan['area'][area])
         hours = self.plan['hour_count']
-        total = total_products * hours * 2
+        total = total_products * hours * self.get_site_count()
         return total
+
+    def get_site_count(self):
+        return len(self.settings.sites['order_of_iteration'])
 
 
 if __name__ == "__main__":

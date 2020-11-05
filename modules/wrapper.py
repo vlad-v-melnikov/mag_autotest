@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+import sys
 from retry import retry
 from datetime import datetime
 import sys
@@ -39,6 +40,10 @@ class Wrapper:
 
     def __init__(self, model, clear=True, filename='settings_default.json', headless=False):
         self.settings = Settings(filename)
+        if model not in self.settings.plan.keys():
+            print(f"Model name {model} not found. Exiting.")
+            sys.exit(0)
+
         self.make_dirs_if_none()
         log_config()
         if clear:
