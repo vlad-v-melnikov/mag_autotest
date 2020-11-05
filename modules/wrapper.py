@@ -2,11 +2,14 @@ import glob
 import logging
 import os
 from retry import retry
+from datetime import datetime
+import sys
 
 # selenium
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-from datetime import datetime
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 # internal
 from modules.settings import Settings
@@ -34,15 +37,7 @@ class Wrapper:
         'Chrome': webdriver.Chrome,
     }
 
-    def make_dirs_if_none(self):
-        if not os.path.isdir('./screenshots'):
-            print("Making directory for screenshots")
-            os.mkdir('./screenshots')
-        if not os.path.isdir('./logs'):
-            print("Making directory for logs")
-            os.mkdir('./logs')
-
-    def __init__(self, model, clear=True, filename='settings_default.json'):
+    def __init__(self, model, clear=True, filename='settings_default.json', headless=False):
         self.settings = Settings(filename)
         self.make_dirs_if_none()
         log_config()
@@ -50,7 +45,18 @@ class Wrapper:
             clear_screenshots(model)
 
         print("Setting up web driver...", end=' ')
-        self.driver = self.driver[self.settings.driver]()
+        if self.settings.driver == "Firefox":
+            options = FirefoxOptions()
+            options.headless = True
+            self.driver = self.driver[self.settings.driver](options=options)
+        elif self.settings.driver == "Chrome":
+            options = ChromeOptions()
+            options.headless = True
+            self.driver = self.driver[self.settings.driver](options=options)
+            self.driver = self.driver[self.settings.driver]()
+        else:
+            print("Unsupported web driver. Exiting.")
+            sys.exit(0)
         self.driver.set_page_load_timeout(5)
         self.driver.maximize_window()
         print("Done.")
@@ -60,6 +66,14 @@ class Wrapper:
             self.open_prod_site()
         except TimeoutException as e:
             logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
+
+    def make_dirs_if_none(self):
+        if not os.path.isdir('./screenshots'):
+            print("Making directory for screenshots")
+            os.mkdir('./screenshots')
+        if not os.path.isdir('./logs'):
+            print("Making directory for logs")
+            os.mkdir('./logs')
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_test_site(self):
