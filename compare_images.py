@@ -24,6 +24,16 @@ class TestCompareImages(unittest.TestCase):
         prod_screens = glob.glob('screenshots/prod_*.png')
         test_screens = glob.glob('screenshots/test_*.png')
         print(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
+
+        try:
+            self.assertNotEqual(len(test_screens), 0,
+                                "No screenshots from TEST. Nothing to compare.")
+            self.assertNotEqual(len(test_screens), 0,
+                                "No screenshots from PROD. Nothing to compare.")
+        except AssertionError as e:
+            logging.error("Zero screenshots from TEST and/or PROD")
+            raise e
+
         try:
             self.assertEqual(len(test_screens), len(prod_screens),
                              "Number of screenshots for test and prod is DIFFERENT")

@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://magtest.ncep.noaa.gov",
+    "test": "https://mag.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -13,7 +13,7 @@
     "today_only": false
   },
 
-  "driver": "Chrome",
+  "driver": "Firefox",
   "headless": true,
 
   "plan": {
@@ -125,9 +125,9 @@
     "SREF-CLUSTER": {
       "section": "Model Guidance",
       "model": "SREF-CLUSTER",
-      "area_count": 1,
-      "product_count": 1,
-      "hour_count": 2,
+      "area_count": 0,
+      "product_count": 0,
+      "hour_count": 1,
       "cluster_count": 3
     },
     "WW3": {
@@ -154,9 +154,9 @@
     "STORM-TRACKS": {
       "section": "Model Guidance",
       "model": "STORM-TRACKS",
-      "area_count": 1,
-      "product_count": 2,
-      "hour_count": 2
+      "area_count": 0,
+      "product_count": 0,
+      "hour_count": 1
     }
   },
 
