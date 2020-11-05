@@ -10,7 +10,7 @@ def check_today():
 
     cycle_matcher.check_today_now()
     wrapper.tear_down()
-    print("\nDone checking cycles")
+    print("Done checking cycles")
 
 
 if __name__ == "__main__":

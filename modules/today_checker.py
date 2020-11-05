@@ -1,7 +1,7 @@
 from modules.settings import Settings
 from modules.gfs_like import GfsLike
 from pprint import pprint
-from datetime import date
+from datetime import date, datetime
 
 
 class TodayChecker:
@@ -31,7 +31,7 @@ class TodayChecker:
             if date_today not in date_only:
                 no_today.append(model)
 
-        print(f"No today's date {date.today().strftime('%Y/%m/%d')} in:")
+        print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
         pprint(no_today)
 
     def find_area_id(self):
