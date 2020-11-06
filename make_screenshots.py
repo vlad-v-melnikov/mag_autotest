@@ -1,4 +1,5 @@
 from modules.wrapper import Wrapper
+from modules.settings import Settings
 from modules.gfs_like import GfsLike
 from modules.sref_cluster import SREFCluster
 from modules.panels import Panels
@@ -39,10 +40,20 @@ def parse_arguments():
     parser.add_argument('-l', '--headless',
                         help="Force headless mode irrespective of the settings file",
                         action="store_true")
+    parser.add_argument('-a', '--area', nargs='+',
+                        help="Single area to crawl")
     args = parser.parse_args()
     model = args.model
     headless = args.headless
     filename = args.settings if args.settings else 'settings_default.json'
+
+    if len(args.area) > 0:
+        settings = Settings(filename)
+        settings.plan[model]['area'] = {}
+        for area_name in args.area:
+            settings.plan[model]['area'][area_name.replace(',', '').upper()] = []
+        settings.save()
+
     return model, filename, headless
 
 

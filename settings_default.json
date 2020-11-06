@@ -45,9 +45,12 @@
     },
     "PANELS": {
       "area": {
-        "ALASKA": [],
-        "ARCTIC": [],
-        "ASIA": []
+        "US-NW": [],
+        "US-SAMOA": [],
+        "US-SC": [],
+        "US-SE": [],
+        "US-SW": [],
+        "WEST-ATL": []
       },
       "section": "Model Guidance",
       "model": "PANELS",
