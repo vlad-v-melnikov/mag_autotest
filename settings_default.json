@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://mag.ncep.noaa.gov",
+    "test": "https://magtest.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -39,19 +39,11 @@
     "NAEFS": {
       "section": "Model Guidance",
       "model": "NAEFS",
-      "area_count": 1,
+      "area_count": 0,
       "product_count": 1,
       "hour_count": 1
     },
     "PANELS": {
-      "area": {
-        "US-NW": [],
-        "US-SAMOA": [],
-        "US-SC": [],
-        "US-SE": [],
-        "US-SW": [],
-        "WEST-ATL": []
-      },
       "section": "Model Guidance",
       "model": "PANELS",
       "area_count": 0,
@@ -68,29 +60,29 @@
     "NAM-HIRES": {
       "section": "Model Guidance",
       "model": "NAM-HIRES",
-      "area_count": 2,
-      "product_count": 5,
+      "area_count": 1,
+      "product_count": 0,
       "hour_count": 1
     },
     "FIREWX": {
       "section": "Model Guidance",
       "model": "FIREWX",
-      "area_count": 1,
-      "product_count": 5,
+      "area_count": 0,
+      "product_count": 1,
       "hour_count": 1
     },
     "RAP": {
       "section": "Model Guidance",
       "model": "RAP",
       "area_count": 1,
-      "product_count": 3,
+      "product_count": 0,
       "hour_count": 1
     },
     "HRRR": {
       "section": "Model Guidance",
       "model": "HRRR",
-      "area_count": 2,
-      "product_count": 2,
+      "area_count": 1,
+      "product_count": 0,
       "hour_count": 1
     },
     "HRW-ARW": {
@@ -189,7 +181,7 @@
       50,
       120
     ],
-    "use_padding": false
+    "use_padding": true
   },
   "delays": {
     "hover_and_click": 1

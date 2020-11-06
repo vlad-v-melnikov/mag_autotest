@@ -41,17 +41,25 @@ def parse_arguments():
                         help="Force headless mode irrespective of the settings file",
                         action="store_true")
     parser.add_argument('-a', '--area', nargs='+',
-                        help="Single area to crawl")
+                        help="Areas to crawl. Divide with space or comma and space.")
+    parser.add_argument('-d', '--delay', type=float,
+                        help="Delay for clicking links")
     args = parser.parse_args()
     model = args.model
     headless = args.headless
     filename = args.settings if args.settings else 'settings_default.json'
 
-    if len(args.area) > 0:
+    if args.area is not None or args.delay is not None:
         settings = Settings(filename)
-        settings.plan[model]['area'] = {}
-        for area_name in args.area:
-            settings.plan[model]['area'][area_name.replace(',', '').upper()] = []
+
+        if args.area is not None:
+            settings.plan[model]['area'] = {}
+            for area_name in args.area:
+                settings.plan[model]['area'][area_name.replace(',', '').upper()] = []
+
+        if args.delay is not None:
+            settings.delays['hover_and_click'] = args.delay
+
         settings.save()
 
     return model, filename, headless

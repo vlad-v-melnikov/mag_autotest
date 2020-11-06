@@ -82,7 +82,6 @@ class GfsLike:
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_base(what_for)
         self.click_area(area)
-        time.sleep(1)
 
         cycles = self.get_all_cycles(area)
 
@@ -118,9 +117,7 @@ class GfsLike:
         self.reset_to_base(what_for)
         self.click_area(area)
         time.sleep(1)
-
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
-
         assert len(elements) > 0, "Empty products"
 
         if 'product_count' in self.plan.keys() \
@@ -162,11 +159,6 @@ class GfsLike:
             EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Page Help')]")))
 
     def hover_and_click(self, identifier, type='id', force=False):
-        # type_mapper = {
-        #     'id': self.driver.find_element_by_id,
-        #     'link_text': self.driver.find_element_by_link_text
-        # }
-
         if type == 'link_text':
             element = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, f"//a[contains(text(), {identifier})]")))
@@ -174,7 +166,6 @@ class GfsLike:
             element = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.ID, identifier)))
 
-        #element = type_mapper[type](identifier)
         color = Color.from_string(element.value_of_css_property('color')).hex
         if force or color == '#0000ff':  # blue, not selected
             action = ActionChains(self.driver)
@@ -191,13 +182,11 @@ class GfsLike:
 
     def click_cycle(self, **kwargs):
         area = kwargs['area']
-        time.sleep(1)
         cycle = self.plan['area_cycle'][area]
         try:
             self.hover_and_click(cycle)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {cycle} while clicking cycle")
-        time.sleep(1)
 
     def click_model(self):
         try:
@@ -211,7 +200,7 @@ class GfsLike:
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown while clicking {area}")
 
-    def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
+    def iterate_one_product(self, what_for, area, product) -> None:
         for hour in self.plan[(area, product)]:
             self.print_info_string(what_for, area, self.plan['area_cycle'][area], product, hour)
             self.click_product(product)
@@ -237,7 +226,6 @@ class GfsLike:
         print("Done.")
 
     def iterate_products(self, what_for, area):
-        hours_just_set = False
         for product in self.plan['area'][area]:
             if (area, product) not in self.plan.keys():
                 self.set_hour_ids(area, product)
