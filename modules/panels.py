@@ -14,6 +14,7 @@ class Panels(GfsLike):
         for product in self.plan['area'][area]:
             if (area, product) not in self.plan.keys():
                 self.click_product(product)
+                time.sleep(1)
                 self.set_cycle_id_per_product(area, product)
                 self.set_hour_ids(area, product)
                 hours_just_set = True
@@ -43,7 +44,6 @@ class Panels(GfsLike):
             self.print_info_string(what_for, area, self.plan[('cycle', area, product)], product, hour)
             if not hours_just_set:
                 self.click_product(product)
-                time.sleep(1)
                 self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
 

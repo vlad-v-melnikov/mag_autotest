@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://magtest.ncep.noaa.gov",
+    "test": "https://mag.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -15,6 +15,9 @@
 
   "driver": "Firefox",
   "headless": false,
+  "delays": {
+    "hover_and_click": 0.5
+  },
 
   "plan": {
     "GFS": {

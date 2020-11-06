@@ -13,6 +13,7 @@ class Settings:
         self.headless = self.settings['headless']
         self.plan = self.settings['plan']
         self.compare = self.settings['compare']
+        self.delays = self.settings['delays']
 
 
 def main():

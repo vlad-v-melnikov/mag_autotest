@@ -83,6 +83,7 @@ class TestCompareImages(unittest.TestCase):
                 'color': tuple(self.COLOR_FOUR[self.settings.driver])
             }
             box = self.search_for_it(target, orig_pix_map, four_images=True)
+
             # target = orig_image.crop((target['left'], target['top'], target['right'], target['bottom']))
             # target.save('screenshots/target.png')
             # to_save = orig_image.crop(box)

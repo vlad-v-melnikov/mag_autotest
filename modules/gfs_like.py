@@ -6,11 +6,11 @@ from datetime import date
 
 # selenium
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.color import Color
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.settings import Settings
 
@@ -140,33 +140,48 @@ class GfsLike:
         self.plan[(area, product)] = [element.get_attribute('id') for element in elements]
 
     @retry(TimeoutException, tries=3, delay=2)
-    def click_hour(self, hour):
+    def click_hour(self, hour, force=False):
         try:
-            self.hover_and_click(hour)
+            self.hover_and_click(hour, force=force)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {hour} while clicking hour")
 
     def screenshot_one_hour(self, **kwargs) -> None:
         area, hour, what_for, product = kwargs.values()
-        self.click_hour(hour)
+        self.final_click(hour)
         self.make_screenshot(area=area, hour=hour, what_for=what_for, product=product)
         self.click_back()
 
-    def hover_and_click(self, identifier, type='id'):
-        delay = 0.5
-        type_mapper = {
-            'id': self.driver.find_element_by_id,
-            'link_text': self.driver.find_element_by_link_text
-        }
+    @retry(TimeoutException, tries=3, delay=2)
+    def final_click(self, hour):
+        self.click_hour(hour, force=True)
+        self.wait_image_page_load()
 
-        element = type_mapper[type](identifier)
+    def wait_image_page_load(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Page Help')]")))
+
+    def hover_and_click(self, identifier, type='id', force=False):
+        # type_mapper = {
+        #     'id': self.driver.find_element_by_id,
+        #     'link_text': self.driver.find_element_by_link_text
+        # }
+
+        if type == 'link_text':
+            element = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, f"//a[contains(text(), {identifier})]")))
+        else:
+            element = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.ID, identifier)))
+
+        #element = type_mapper[type](identifier)
         color = Color.from_string(element.value_of_css_property('color')).hex
-        if color == '#0000ff':  # blue, not selected
+        if force or color == '#0000ff':  # blue, not selected
             action = ActionChains(self.driver)
             action.move_to_element(element).perform()
-            time.sleep(delay)
+            time.sleep(self.settings.delays['hover_and_click'])
             element.click()
-            time.sleep(delay)
+            time.sleep(self.settings.delays['hover_and_click'])
 
     def click_product(self, product):
         try:

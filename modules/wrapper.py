@@ -62,7 +62,9 @@ class Wrapper:
 
         print("Setting up web driver...", end=' ')
         options = self.driver_options[self.settings.driver]()
-        options.headless = self.settings.headless if not headless else headless
+        if headless:
+            self.settings.headless = headless
+        options.headless = self.settings.headless
         if self.settings.driver == "Chrome":
             options.add_argument(f"--window-size={self.window_width},{self.window_height_chrome}")
         else:
