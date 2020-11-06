@@ -214,9 +214,8 @@ class GfsLike:
     def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
         for hour in self.plan[(area, product)]:
             self.print_info_string(what_for, area, self.plan['area_cycle'][area], product, hour)
-            if not hours_just_set:
-                self.click_product(product)
-                self.click_cycle(area=area, product=product)
+            self.click_product(product)
+            self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
 
     def print_info_string(self, *args):
@@ -242,8 +241,7 @@ class GfsLike:
         for product in self.plan['area'][area]:
             if (area, product) not in self.plan.keys():
                 self.set_hour_ids(area, product)
-                hours_just_set = True
-            self.iterate_one_product(what_for, area, product, hours_just_set)
+            self.iterate_one_product(what_for, area, product)
 
     @retry(TimeoutException, tries=5, delay=2)
     def reset_to_base(self, what_for):

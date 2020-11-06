@@ -17,13 +17,12 @@ class Panels(GfsLike):
                 time.sleep(1)
                 self.set_cycle_id_per_product(area, product)
                 self.set_hour_ids(area, product)
-                hours_just_set = True
-            self.iterate_one_product(what_for, area, product, hours_just_set)
+            self.iterate_one_product(what_for, area, product)
 
     def set_cycle_id_per_product(self, area, product):
         # no manual setting of cycles for panels
         self.click_product(product)
-        time.sleep(2)
+        time.sleep(1)
         cycles = self.get_all_cycles(area, product)
         self.plan[('cycle', area, product)] = self.find_cycle(cycles)
 
@@ -32,19 +31,19 @@ class Panels(GfsLike):
 
     def click_cycle(self, **kwargs):
         area, product = kwargs.values()
-        time.sleep(2)
+        time.sleep(1)
         try:
             self.hover_and_click(self.plan[('cycle', area, product)])
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {self.plan[('cycle', area, product)]} "
                           f"while clicking cycle")
 
-    def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
+    def iterate_one_product(self, what_for, area, product) -> None:
         for hour in self.plan[(area, product)]:
             self.print_info_string(what_for, area, self.plan[('cycle', area, product)], product, hour)
-            if not hours_just_set:
-                self.click_product(product)
-                self.click_cycle(area=area, product=product)
+            self.click_product(product)
+            time.sleep(1)
+            self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
 
     def set_common_for_all_areas(self):

@@ -12,13 +12,8 @@
     ],
     "today_only": false
   },
-
   "driver": "Firefox",
   "headless": false,
-  "delays": {
-    "hover_and_click": 0.5
-  },
-
   "plan": {
     "GFS": {
       "section": "Model Guidance",
@@ -50,7 +45,9 @@
     },
     "PANELS": {
       "area": {
-        "AFRICA": []
+        "ALASKA": [],
+        "ARCTIC": [],
+        "ASIA": []
       },
       "section": "Model Guidance",
       "model": "PANELS",
@@ -165,7 +162,6 @@
       "hour_count": 1
     }
   },
-
   "compare": {
     "box_color": [
       102,
@@ -191,5 +187,8 @@
       120
     ],
     "use_padding": false
+  },
+  "delays": {
+    "hover_and_click": 1
   }
 }
