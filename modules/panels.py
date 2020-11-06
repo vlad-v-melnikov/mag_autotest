@@ -23,7 +23,7 @@ class Panels(GfsLike):
         # no manual setting of cycles for panels
         self.click_product(product)
         time.sleep(2)
-        cycles = self.get_all_cycles()
+        cycles = self.get_all_cycles(area, product)
         self.plan[('cycle', area, product)] = self.find_cycle(cycles)
 
     def find_cycle(self, cycles: list):
@@ -43,6 +43,7 @@ class Panels(GfsLike):
             self.print_info_string(what_for, area, self.plan[('cycle', area, product)], product, hour)
             if not hours_just_set:
                 self.click_product(product)
+                time.sleep(1)
                 self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
 

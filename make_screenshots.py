@@ -15,9 +15,9 @@ CLASS_MAP = {
 
 def take_screenshots():
     start_time = time.time()
-    model, filename = parse_arguments()
+    model, filename, headless = parse_arguments()
     print(f"Screenshots for {model}.")
-    wrapper = Wrapper(model=model, filename=filename)
+    wrapper = Wrapper(model=model, filename=filename, headless=headless)
 
     if model in CLASS_MAP.keys():
         single_model = CLASS_MAP[model](model=model, driver=wrapper.driver, handles=wrapper.handles, filename=filename)
@@ -36,10 +36,14 @@ def parse_arguments():
                         help="Model name to take screenshots")
     parser.add_argument('-s', '--settings',
                         help="Name of the json settings file different from default_settings.json")
+    parser.add_argument('-l', '--headless',
+                        help="Force headless mode irrespective of the settings file",
+                        action="store_true")
     args = parser.parse_args()
     model = args.model
+    headless = args.headless
     filename = args.settings if args.settings else 'settings_default.json'
-    return model, filename
+    return model, filename, headless
 
 
 if __name__ == "__main__":

@@ -39,6 +39,7 @@ class GfsLike:
 
     def make_screenshot(self, **kwargs):
         area, hour, what_for, product = kwargs.values()
+        # TO DO: wait for some unique element of the page to load
         time.sleep(self.IMAGE_DELAY)  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
@@ -83,7 +84,7 @@ class GfsLike:
         self.click_area(area)
         time.sleep(1)
 
-        cycles = self.get_all_cycles()
+        cycles = self.get_all_cycles(area)
 
         if 'area_cycle' not in self.plan.keys():
             self.plan['area_cycle'] = {}
@@ -92,8 +93,8 @@ class GfsLike:
 
         print(f"Set cycle {self.plan['area_cycle'][area]} for area {area}.")
 
-    @retry(AssertionError, tries=3, delay=1)
-    def get_all_cycles(self):
+    @retry(AssertionError, tries=3, delay=2)
+    def get_all_cycles(self, area='', product=''):
         # cycle is previous to the last one except for single element. Has to contain today's date
         if self.settings.sites['today_only']:
             date_today = date.today().strftime("%Y%m%d")
@@ -101,7 +102,7 @@ class GfsLike:
                                                         f"and (contains(@id, {date_today}))]")
         else:
             cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link')]")
-        assert len(cycles) > 0, 'No cycles found'
+        assert len(cycles) > 0, f'No cycles found {area}, {product}'
         return cycles
 
     def set_product_ids(self, area: str) -> None:

@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://mag.ncep.noaa.gov",
+    "test": "https://magtest.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -14,7 +14,7 @@
   },
 
   "driver": "Firefox",
-  "headless": true,
+  "headless": false,
 
   "plan": {
     "GFS": {
@@ -46,10 +46,13 @@
       "hour_count": 1
     },
     "PANELS": {
+      "area": {
+        "AFRICA": []
+      },
       "section": "Model Guidance",
       "model": "PANELS",
-      "area_count": 3,
-      "product_count": 1,
+      "area_count": 0,
+      "product_count": 0,
       "hour_count": 1
     },
     "NAM": {
