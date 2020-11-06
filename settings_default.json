@@ -88,8 +88,8 @@
     "HRW-ARW": {
       "section": "Model Guidance",
       "model": "HRW-ARW",
-      "area_count": 1,
-      "product_count": 3,
+      "area_count": 0,
+      "product_count": 1,
       "hour_count": 1
     },
     "HRW-ARW2": {
