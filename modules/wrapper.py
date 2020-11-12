@@ -46,7 +46,7 @@ class Wrapper:
     window_height_chrome = 1006
     window_height_firefox = 1080
 
-    def __init__(self, model, clear=True, filename='settings_default.json', headless=False):
+    def __init__(self, model, clear=True, filename='json\settings_default.json', headless=False):
         self.settings = Settings(filename)
         if model not in self.settings.plan.keys():
             print(f"Model name {model} not found. Exiting.")

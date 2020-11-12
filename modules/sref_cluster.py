@@ -11,14 +11,11 @@ from modules.gfs_like import GfsLike
 
 class SREFCluster(GfsLike):
 
-    def __init__(self, model, driver, handles, filename='settings_default.json'):
-        super().__init__(model, driver, handles, filename=filename)
-
     def set_hour_ids(self, area, product) -> None:
         super().set_hour_ids(area, product)
         for hour in self.plan[(area, product)]:
             self.click_hour(hour)
-            time.sleep(1)
+            time.sleep(self.settings.delays['common'])
             self.set_cluster_ids(area, product, hour)
 
     def set_cluster_ids(self, area, product, hour):
@@ -43,7 +40,7 @@ class SREFCluster(GfsLike):
             logging.error(f"Exception {type(e)} was thrown for {hour}, {what_for}, {product} while clicking hour")
 
         all_tabs_before = self.driver.window_handles
-        time.sleep(1)
+        time.sleep(self.settings.delays['common'])
         try:
             self.click_cluster(cluster)
         except Exception as e:
@@ -59,7 +56,7 @@ class SREFCluster(GfsLike):
 
     def make_screenshot(self, **kwargs):
         area, hour, what_for, product, cluster = kwargs.values()
-        time.sleep(self.IMAGE_DELAY)  # let the image load
+        time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                     what_for + '_' +
                                     self.plan['model'] + '_' +
@@ -68,13 +65,12 @@ class SREFCluster(GfsLike):
                                     hour + '_' +
                                     cluster.replace(' ', '-') + '.png')
 
-    def iterate_one_product(self, what_for, area, product, hours_just_set) -> None:
+    def iterate_one_product(self, what_for, area, product) -> None:
         for hour in self.plan[(area, product)]:
             for cluster in self.plan[(area, product, hour)]:
                 self.print_info_string(what_for, area, cluster, product, hour)
-                if not hours_just_set:
-                    self.click_product(product)
-                    self.click_cycle(area=area, product=product)
+                self.click_product(product)
+                self.click_cycle(area=area, product=product)
                 self.screenshot_one_hour(area=area, hour=hour, what_for=what_for, product=product,
                                          cluster=cluster)
 

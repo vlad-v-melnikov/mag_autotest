@@ -16,9 +16,7 @@ from modules.settings import Settings
 
 class GfsLike:
 
-    IMAGE_DELAY = 1
-
-    def __init__(self, model, driver, handles, filename='settings_default.json'):
+    def __init__(self, model, driver, handles, filename='json\settings_default.json'):
         self.settings = Settings(filename)
         self.plan = self.settings.plan[model]
         self.driver = driver
@@ -40,7 +38,7 @@ class GfsLike:
     def make_screenshot(self, **kwargs):
         area, hour, what_for, product = kwargs.values()
         # TO DO: wait for some unique element of the page to load
-        time.sleep(self.IMAGE_DELAY)  # let the image load
+        time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
                                      self.plan['model'] + '_' +
@@ -116,7 +114,7 @@ class GfsLike:
         self.driver.switch_to.window(self.handles[what_for])
         self.reset_to_base(what_for)
         self.click_area(area)
-        time.sleep(1)
+        time.sleep(self.settings.delays['common'])
         elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
         assert len(elements) > 0, "Empty products"
 
@@ -129,7 +127,7 @@ class GfsLike:
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
         self.click_cycle(area=area, product=product)
-        time.sleep(1)
+        time.sleep(self.settings.delays['common'])
         elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'fhr_id_')]")
         if 'hour_count' in self.plan.keys() \
                 and 0 < self.plan['hour_count'] <= len(elements):

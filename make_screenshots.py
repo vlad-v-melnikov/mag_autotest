@@ -47,7 +47,10 @@ def parse_arguments():
     args = parser.parse_args()
     model = args.model
     headless = args.headless
-    filename = args.settings if args.settings else 'settings_default.json'
+
+    filename = args.settings if args.settings else 'json/settings_default.json'
+    if filename[:5] != 'json/':
+        filename = 'json/' + filename
 
     if args.area is not None or args.delay is not None:
         settings = Settings(filename)

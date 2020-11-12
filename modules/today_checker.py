@@ -9,8 +9,8 @@ class TodayChecker:
     cycles_test = {}
     cycles_prod = {}
 
-    def __init__(self, driver, handles):
-        self.settings = Settings()
+    def __init__(self, driver, handles, filename='json/settings_check_today.json'):
+        self.settings = Settings(filename)
         self.models = self.settings.plan
         self.driver = driver
         self.handles = handles

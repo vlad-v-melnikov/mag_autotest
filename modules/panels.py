@@ -6,15 +6,12 @@ from modules.gfs_like import GfsLike
 
 class Panels(GfsLike):
 
-    # def __init__(self, model, driver, handles, filename='settings_default.json'):
-    #     super().__init__(model, driver, handles, filename)
-
     def iterate_products(self, what_for, area):
         hours_just_set = False
         for product in self.plan['area'][area]:
             if (area, product) not in self.plan.keys():
                 self.click_product(product)
-                time.sleep(1)
+                time.sleep(self.settings.delays['common'])
                 self.set_cycle_id_per_product(area, product)
                 self.set_hour_ids(area, product)
             self.iterate_one_product(what_for, area, product)
@@ -22,7 +19,7 @@ class Panels(GfsLike):
     def set_cycle_id_per_product(self, area, product):
         # no manual setting of cycles for panels
         self.click_product(product)
-        time.sleep(1)
+        time.sleep(self.settings.delays['common'])
         cycles = self.get_all_cycles(area, product)
         self.plan[('cycle', area, product)] = self.find_cycle(cycles)
 
@@ -31,7 +28,7 @@ class Panels(GfsLike):
 
     def click_cycle(self, **kwargs):
         area, product = kwargs.values()
-        time.sleep(1)
+        time.sleep(self.settings.delays['common'])
         try:
             self.hover_and_click(self.plan[('cycle', area, product)])
         except Exception as e:
@@ -42,7 +39,7 @@ class Panels(GfsLike):
         for hour in self.plan[(area, product)]:
             self.print_info_string(what_for, area, self.plan[('cycle', area, product)], product, hour)
             self.click_product(product)
-            time.sleep(1)
+            time.sleep(self.settings.delays['common'])
             self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
 

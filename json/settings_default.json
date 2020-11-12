@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://mag.ncep.noaa.gov",
+    "test": "https://magtest.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -26,7 +26,7 @@
       "section": "Model Guidance",
       "model": "GEFS-SPAG",
       "area_count": 1,
-      "product_count": 0,
+      "product_count": 1,
       "hour_count": 1,
       "area": {
         "EUROPE": []
@@ -42,8 +42,8 @@
     "NAEFS": {
       "section": "Model Guidance",
       "model": "NAEFS",
-      "area_count": 0,
-      "product_count": 1,
+      "area_count": 1,
+      "product_count": 2,
       "hour_count": 1
     },
     "PANELS": {
@@ -161,6 +161,8 @@
     }
   },
   "delays": {
-    "hover_and_click": 1
+    "hover_and_click": 0.5,
+    "common": 0.5,
+    "image": 1
   }
 }

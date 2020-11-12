@@ -3,7 +3,7 @@ from pprint import pprint
 
 
 class SettingsCompare:
-    def __init__(self, filename='settings_compare.json'):
+    def __init__(self, filename='json/settings_compare.json'):
 
         with open(filename) as json_file:
             self.settings = json.load(json_file)
