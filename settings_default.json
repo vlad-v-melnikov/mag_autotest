@@ -1,7 +1,7 @@
 {
   "sites": {
-    "test": "https://magtest.ncep.noaa.gov",
-    "prod": "https://magtest.ncep.noaa.gov",
+    "test": "https://mag.ncep.noaa.gov",
+    "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
     "products_from": "prod",

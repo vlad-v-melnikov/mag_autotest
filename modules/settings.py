@@ -13,7 +13,6 @@ class Settings:
         self.driver = self.settings['driver']
         self.headless = self.settings['headless']
         self.plan = self.settings['plan']
-        self.compare = self.settings['compare']
         self.delays = self.settings['delays']
 
     def save(self):
@@ -22,7 +21,6 @@ class Settings:
             'driver': self.driver,
             'headless': self.headless,
             'plan': self.plan,
-            'compare': self.compare,
             'delays': self.delays
         }
         with open(self.filename, 'w') as json_file:
@@ -34,7 +32,6 @@ def main():
 
     pprint(settings.sites)
     pprint(settings.driver)
-    pprint(settings.compare)
     pprint(settings.plan)
 
 
