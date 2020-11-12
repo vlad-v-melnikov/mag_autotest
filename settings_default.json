@@ -26,8 +26,11 @@
       "section": "Model Guidance",
       "model": "GEFS-SPAG",
       "area_count": 1,
-      "product_count": 1,
-      "hour_count": 1
+      "product_count": 0,
+      "hour_count": 1,
+      "area": {
+        "EUROPE": []
+      }
     },
     "GEFS-MEAN-SPRD": {
       "section": "Model Guidance",

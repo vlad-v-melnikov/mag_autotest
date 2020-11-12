@@ -4,5 +4,6 @@ __pycache__/
 /screenshots/
 /logs/
 /keep/
+/demos/
 
 *.log
