@@ -45,7 +45,7 @@ def parse_arguments():
     parser.add_argument('-d', '--delay', type=float,
                         help="Delay for clicking links")
     args = parser.parse_args()
-    model = args.model
+    model = args.model.upper()
     headless = args.headless
 
     filename = args.settings if args.settings else 'json/settings_default.json'
