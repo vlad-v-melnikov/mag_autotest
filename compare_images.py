@@ -24,6 +24,7 @@ class TestCompareImages(unittest.TestCase):
         prod_screens = glob.glob('screenshots/prod_*.png')
         test_screens = glob.glob('screenshots/test_*.png')
         print(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
+        logging.info(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
 
         try:
             self.assertNotEqual(len(test_screens), 0,

@@ -52,6 +52,7 @@ class Panels(GfsLike):
         for area in self.plan['area'].keys():
             counter += 1
             print(f"Area {counter} out of {total}:")
+            logging.info(f"Area {counter} out of {total}:")
             self.set_product_ids(area)
 
 

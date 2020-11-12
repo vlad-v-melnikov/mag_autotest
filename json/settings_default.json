@@ -49,8 +49,8 @@
     "PANELS": {
       "section": "Model Guidance",
       "model": "PANELS",
-      "area_count": 0,
-      "product_count": 0,
+      "area_count": 3,
+      "product_count": 2,
       "hour_count": 1
     },
     "NAM": {

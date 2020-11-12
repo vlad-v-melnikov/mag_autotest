@@ -50,9 +50,11 @@ class GfsLike:
         what_for = self.settings.sites['area_from']
 
         print(f"Setting areas for {self.plan['model']} from {what_for}...", end=' ')
+        logging.info(f"Setting areas for {self.plan['model']} from {what_for}...")
 
         if 'area' in self.plan.keys() and len(self.plan['area']) > 0:
             print(f"{len(self.plan['area'])} areas prescribed in settings file. Done.")
+            logging.info(f"{len(self.plan['area'])} areas prescribed in settings file. Done.")
             return
 
         self.driver.switch_to.window(self.handles[what_for])
@@ -68,12 +70,15 @@ class GfsLike:
             self.plan['area'][area] = []
 
         print(f"{len(elements)} area(s) chosen randomly.")
+        logging.info(f"{len(elements)} area(s) chosen randomly.")
 
     def set_cycle_id(self, area) -> None:
         print(f"Setting cycle for {area}...", end=' ')
+        logging.info(f"Setting cycle for {area}...")
         if 'area_cycle' in self.plan.keys() \
                 and area in self.plan['area_cycle'].keys():
             print("Set by prescribed cycle.")
+            logging.info("Set by prescribed cycle.")
             return
 
         what_for = self.settings.sites['cycle_from']
@@ -89,6 +94,7 @@ class GfsLike:
             else cycles[0].get_attribute('id')
 
         print(f"Set cycle {self.plan['area_cycle'][area]} for area {area}.")
+        logging.info(f"Set cycle {self.plan['area_cycle'][area]} for area {area}.")
 
     @retry(AssertionError, tries=3, delay=2)
     def get_all_cycles(self, area='', product=''):
@@ -106,9 +112,11 @@ class GfsLike:
         what_for = self.settings.sites['products_from']
 
         print(f"Setting products for {area} from {what_for}...", end=' ')
+        logging.info(f"Setting products for {area} from {what_for}...")
 
         if len(self.plan['area'][area]) > 0:
             print("Prescribed in settings.")
+            logging.info("Prescribed in settings.")
             return
 
         self.driver.switch_to.window(self.handles[what_for])
@@ -123,6 +131,7 @@ class GfsLike:
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area] = elements
         print(f"{len(elements)} product(s) set randomly.")
+        logging.info(f"{len(elements)} product(s) set randomly.")
 
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)
@@ -211,17 +220,15 @@ class GfsLike:
         info_str = f"{self.counter} out of {self.calc_total()}: " \
                    + f"Processing {output}... "
         print(info_str)
-        # print(info_str, end=(' ' * 50))
-        # if self.counter < self.calc_total():
-        #     print('\r', end='')
-        # else:
-        #     print('\n', end='')
+        logging.info(info_str)
 
     def setup_page(self, what_for) -> None:
         print(f"Setting up page for {what_for}...", end=' ')
+        logging.info(f"Setting up page for {what_for}...")
         self.switch_to_window(what_for)
         self.reset_to_base(what_for)
         print("Done.")
+        logging.info("Done.")
 
     def iterate_products(self, what_for, area):
         for product in self.plan['area'][area]:
@@ -256,6 +263,7 @@ class GfsLike:
         for area in self.plan['area'].keys():
             counter += 1
             print(f"Area {counter} out of {total}:")
+            logging.info(f"Area {counter} out of {total}:")
             self.set_product_ids(area)
             self.set_cycle_id(area)
 
@@ -268,6 +276,7 @@ class GfsLike:
 
         self.iterate_what_for_areas()
         print("Processing complete.")
+        logging.info("Processing complete.")
 
     def calc_total(self):
         total_products = 0

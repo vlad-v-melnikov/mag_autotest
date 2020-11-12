@@ -19,7 +19,9 @@ def parse_arguments():
     parser.add_argument('-m', '--model',
                         help="Model name which screenshots should be removed")
     args = parser.parse_args()
-    return args.model.upper()
+    if args.model is not None:
+        args.model = args.model.upper()
+    return args.model
 
 
 if __name__ == '__main__':

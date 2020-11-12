@@ -1,7 +1,6 @@
 import glob
 import logging
 import os
-import sys
 from retry import retry
 from datetime import datetime
 import sys
@@ -22,6 +21,7 @@ def clear_screenshots(model):
         os.unlink(f)
     if len(files) > 0:
         print("Cleared previous screenshots for", model)
+        logging.info("Cleared previous screenshots for" + model)
 
 
 def log_config():
@@ -48,19 +48,22 @@ class Wrapper:
 
     def __init__(self, model, clear=True, filename='json\settings_default.json', headless=False):
         self.settings = Settings(filename)
+        log_config()
         if model not in self.settings.plan.keys():
             print(f"Model name {model} not found. Exiting.")
+            logging.info(f"Model name {model} not found. Exiting.")
             sys.exit(0)
         if self.settings.driver not in self.driver.keys():
             print("Unsupported web driver. Exiting.")
+            logging.info("Unsupported web driver. Exiting.")
             sys.exit(0)
 
         self.make_dirs_if_none()
-        log_config()
         if clear:
             clear_screenshots(model)
 
         print("Setting up web driver...", end=' ')
+        logging.info("Setting up web driver...")
         options = self.driver_options[self.settings.driver]()
         if headless:
             self.settings.headless = headless
@@ -75,6 +78,7 @@ class Wrapper:
         if not self.settings.headless:
             self.driver.maximize_window()
         print("Done.")
+        logging.info("Done.")
 
         try:
             self.open_test_site()
@@ -85,28 +89,36 @@ class Wrapper:
     def make_dirs_if_none(self):
         if not os.path.isdir('./screenshots'):
             print("Making directory for screenshots")
+            logging.info("Making directory for screenshots")
             os.mkdir('./screenshots')
         if not os.path.isdir('./logs'):
             print("Making directory for logs")
+            logging.info("Making directory for logs")
             os.mkdir('./logs')
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_test_site(self):
         print(f"Opening test site {self.settings.sites['test']}...", end=' ')
+        logging.info(f"Opening test site {self.settings.sites['test']}...")
         self.driver.get(self.settings.sites['test'])
         self.handles['test'] = self.driver.window_handles[0]
         print("Done.")
+        logging.info("Done.")
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_prod_site(self):
         print(f"Opening prod site {self.settings.sites['prod']}...", end=' ')
+        logging.info(f"Opening prod site {self.settings.sites['prod']}...")
         self.driver.execute_script(f"window.open('{self.settings.sites['prod']}', 'new window')")
         self.handles['prod'] = self.driver.window_handles[1]
         print("Done.")
+        logging.info("Done.")
 
     def tear_down(self):
         print("Closing sites...", end=' ')
+        logging.info("Closing sites...")
         for handle in self.handles.values():
             self.driver.switch_to.window(handle)
             self.driver.close()
         print("Done.")
+        logging.info("Done.")

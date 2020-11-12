@@ -42,8 +42,7 @@ def parse_arguments():
                         action="store_true")
     parser.add_argument('-a', '--area', nargs='+',
                         help="Areas to crawl. Divide with space or comma and space.")
-    parser.add_argument('-d', '--delay', type=float,
-                        help="Delay for clicking links")
+
     args = parser.parse_args()
     model = args.model.upper()
     headless = args.headless
@@ -52,16 +51,13 @@ def parse_arguments():
     if filename[:5] != 'json/':
         filename = 'json/' + filename
 
-    if args.area is not None or args.delay is not None:
+    if args.area is not None:
         settings = Settings(filename)
 
         if args.area is not None:
             settings.plan[model]['area'] = {}
             for area_name in args.area:
                 settings.plan[model]['area'][area_name.replace(',', '').upper()] = []
-
-        if args.delay is not None:
-            settings.delays['hover_and_click'] = args.delay
 
         settings.save()
 
