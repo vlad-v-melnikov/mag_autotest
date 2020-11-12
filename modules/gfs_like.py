@@ -37,7 +37,6 @@ class GfsLike:
 
     def make_screenshot(self, **kwargs):
         area, hour, what_for, product = kwargs.values()
-        # TO DO: wait for some unique element of the page to load
         time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
@@ -59,18 +58,26 @@ class GfsLike:
 
         self.driver.switch_to.window(self.handles[what_for])
         self.click_model()
-        elements = self.driver.find_elements_by_xpath("//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
+        elements = self.get_all_area_ids()
         assert len(elements) > 0, 'No areas found'
 
         if 'area_count' in self.plan.keys() and 0 < self.plan['area_count'] <= len(elements):
             elements = random.sample(elements, self.plan['area_count'])
         self.plan['area'] = {}
         for element in elements:
-            area = element.get_attribute('class')
+            area = self.process_area(element)
             self.plan['area'][area] = []
 
         print(f"{len(elements)} area(s) chosen randomly.")
         logging.info(f"{len(elements)} area(s) chosen randomly.")
+
+    def process_area(self, element):
+        return element.get_attribute('class')
+
+    def get_all_area_ids(self):
+        elements = self.driver.find_elements_by_xpath(
+            "//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
+        return elements
 
     def set_cycle_id(self, area) -> None:
         print(f"Setting cycle for {area}...", end=' ')
@@ -123,7 +130,7 @@ class GfsLike:
         self.reset_to_base(what_for)
         self.click_area(area)
         time.sleep(self.settings.delays['common'])
-        elements = [elem.get_attribute('id') for elem in self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
+        elements = self.get_all_product_ids()
         assert len(elements) > 0, "Empty products"
 
         if 'product_count' in self.plan.keys() \
@@ -132,6 +139,11 @@ class GfsLike:
         self.plan['area'][area] = elements
         print(f"{len(elements)} product(s) set randomly.")
         logging.info(f"{len(elements)} product(s) set randomly.")
+
+    def get_all_product_ids(self):
+        elements = [elem.get_attribute('id') for elem in
+                    self.driver.find_elements_by_xpath("//a[contains(@class, 'params_link')]")]
+        return elements
 
     def set_hour_ids(self, area, product) -> None:
         self.click_product(product)

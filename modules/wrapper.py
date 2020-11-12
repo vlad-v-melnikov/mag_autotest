@@ -4,6 +4,7 @@ import os
 from retry import retry
 from datetime import datetime
 import sys
+import time
 
 # selenium
 from selenium import webdriver
@@ -47,6 +48,7 @@ class Wrapper:
     window_height_firefox = 1080
 
     def __init__(self, model, clear=True, filename='json\settings_default.json', headless=False):
+        self.start_time = time.time()
         self.settings = Settings(filename)
         log_config()
         if model not in self.settings.plan.keys():
@@ -122,3 +124,5 @@ class Wrapper:
             self.driver.close()
         print("Done.")
         logging.info("Done.")
+        print(f"Screenshots taken. Running time: {(time.time() - self.start_time):.2f} seconds.")
+        logging.info(f"Screenshots taken. Running time: {(time.time() - self.start_time):.2f} seconds.")

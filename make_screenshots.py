@@ -4,18 +4,19 @@ from modules.gfs_like import GfsLike
 from modules.sref_cluster import SREFCluster
 from modules.panels import Panels
 from modules.storm_tracks import StormTracks
+from modules.uair import Uair
 import argparse
-import time
+
 
 CLASS_MAP = {
         'PANELS': Panels,
         'SREF-CLUSTER': SREFCluster,
         'STORM-TRACKS': StormTracks,
+        'UAIR': Uair,
     }
 
 
 def take_screenshots():
-    start_time = time.time()
     model, filename, headless = parse_arguments()
     print(f"Screenshots for {model}.")
     wrapper = Wrapper(model=model, filename=filename, headless=headless)
@@ -28,7 +29,6 @@ def take_screenshots():
     single_model.make_now()
 
     wrapper.tear_down()
-    print(f"Screenshots taken. Running time: {(time.time() - start_time):.2f} seconds.")
 
 
 def parse_arguments():

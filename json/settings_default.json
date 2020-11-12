@@ -158,6 +158,13 @@
       "area_count": 0,
       "product_count": 0,
       "hour_count": 1
+    },
+    "UAIR": {
+      "section": "Observations and Analysis",
+      "model": "UAIR",
+      "area_count": 1,
+      "product_count": 1,
+      "hour_count": 1
     }
   },
   "delays": {
