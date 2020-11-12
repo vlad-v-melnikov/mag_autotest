@@ -2,7 +2,7 @@ import unittest
 from PIL import Image, ImageChops
 import glob
 import logging
-from modules.settings import Settings
+from modules.settings_compare import SettingsCompare
 from datetime import datetime
 
 class TestCompareImages(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestCompareImages(unittest.TestCase):
     X_RIGHT_LIMITER_SINGLE = 50
 
     def setUp(self):
-        self.settings = Settings()
+        self.settings = SettingsCompare()
         self.COLOR_SINGLE = self.settings.compare['box_color']
         self.COLOR_FOUR = self.settings.compare['box_color_four']
 

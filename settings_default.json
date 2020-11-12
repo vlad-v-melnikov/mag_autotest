@@ -157,32 +157,6 @@
       "hour_count": 1
     }
   },
-  "compare": {
-    "box_color": [
-      102,
-      102,
-      102
-    ],
-    "box_color_four": {
-      "Chrome": [
-        0,
-        0,
-        0
-      ],
-      "Firefox": [
-        76,
-        76,
-        76
-      ]
-    },
-    "padding_offset": [
-      70,
-      70,
-      50,
-      120
-    ],
-    "use_padding": false
-  },
   "delays": {
     "hover_and_click": 1
   }
