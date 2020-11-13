@@ -10,7 +10,7 @@
       "test",
       "prod"
     ],
-    "today_only": true
+    "today_only": false
   },
   "driver": "Firefox",
   "headless": false,
@@ -18,8 +18,8 @@
     "GFS": {
       "section": "Model Guidance",
       "model": "GFS",
-      "area_count": 1,
-      "product_count": 1,
+      "area_count": 2,
+      "product_count": 2,
       "hour_count": 1
     },
     "GEFS-SPAG": {
@@ -56,8 +56,8 @@
     "NAM": {
       "section": "Model Guidance",
       "model": "NAM",
-      "area_count": 1,
-      "product_count": 1,
+      "area_count": 2,
+      "product_count": 2,
       "hour_count": 1
     },
     "NAM-HIRES": {
