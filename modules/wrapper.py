@@ -16,7 +16,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from modules.settings import Settings
 
 
-def clear_screenshots(model):
+def clear_screenshots(model=''):
     files = glob.glob(f'./screenshots/*{model}*.png')
     for f in files:
         os.unlink(f)

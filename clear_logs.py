@@ -2,7 +2,7 @@ from glob import glob
 import os
 
 
-def clear_screenshots():
+def clear_logs():
     files = glob(f'./logs/*.log')
     for f in files:
         os.unlink(f)
@@ -11,4 +11,4 @@ def clear_screenshots():
 
 
 if __name__ == '__main__':
-    clear_screenshots()
+    clear_logs()
