@@ -68,8 +68,8 @@ class GfsLike:
             area = self.process_area(element)
             self.plan['area'][area] = []
 
-        print(f"{len(elements)} area(s) chosen randomly.")
-        logging.info(f"{len(elements)} area(s) chosen randomly.")
+        print(f"{len(elements)} area(s) chosen.")
+        logging.info(f"{len(elements)} area(s) chosen.")
 
     def process_area(self, element):
         return element.get_attribute('class')
@@ -137,8 +137,8 @@ class GfsLike:
                 and 0 < self.plan['product_count'] <= len(elements):
             elements = random.sample(elements, self.plan['product_count'])
         self.plan['area'][area] = elements
-        print(f"{len(elements)} product(s) set randomly.")
-        logging.info(f"{len(elements)} product(s) set randomly.")
+        print(f"{len(elements)} product(s) set.")
+        logging.info(f"{len(elements)} product(s) set.")
 
     def get_all_product_ids(self):
         elements = [elem.get_attribute('id') for elem in
