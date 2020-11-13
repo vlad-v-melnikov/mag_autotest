@@ -10,7 +10,7 @@
       "test",
       "prod"
     ],
-    "today_only": false
+    "today_only": true
   },
   "driver": "Firefox",
   "headless": false,
@@ -163,8 +163,7 @@
       "section": "Observations and Analysis",
       "model": "UAIR",
       "area_count": 1,
-      "product_count": 1,
-      "hour_count": 1
+      "product_count": 0
     }
   },
   "delays": {

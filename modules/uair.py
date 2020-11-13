@@ -35,6 +35,14 @@ class Uair(GfsLike):
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {product} while clicking product")
 
+    def click_cycle(self, **kwargs):
+        area = next(iter(self.plan['area'].keys()))  # first area
+        cycle = self.plan['area_cycle'][area]
+        try:
+            self.hover_and_click(cycle)
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown for {cycle} while clicking cycle")
+
     def process_area(self, element):
         return element.text
 
@@ -45,7 +53,8 @@ class Uair(GfsLike):
 
     def get_all_product_ids(self):
         elements = [elem.text for elem in
-                    self.driver.find_elements_by_class_name('bluehover')]
+                    self.driver.find_elements_by_xpath(
+                        "//a[contains(@class, 'bluehover') and not(contains(@class, 'cycle_link'))]")]
         return elements
 
     def set_common_for_all_areas(self):
@@ -69,7 +78,8 @@ class Uair(GfsLike):
             self.iterate_one_product(what_for, area, product)
 
     def iterate_one_product(self, what_for, area, product) -> None:
-        self.print_info_string(what_for, area, self.plan['area_cycle'][area], product)
+        first_area = next(iter(self.plan['area'].keys()))
+        self.print_info_string(what_for, area, self.plan['area_cycle'][first_area], product)
         self.click_cycle(area=area, product=product)
         self.click_product(product)
         self.make_screenshot(area=area, what_for=what_for, product=product)
