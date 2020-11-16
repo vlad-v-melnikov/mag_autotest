@@ -164,6 +164,12 @@
       "model": "UAIR",
       "area_count": 1,
       "product_count": 0
+    },
+    "RTMA": {
+      "section": "Observations and Analysis",
+      "model": "RTMA",
+      "area_count": 1,
+      "product_count": 0
     }
   },
   "delays": {

@@ -13,6 +13,7 @@ CLASS_MAP = {
         'SREF-CLUSTER': SREFCluster,
         'STORM-TRACKS': StormTracks,
         'UAIR': Uair,
+        'RTMA': Uair,
     }
 
 

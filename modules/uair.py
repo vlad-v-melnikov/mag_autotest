@@ -87,6 +87,7 @@ class Uair(GfsLike):
 
     def make_screenshot(self, **kwargs):
         area, what_for, product = kwargs.values()
+        self.wait_image_page_load()
         time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
