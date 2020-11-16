@@ -28,7 +28,8 @@ class SREFCluster(GfsLike):
     @retry(TimeoutException, tries=3, delay=1)
     def click_cluster(self, cluster):
         try:
-            self.hover_and_click(cluster, 'link_text')
+            print("Clicking cluster", cluster)
+            self.hover_and_click(cluster, 'link_text', force=True)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {cluster} while clicking this cluster")
 

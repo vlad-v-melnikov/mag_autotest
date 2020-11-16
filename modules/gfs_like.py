@@ -175,12 +175,13 @@ class GfsLike:
 
     def wait_image_page_load(self):
         WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Page Help')]")))
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), \"Page Help\")]")))
 
     def hover_and_click(self, identifier, type='id', force=False):
         if type == 'link_text':
+            xpath_str = f"//a[contains(text(), \"{identifier}\")]"
             element = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, f"//a[contains(text(), {identifier})]")))
+                EC.element_to_be_clickable((By.XPATH, xpath_str)))
         else:
             element = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.ID, identifier)))
