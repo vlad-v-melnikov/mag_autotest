@@ -57,13 +57,13 @@ class Uair(GfsLike):
                         "//a[contains(@class, 'bluehover') and not(contains(@class, 'cycle_link'))]")]
         return elements
 
-    def set_common_for_all_areas(self):
+    def set_common_for_all(self):
         self.set_area_ids()
         area = next(iter(self.plan['area'].keys()))
         self.set_product_ids(area)
         self.set_cycle_id(area)
 
-    def set_for_each_area(self):
+    def set_for_each(self):
         return
 
     def calc_total(self):

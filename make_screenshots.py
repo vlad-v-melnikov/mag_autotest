@@ -6,6 +6,7 @@ from modules.panels import Panels
 from modules.storm_tracks import StormTracks
 from modules.uair import Uair
 from modules.skewt import Skewt
+from modules.trop import Trop
 import argparse
 
 
@@ -16,6 +17,7 @@ CLASS_MAP = {
         'UAIR': Uair,
         'RTMA': Uair,
         'SKEWT': Skewt,
+        'TROP': Trop,
     }
 
 

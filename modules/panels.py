@@ -43,10 +43,10 @@ class Panels(GfsLike):
             self.click_cycle(area=area, product=product)
             self.screenshot_one_hour(name=area, hour=hour, what_for=what_for, product=product)
 
-    def set_common_for_all_areas(self):
+    def set_common_for_all(self):
         self.set_area_ids()
 
-    def set_for_each_area(self):
+    def set_for_each(self):
         counter = 0
         total = len(self.plan['area'].keys())
         for area in self.plan['area'].keys():

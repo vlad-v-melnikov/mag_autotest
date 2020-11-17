@@ -15,6 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.settings import Settings
 
+
 class GfsLike:
 
     def __init__(self, model, driver, handles, filename='json\settings_default.json'):
@@ -266,7 +267,7 @@ class GfsLike:
             self.driver.get(url)
         self.click_model()
 
-    def iterate_what_for_areas(self):
+    def iterate_what_for(self):
         for what_for in self.settings.sites['order_of_iteration']:
             self.switch_to_window(what_for)
             for area in self.plan['area'].keys():
@@ -274,10 +275,10 @@ class GfsLike:
                 self.click_area(area)
                 self.iterate_products(what_for, area)
 
-    def set_common_for_all_areas(self):
+    def set_common_for_all(self):
         self.set_area_ids()
 
-    def set_for_each_area(self):
+    def set_for_each(self):
         counter = 0
         total = len(self.plan['area'].keys())
         for area in self.plan['area'].keys():
@@ -291,10 +292,10 @@ class GfsLike:
         for what_for in self.handles.keys():
             self.setup_page(what_for)
 
-        self.set_common_for_all_areas()
-        self.set_for_each_area()
+        self.set_common_for_all()
+        self.set_for_each()
 
-        self.iterate_what_for_areas()
+        self.iterate_what_for()
         print("Processing complete.")
         logging.info("Processing complete.")
 

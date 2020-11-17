@@ -6,7 +6,7 @@ import random
 
 class Skewt (Uair):
 
-    def set_common_for_all_areas(self):
+    def set_common_for_all(self):
         self.set_area_ids()
         area = next(iter(self.plan['area'].keys()))
         self.set_cycle_id(area)
@@ -74,7 +74,7 @@ class Skewt (Uair):
         self.make_screenshot(area=area, what_for=what_for, product=station)
         self.click_back()
 
-    def iterate_what_for_areas(self):
+    def iterate_what_for(self):
         for what_for in self.settings.sites['order_of_iteration']:
             self.switch_to_window(what_for)
             for area in self.plan['area'].keys():

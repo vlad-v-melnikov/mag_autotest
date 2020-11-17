@@ -6,6 +6,7 @@
     "cycle_from": "test",
     "products_from": "prod",
     "cluster_from": "prod",
+    "storms_from": "test",
     "order_of_iteration": [
       "test",
       "prod"
@@ -176,6 +177,14 @@
       "model": "SKEWT",
       "area_count": 0,
       "station_count": 2
+    },
+    "TROP": {
+      "section": "Tropical Guidance",
+      "model": "TROP",
+      "storm_count": 0,
+      "type_count": 0,
+      "product_count": 1,
+      "hour_count": 1
     }
   },
   "delays": {
