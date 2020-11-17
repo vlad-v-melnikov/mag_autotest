@@ -9,7 +9,8 @@ class TodayChecker:
     cycles_test = {}
     cycles_prod = {}
 
-    def __init__(self, driver, handles, filename='json/settings_check_today.json'):
+    def __init__(self, driver, handles, filename="json/settings_check_today.json"):
+        self.settings_file = filename
         self.settings = Settings(filename)
         self.models = self.settings.plan
         self.driver = driver
@@ -51,7 +52,7 @@ class TodayChecker:
                 continue
 
             counter += 1
-            dude = GfsLike(model, self.driver, self.handles)
+            dude = GfsLike(model, self.driver, self.handles, filename=self.settings_file)
             if first:
                 dude.setup_page(what_for)
                 first = False
@@ -65,4 +66,3 @@ class TodayChecker:
         print()
         self.has_today()
 
-# for now, it only finds if there is a cycle for today for each of the models
