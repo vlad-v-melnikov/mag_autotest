@@ -64,7 +64,7 @@ class Uair(GfsLike):
         self.set_cycle_id(area)
 
     def set_for_each_area(self):
-        pass
+        return
 
     def calc_total(self):
         total_products = 0

@@ -10,7 +10,7 @@
       "test",
       "prod"
     ],
-    "today_only": false
+    "today_only": true
   },
   "driver": "Firefox",
   "headless": false,
@@ -170,6 +170,12 @@
       "model": "RTMA",
       "area_count": 1,
       "product_count": 0
+    },
+    "SKEWT": {
+      "section": "Observations and Analysis",
+      "model": "SKEWT",
+      "area_count": 0,
+      "station_count": 2
     }
   },
   "delays": {

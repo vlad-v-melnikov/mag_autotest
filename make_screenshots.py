@@ -5,6 +5,7 @@ from modules.sref_cluster import SREFCluster
 from modules.panels import Panels
 from modules.storm_tracks import StormTracks
 from modules.uair import Uair
+from modules.skewt import Skewt
 import argparse
 
 
@@ -14,6 +15,7 @@ CLASS_MAP = {
         'STORM-TRACKS': StormTracks,
         'UAIR': Uair,
         'RTMA': Uair,
+        'SKEWT': Skewt,
     }
 
 

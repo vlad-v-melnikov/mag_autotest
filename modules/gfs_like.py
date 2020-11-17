@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import MoveTargetOutOfBoundsException
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -97,11 +98,14 @@ class GfsLike:
 
         if 'area_cycle' not in self.plan.keys():
             self.plan['area_cycle'] = {}
-        self.plan['area_cycle'][area] = cycles[1].get_attribute('id') if len(cycles) > 1 \
-            else cycles[0].get_attribute('id')
+        self.save_cycle_to_plan(area, cycles)
 
         print(f"Set cycle {self.plan['area_cycle'][area]} for area {area}.")
         logging.info(f"Set cycle {self.plan['area_cycle'][area]} for area {area}.")
+
+    def save_cycle_to_plan(self, area, cycles):
+        self.plan['area_cycle'][area] = cycles[1].get_attribute('id') if len(cycles) > 1 \
+            else cycles[0].get_attribute('id')
 
     @retry(AssertionError, tries=3, delay=2)
     def get_all_cycles(self, area='', product=''):
@@ -189,7 +193,10 @@ class GfsLike:
         color = Color.from_string(element.value_of_css_property('color')).hex
         if force or color == '#0000ff':  # blue, not selected
             action = ActionChains(self.driver)
-            action.move_to_element(element).perform()
+            try:
+                action.move_to_element(element).perform()
+            except MoveTargetOutOfBoundsException as e:
+                logging.error("Link to hover over is not in the screen. But I still can click it. Continuing.")
             time.sleep(self.settings.delays['hover_and_click'])
             element.click()
             time.sleep(self.settings.delays['hover_and_click'])
