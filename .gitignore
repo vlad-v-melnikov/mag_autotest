@@ -9,3 +9,5 @@ __pycache__/
 *.log
 /geckodriver.exe
 /chromedriver.exe
+/json/MAG133.json
+/json/MAG144.json
