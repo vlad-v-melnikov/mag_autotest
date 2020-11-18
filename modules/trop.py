@@ -89,19 +89,18 @@ class Trop(GfsLike):
         logging.info(f"Set cycle {self.plan['cycle']}.")
 
     def set_products_trop(self):
+        print(f"Setting products...", end=' ')
+        logging.info(f"Setting products from...")
+
         what_for = self.settings.sites['products_from']
+        self.driver.switch_to.window(self.handles[what_for])
+        self.click_cycle_trop()
 
-        print(f"Setting products from {what_for}...", end=' ')
-        logging.info(f"Setting products from {what_for}...")
-
-        #TO DO - continue tomorrow morning from here. Set same products for all storms
         first_storm = next(iter(self.plan['storm'].keys()))
-        if len(self.plan['storm'][first_storm]) > 0:
+        if len(self.plan['storm'][first_storm]['products']) > 0:
             print("Prescribed in settings.")
             logging.info("Prescribed in settings.")
             return
-
-        self.driver.switch_to.window(self.handles[what_for])
 
         elements = self.get_all_product_ids()
         assert len(elements) > 0, "Empty products"
@@ -113,6 +112,20 @@ class Trop(GfsLike):
             self.plan['storm'][storm]['products'] = elements
         print(f"{len(elements)} product(s) set.")
         logging.info(f"{len(elements)} product(s) set.")
+
+    def set_hours_trop(self):
+        self.click_product(self.get_first_product())
+        time.sleep(self.settings.delays['common'])
+
+        elements = self.driver.find_elements_by_xpath("//a[contains(@href, 'goToTropicalImage')]")
+        assert len(elements) > 0, 'Hours are empty'
+
+        if 'hour_count' in self.plan.keys() \
+                and 0 < self.plan['hour_count'] <= len(elements):
+            elements = random.sample(elements, self.plan['hour_count'])
+        hour_ids = [element.text for element in elements]
+        for storm in self.plan['storm'].keys():
+            self.plan['storm'][storm]['hours'] = hour_ids
 
     def get_all_types(self):
         elements = self.driver.find_elements_by_xpath(
@@ -139,14 +152,15 @@ class Trop(GfsLike):
 
     def go_one_level_down(self):
         first_storm = next(iter(self.plan['storm'].keys()))
-        self.click_storm(first_storm)
         first_type = self.plan['storm'][first_storm]['types'][0]
-        self.click_type(first_type)
+        for handle in self.handles.values():
+            self.driver.switch_to.window(handle)
+            self.click_storm(first_storm)
+            self.click_type(first_type)
 
     def get_first_product(self):
         first_storm = next(iter(self.plan['storm'].keys()))
         return self.plan['storm'][first_storm]['products'][0]
-
 
     def set_common_for_all(self):
         self.set_storms()
@@ -157,23 +171,51 @@ class Trop(GfsLike):
         self.go_one_level_down()
 
         self.set_cycle_trop()
-        self.click_cycle_trop()
         self.set_products_trop()
-        self.click_product(self.get_first_product())
-        # self.set_product_ids()
-        # self.set_hour_ids()
-
-        pprint(self.plan['storm'])
-        time.sleep(10)
+        self.set_hours_trop()
 
     def set_for_each(self):
         pass
 
+    def iterate_types(self, what_for, storm):
+        for type in self.plan['storm'][storm]['types']:
+            self.click_type(type)
+            self.iterate_one_type(what_for, storm, type)
+            self.click_back()
+
+    def click_hour(self, hour, force=False):
+        try:
+            self.hover_and_click(hour, type='link_text')
+        except Exception as e:
+            logging.error(f"Exception {type(e)} was thrown for {hour} while clicking hour")
+
+    def iterate_one_type(self, what_for, storm, type):
+        self.click_cycle_trop()
+        for product in self.plan['storm'][storm]['products']:
+            self.click_product(product)
+            for hour in self.plan['storm'][storm]['hours']:
+                self.print_info_string(what_for, storm, type, product, hour)
+                self.click_hour(hour)
+                self.screenshot_one_hour(name=f'{storm}_{type}', hour=hour, what_for=what_for, product=product)
+
+    def screenshot_one_hour(self, **kwargs) -> None:
+        name, hour, what_for, product = kwargs.values()
+        self.make_screenshot(area=name, hour=hour, what_for=what_for, product=product)
+        self.click_back()
+
+    def calc_total(self):
+        for_all_storms = 0
+        for storm in self.plan['storm'].keys():
+            types_no = len(self.plan['storm'][storm]['types'])
+            prod_no = len(self.plan['storm'][storm]['products'])
+            hours_no = len(self.plan['storm'][storm]['hours'])
+            for_all_storms += types_no * prod_no * hours_no
+        return self.get_site_count() * for_all_storms
+
     def iterate_what_for(self):
-        return
         for what_for in self.settings.sites['order_of_iteration']:
             self.switch_to_window(what_for)
-            for area in self.plan['area'].keys():
+            for storm in self.plan['storm'].keys():
                 self.reset_to_base(what_for)
-                self.click_area(area)
-                self.iterate_products(what_for, area)
+                self.click_storm(storm)
+                self.iterate_types(what_for, storm)
