@@ -1,5 +1,5 @@
-.idea/
-__pycache__/
+/.idea/
+/__pycache__/
 
 /screenshots/
 /logs/
@@ -11,3 +11,5 @@ __pycache__/
 /chromedriver.exe
 /json/MAG133.json
 /json/MAG144.json
+/dist/
+/check_today.spec

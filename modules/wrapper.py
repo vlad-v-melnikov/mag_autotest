@@ -25,10 +25,10 @@ def clear_screenshots(model=''):
         logging.info("Cleared previous screenshots for" + model)
 
 
-def log_config():
+def log_config(log_name='screenshot_maker'):
     now = datetime.now()
     log_time = now.strftime("%Y%m%d%H%M%S")
-    logging.basicConfig(filename=f'logs\screenshot_maker_{log_time}.log', format='%(asctime)s - %(levelname)s - %(message)s',
+    logging.basicConfig(filename=f'logs/{log_name}_{log_time}.log', format='%(asctime)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
 
 
@@ -47,10 +47,16 @@ class Wrapper:
     window_height_chrome = 1006
     window_height_firefox = 1080
 
-    def __init__(self, model, clear=True, filename='json\settings_default.json', headless=False):
+    def __init__(self,
+                 model,
+                 clear=True,
+                 filename='json\settings_default.json',
+                 headless=False,
+                 log_name='screenshot_maker'):
         self.start_time = time.time()
         self.settings = Settings(filename)
-        log_config()
+        self.make_dirs_if_none(log_name)
+        log_config(log_name)
         if model not in self.settings.plan.keys():
             print(f"Model name {model} not found. Exiting.")
             logging.info(f"Model name {model} not found. Exiting.")
@@ -60,7 +66,6 @@ class Wrapper:
             logging.info("Unsupported web driver. Exiting.")
             sys.exit(0)
 
-        self.make_dirs_if_none()
         if clear:
             clear_screenshots(model)
 
@@ -88,8 +93,8 @@ class Wrapper:
         except TimeoutException as e:
             logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
 
-    def make_dirs_if_none(self):
-        if not os.path.isdir('./screenshots'):
+    def make_dirs_if_none(self, log_name):
+        if log_name == 'screenshot_maker' and not os.path.isdir('./screenshots'):
             print("Making directory for screenshots")
             logging.info("Making directory for screenshots")
             os.mkdir('./screenshots')

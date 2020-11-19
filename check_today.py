@@ -8,7 +8,11 @@ def check_today():
     start_time = time()
     print(f"Checking if today cycles are present on test...")
 
-    wrapper = Wrapper('GFS', clear=False, headless=parse_arguments(), filename='json/settings_check_today.json')
+    wrapper = Wrapper('GFS',
+                      clear=False,
+                      headless=parse_arguments(),
+                      filename='json/settings_check_today.json',
+                      log_name='check_today')
     cycle_matcher = TodayChecker(driver=wrapper.driver, handles=wrapper.handles)
 
     cycle_matcher.check_today_now()
@@ -28,6 +32,3 @@ def parse_arguments() -> bool:
 
 if __name__ == "__main__":
     check_today()
-
-# To Do:
-#
