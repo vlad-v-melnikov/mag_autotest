@@ -98,6 +98,10 @@ class Wrapper:
             print("Making directory for screenshots")
             logging.info("Making directory for screenshots")
             os.mkdir('./screenshots')
+        if log_name == 'check_today' and not os.path.isdir('./reports'):
+            print("Making directory for reports")
+            logging.info("Making directory for reports")
+            os.mkdir('./reports')
         if not os.path.isdir('./logs'):
             print("Making directory for logs")
             logging.info("Making directory for logs")

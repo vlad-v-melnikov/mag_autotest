@@ -32,8 +32,17 @@ class TodayChecker:
             if date_today not in date_only:
                 no_today.append(model)
 
+        # print result
         print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
         pprint(no_today)
+
+        # save result
+        now = datetime.now()
+        report_time = now.strftime("%Y%m%d%H%M%S")
+        with open(f'reports/today_check_report_{report_time}', 'w') as report_file:
+            print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
+            pprint(no_today, stream=report_file)
+
 
     def find_area_id(self):
         element = self.driver.find_element_by_xpath(
