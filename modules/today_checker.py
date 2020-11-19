@@ -24,7 +24,7 @@ class TodayChecker:
         else:
             self.cycles_prod[dude.plan['model']] = [element.get_attribute('id') for element in elements]
 
-    def has_today(self):
+    def find_no_today(self):
         no_today = []
         date_today = date.today().strftime("%Y%m%d")
         for model, times in self.cycles_test.items():
@@ -32,14 +32,16 @@ class TodayChecker:
             if date_today not in date_only:
                 no_today.append(model)
 
-        # print result
+        return no_today
+
+    def print_results(self, no_today):
         print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
         pprint(no_today)
 
-        # save result
+    def save_results(self, no_today):
         now = datetime.now()
         report_time = now.strftime("%Y%m%d%H%M%S")
-        with open(f'reports/today_check_report_{report_time}', 'w') as report_file:
+        with open(f'reports/today_check_report_{report_time}.txt', 'w') as report_file:
             print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
             pprint(no_today, stream=report_file)
 
@@ -73,5 +75,7 @@ class TodayChecker:
             dude.click_back()
 
         print()
-        self.has_today()
+        results = self.find_no_today()
+        self.print_results(results)
+        self.save_results(results)
 
