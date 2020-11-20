@@ -1,5 +1,7 @@
 /.idea/
 /__pycache__/
+/modules/__pycache__/
+/tests/__pycache__/
 
 /screenshots/
 /logs/
@@ -15,3 +17,4 @@
 /check_today.spec
 /build/
 /reports/
+/json/trop.json
