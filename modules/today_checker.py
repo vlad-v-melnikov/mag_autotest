@@ -45,7 +45,6 @@ class TodayChecker:
             print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
             pprint(no_today, stream=report_file)
 
-
     def find_area_id(self):
         element = self.driver.find_element_by_xpath(
             "//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")

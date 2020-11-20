@@ -46,7 +46,6 @@ class GfsLike:
         new_pos = self.driver.get_window_position()
 
         old_dim, old_pos = self.change_dim_and_pos(new_dim, new_pos)
-        print("Before", self.driver.get_window_size(), self.driver.get_window_position())
         time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
@@ -55,7 +54,6 @@ class GfsLike:
                                      product + '_' +
                                      hour + '.png')
         self.change_dim_and_pos(old_dim, old_pos)
-        print("After", self.driver.get_window_size(), self.driver.get_window_position())
 
     def change_dim_and_pos(self, new_dim, new_pos):
         old_dim = self.driver.get_window_size()
