@@ -1,6 +1,7 @@
 import time
 import random
 import logging
+import sys
 from retry import retry
 from datetime import date
 
@@ -14,6 +15,7 @@ from selenium.webdriver.support.color import Color
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.settings import Settings
+import modules.dimensions as dim
 
 
 class GfsLike:
@@ -39,6 +41,12 @@ class GfsLike:
 
     def make_screenshot(self, **kwargs):
         area, hour, what_for, product = kwargs.values()
+        new_height = dim.WINDOW_HEIGHT_FIREFOX if self.settings.driver == "Firefox" else dim.WINDOW_HEIGHT_CHROME
+        new_dim = {'width': dim.WINDOW_WIDTH, 'height': new_height}
+        new_pos = self.driver.get_window_position()
+
+        old_dim, old_pos = self.change_dim_and_pos(new_dim, new_pos)
+        print("Before", self.driver.get_window_size(), self.driver.get_window_position())
         time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                      what_for + '_' +
@@ -46,6 +54,17 @@ class GfsLike:
                                      area + '_' +
                                      product + '_' +
                                      hour + '.png')
+        self.change_dim_and_pos(old_dim, old_pos)
+        print("After", self.driver.get_window_size(), self.driver.get_window_position())
+
+    def change_dim_and_pos(self, new_dim, new_pos):
+        old_dim = self.driver.get_window_size()
+        old_pos = self.driver.get_window_position()
+
+        self.driver.set_window_size(int(new_dim['width']), int(new_dim['height']))
+        self.driver.set_window_position(new_pos['x'], new_pos['y'])
+
+        return old_dim, old_pos
 
     def set_area_ids(self) -> None:
         what_for = self.settings.sites['area_from']

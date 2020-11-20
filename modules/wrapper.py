@@ -14,6 +14,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 # internal
 from modules.settings import Settings
+import modules.dimensions as dim
 
 
 def clear_screenshots(model=''):
@@ -42,10 +43,6 @@ class Wrapper:
         'Firefox': FirefoxOptions,
         'Chrome': ChromeOptions,
     }
-
-    window_width = 1920
-    window_height_chrome = 1006
-    window_height_firefox = 1080
 
     def __init__(self,
                  model,
@@ -76,14 +73,19 @@ class Wrapper:
             self.settings.headless = headless
         options.headless = self.settings.headless
         if self.settings.driver == "Chrome":
-            options.add_argument(f"--window-size={self.window_width},{self.window_height_chrome}")
+            options.add_argument(f"--window-size={dim.WINDOW_WIDTH},{dim.WINDOW_HEIGHT_CHROME}")
         else:
-            options.add_argument(f"--width={self.window_width}")
-            options.add_argument(f"--height={self.window_height_firefox}")
+            options.add_argument(f"--width={dim.WINDOW_WIDTH}")
+            options.add_argument(f"--height={dim.WINDOW_HEIGHT_FIREFOX}")
         self.driver = self.driver[self.settings.driver](options=options)
         self.driver.set_page_load_timeout(5)
-        if not self.settings.headless:
+
+        if sys.platform == 'linux' and not self.settings.headless:
+            new_height = dim.WINDOW_HEIGHT_FIREFOX if self.settings.driver == "Firefox" else dim.WINDOW_HEIGHT_CHROME
+            self.driver.set_window_size(dim.WINDOW_WIDTH, new_height)
+        if sys.platform != 'linux' and not self.settings.headless:
             self.driver.maximize_window()
+
         print("Done.")
         logging.info("Done.")
 

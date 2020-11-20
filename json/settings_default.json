@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://magtest.ncep.noaa.gov",
+    "test": "https://mag.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -57,7 +57,7 @@
     "NAM": {
       "section": "Model Guidance",
       "model": "NAM",
-      "area_count": 2,
+      "area_count": 1,
       "product_count": 2,
       "hour_count": 1
     },
