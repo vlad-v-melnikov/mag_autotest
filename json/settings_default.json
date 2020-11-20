@@ -175,8 +175,8 @@
     "SKEWT": {
       "section": "Observations and Analysis",
       "model": "SKEWT",
-      "area_count": 0,
-      "station_count": 2
+      "area_count": 1,
+      "station_count": 1
     },
     "TROP": {
       "section": "Tropical Guidance",

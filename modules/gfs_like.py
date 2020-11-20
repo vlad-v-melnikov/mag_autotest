@@ -129,8 +129,8 @@ class GfsLike:
         # cycle is previous to the last one except for single element. Has to contain today's date
         if self.settings.sites['today_only']:
             date_today = date.today().strftime("%Y%m%d")
-            cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link') "
-                                                        f"and (contains(@id, {date_today}))]")
+            xpath = f"//a[contains(@class, 'cycle_link') and contains(@id, '{date_today}')]"
+            cycles = self.driver.find_elements_by_xpath(xpath)
         else:
             cycles = self.driver.find_elements_by_xpath(f"//a[contains(@class, 'cycle_link')]")
         assert len(cycles) > 0, f'No cycles found {area}, {product}'

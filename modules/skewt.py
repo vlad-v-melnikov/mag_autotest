@@ -20,7 +20,7 @@ class Skewt (Uair):
         if self.settings.sites['today_only']:
             date_today = date.today().strftime("%Y%m%d")
             cycles = self.driver.find_elements_by_xpath(f"//a[contains(@href, 'skewt') "
-                                                        f"and (contains(@title, {date_today}))]")
+                                                        f"and (contains(@title, '{date_today}'))]")
         else:
             cycles = self.driver.find_elements_by_xpath(f"//a[contains(@href, 'skewt')]")
         assert len(cycles) > 0, f'No cycles found {area}, {product}'
