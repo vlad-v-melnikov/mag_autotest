@@ -41,8 +41,7 @@ class GfsLike:
 
     def make_screenshot(self, **kwargs):
         area, hour, what_for, product = kwargs.values()
-        new_height = dim.WINDOW_HEIGHT_FIREFOX if self.settings.driver == "Firefox" else dim.WINDOW_HEIGHT_CHROME
-        new_dim = {'width': dim.WINDOW_WIDTH, 'height': new_height}
+        new_dim = {'width': dim.WINDOW_WIDTH, 'height': dim.WINDOW_HEIGHT}
         new_pos = self.driver.get_window_position()
 
         old_dim, old_pos = self.change_dim_and_pos(new_dim, new_pos)
