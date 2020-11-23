@@ -81,6 +81,7 @@ class Wrapper:
         self.driver.set_page_load_timeout(5)
 
         if sys.platform == 'linux' and self.settings.driver == 'Firefox':
+            # need to do first window size change before making screenshots, bug in firefox/linux browser
             self.driver.set_window_size(dim.WINDOW_WIDTH, dim.WINDOW_HEIGHT)
         else:
             if not self.settings.headless:
