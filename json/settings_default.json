@@ -13,7 +13,7 @@
     ],
     "today_only": true
   },
-  "driver": "Chrome",
+  "driver": "Firefox",
   "headless": false,
   "plan": {
     "GFS": {
@@ -58,7 +58,7 @@
       "section": "Model Guidance",
       "model": "NAM",
       "area_count": 1,
-      "product_count": 2,
+      "product_count": 1,
       "hour_count": 1
     },
     "NAM-HIRES": {

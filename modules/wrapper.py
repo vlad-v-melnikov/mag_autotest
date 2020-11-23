@@ -80,10 +80,11 @@ class Wrapper:
         self.driver = self.driver[self.settings.driver](options=options)
         self.driver.set_page_load_timeout(5)
 
-        if sys.platform == 'linux' and not self.settings.headless:
+        if sys.platform == 'linux' and self.settings.driver == 'Firefox':
             self.driver.set_window_size(dim.WINDOW_WIDTH, dim.WINDOW_HEIGHT)
-        if sys.platform != 'linux' and not self.settings.headless:
-            self.driver.maximize_window()
+        else:
+            if not self.settings.headless:
+                self.driver.maximize_window()
 
         print("Done.")
         logging.info("Done.")

@@ -58,8 +58,9 @@ class GfsLike:
         old_dim = self.driver.get_window_size()
         old_pos = self.driver.get_window_position()
 
-        self.driver.set_window_size(int(new_dim['width']), int(new_dim['height']))
-        self.driver.set_window_position(new_pos['x'], new_pos['y'])
+        if self.settings.driver != 'Chrome' or sys.platform != 'linux':
+            self.driver.set_window_size(int(new_dim['width']), int(new_dim['height']))
+            self.driver.set_window_position(new_pos['x'], new_pos['y'])
 
         return old_dim, old_pos
 
