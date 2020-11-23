@@ -1,13 +1,21 @@
 from modules.settings import Settings
 from modules.gfs_like import GfsLike
+from modules.uair import Uair
+from modules.skewt import Skewt
+from modules.trop import Trop
 from pprint import pprint
 from datetime import date, datetime
 
+CLASS_MAP = {
+        'UAIR': Uair,
+        'RTMA': Uair,
+        'SKEWT': Skewt,
+        'TROP': Trop,
+    }
 
 class TodayChecker:
     excluded_areas = ['PANELS', 'HRW-NMMB', 'HIRES-FV3']
-    cycles_test = {}
-    cycles_prod = {}
+    cycles = {}
 
     def __init__(self, driver, handles, filename="json/settings_check_today.json"):
         self.settings_file = filename
@@ -19,15 +27,12 @@ class TodayChecker:
     def save_cycles(self, what_for, dude, counter, total):
         print(f"Model {counter} out of {total}: saving cycles for {dude.plan['model']}")
         elements = dude.get_all_cycles()
-        if what_for == 'test':
-            self.cycles_test[dude.plan['model']] = [element.get_attribute('id') for element in elements]
-        else:
-            self.cycles_prod[dude.plan['model']] = [element.get_attribute('id') for element in elements]
+        self.cycles[dude.plan['model']] = [element.get_attribute('title') for element in elements]
 
     def find_no_today(self):
         no_today = []
         date_today = date.today().strftime("%Y%m%d")
-        for model, times in self.cycles_test.items():
+        for model, times in self.cycles.items():
             date_only = [one_time[:8] for one_time in times]
             if date_today not in date_only:
                 no_today.append(model)
@@ -45,22 +50,17 @@ class TodayChecker:
             print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
             pprint(no_today, stream=report_file)
 
-    def find_area_id(self):
+    def find_area_id(self, prefix='modarea'):
         element = self.driver.find_element_by_xpath(
-            "//a[contains(@id, 'modarea') and not(contains(@class, 'deselect'))]")
+            f"//a[contains(@id, \"{prefix}\") and not(contains(@class, 'deselect'))]")
         assert element, 'No area found'
-        return element.get_attribute('class')
+        return element.text
 
-    def check_today_now(self):
-        what_for = 'test'
+    def iterate_model_guidance(self, what_for, counter, total, models):
         first = True
-
-        counter = 0
-        total = len(set(self.settings.plan.keys()) - set(self.excluded_areas))
-        for model in self.settings.plan.keys():
+        for model in models:
             if model in self.excluded_areas:
                 continue
-
             counter += 1
             dude = GfsLike(model, self.driver, self.handles, filename=self.settings_file)
             if first:
@@ -72,6 +72,65 @@ class TodayChecker:
             dude.click_area(area)
             self.save_cycles(what_for, dude, counter, total)
             dude.click_back()
+        return counter
+
+    def iterate_observations(self, what_for, counter, total, models):
+        first = True
+        for model in models:
+            if model in self.excluded_areas:
+                continue
+            counter += 1
+            dude = CLASS_MAP[model](model, self.driver, self.handles, filename=self.settings_file)
+            if first:
+                dude.setup_page(what_for)
+                first = False
+            dude.plan['area_count'] = 0
+            dude.click_model()
+            area = self.find_area_id(prefix='obsarea')
+            dude.click_area(area)
+            self.save_cycles(what_for, dude, counter, total)
+            dude.click_back()
+        return counter
+
+    def iterate_trop(self, what_for, counter, total, models):
+        first = True
+        for model in models:
+            if model in self.excluded_areas:
+                continue
+            counter += 1
+            dude = CLASS_MAP[model](model, self.driver, self.handles, filename=self.settings_file)
+            if first:
+                dude.setup_page(what_for)
+                first = False
+            dude.plan['area_count'] = 0
+
+            elements = dude.get_all_storms()
+            assert len(elements) > 0, 'No storms found'
+            dude.click_storm(elements[-1].text)
+
+            elements = dude.get_all_types()
+            assert len(elements) > 0, 'No types found'
+            dude.click_type(elements[0].text)
+
+            self.save_cycles(what_for, dude, counter, total)
+            dude.click_back()
+        return counter
+
+    def check_today_now(self):
+        what_for = 'test'
+        counter = 0
+
+        model_guidance_models = [model for model in self.settings.plan.keys()
+                                 if self.settings.plan[model]['section'] == 'Model Guidance']
+        observation_models = [model for model in self.settings.plan.keys()
+                                 if self.settings.plan[model]['section'] == 'Observations and Analyses']
+        trop_models = [model for model in self.settings.plan.keys()
+                              if self.settings.plan[model]['section'] == 'Tropical Guidance']
+        total = len(set(model_guidance_models + observation_models + trop_models) - set(self.excluded_areas))
+
+        counter = self.iterate_model_guidance(what_for, counter, total, model_guidance_models)
+        counter = self.iterate_observations(what_for, counter, total, observation_models)
+        self.iterate_trop(what_for, counter, total, trop_models)
 
         print()
         results = self.find_no_today()

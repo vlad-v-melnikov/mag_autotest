@@ -161,19 +161,19 @@
       "hour_count": 1
     },
     "UAIR": {
-      "section": "Observations and Analysis",
+      "section": "Observations and Analyses",
       "model": "UAIR",
       "area_count": 1,
       "product_count": 0
     },
     "RTMA": {
-      "section": "Observations and Analysis",
+      "section": "Observations and Analyses",
       "model": "RTMA",
       "area_count": 1,
       "product_count": 0
     },
     "SKEWT": {
-      "section": "Observations and Analysis",
+      "section": "Observations and Analyses",
       "model": "SKEWT",
       "area_count": 1,
       "station_count": 1

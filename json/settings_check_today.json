@@ -13,13 +13,13 @@
     "today_only": false
   },
   "driver": "Firefox",
-  "headless": true,
+  "headless": false,
   "plan": {
     "GFS": {
       "section": "Model Guidance",
       "model": "GFS",
-      "area_count": 1,
-      "product_count": 1,
+      "area_count": 2,
+      "product_count": 2,
       "hour_count": 1
     },
     "GEFS-SPAG": {
@@ -49,15 +49,15 @@
     "PANELS": {
       "section": "Model Guidance",
       "model": "PANELS",
-      "area_count": 0,
-      "product_count": 0,
+      "area_count": 3,
+      "product_count": 2,
       "hour_count": 1
     },
     "NAM": {
       "section": "Model Guidance",
       "model": "NAM",
       "area_count": 1,
-      "product_count": 0,
+      "product_count": 1,
       "hour_count": 1
     },
     "NAM-HIRES": {
@@ -84,9 +84,9 @@
     "HRRR": {
       "section": "Model Guidance",
       "model": "HRRR",
-      "area_count": 1,
-      "product_count": 0,
-      "hour_count": 1
+      "area_count": 2,
+      "product_count": 2,
+      "hour_count": 2
     },
     "HRW-ARW": {
       "section": "Model Guidance",
@@ -157,6 +157,32 @@
       "model": "STORM-TRACKS",
       "area_count": 0,
       "product_count": 0,
+      "hour_count": 1
+    },
+    "UAIR": {
+      "section": "Observations and Analyses",
+      "model": "UAIR",
+      "area_count": 1,
+      "product_count": 0
+    },
+    "RTMA": {
+      "section": "Observations and Analyses",
+      "model": "RTMA",
+      "area_count": 1,
+      "product_count": 0
+    },
+    "SKEWT": {
+      "section": "Observations and Analyses",
+      "model": "SKEWT",
+      "area_count": 1,
+      "station_count": 1
+    },
+    "TROP": {
+      "section": "Tropical Guidance",
+      "model": "TROP",
+      "storm_count": 0,
+      "type_count": 0,
+      "product_count": 2,
       "hour_count": 1
     }
   },
