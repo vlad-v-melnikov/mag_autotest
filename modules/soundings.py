@@ -56,9 +56,8 @@ class Soundings(GfsLike):
         element.click()
 
     def click_type(self):
-        xpath_str = f"//div[contains(text(), \"{self.plan['model']}\")]"
-        element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath_str)))
-        element.click()
+        iden = self.plan['model'].lower() + '_model_id'
+        self.hover_and_click(iden, force=True)
 
     def click_station(self, station):
         xpath_str = f"//span[contains(text(), \"{station}\")]"
@@ -74,6 +73,7 @@ class Soundings(GfsLike):
     def set_stations(self):
         what_for = self.settings.sites['stations_from']
         self.driver.switch_to.window(self.handles[what_for])
+        self.click_type()
 
         self.click_tab()
         print(f"Setting stations from {what_for}...", end=' ')
@@ -121,7 +121,10 @@ class Soundings(GfsLike):
         self.plan['hours'] = [element.get_attribute('id') for element in elements]
 
     def set_common_for_all(self):
-        self.click_type()
+        for what_for in self.settings.sites['order_of_iteration']:
+            self.switch_to_window(what_for)
+            self.click_type()
+
         self.set_stations()
         self.click_station(self.plan['stations'][0])
         self.set_cycle_snd()

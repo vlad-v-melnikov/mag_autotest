@@ -190,8 +190,14 @@
     "NAM-SND": {
       "section": "Forecast Soundings",
       "model": "NAM-SND",
-      "station_count": 5,
-      "hour_count": 3
+      "station_count": 2,
+      "hour_count": 2
+    },
+    "GFS-SND": {
+      "section": "Forecast Soundings",
+      "model": "GFS-SND",
+      "station_count": 2,
+      "hour_count": 2
     }
   },
   "delays": {

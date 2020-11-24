@@ -46,12 +46,10 @@ class GfsLike:
 
         old_dim, old_pos = self.change_dim_and_pos(new_dim, new_pos)
         time.sleep(self.settings.delays['image'])  # let the image load
-        self.driver.save_screenshot('screenshots/' +
-                                     what_for + '_' +
-                                     self.plan['model'] + '_' +
-                                     area + '_' +
-                                     product + '_' +
-                                     hour + '.png')
+        file_name = 'screenshots/' + what_for + '_' + self.plan['model'] + '_' + area + '_' + product + '_' + hour + \
+                    '.png'
+        file_name = file_name.replace('__', '_')
+        self.driver.save_screenshot(file_name)
         self.change_dim_and_pos(old_dim, old_pos)
 
     def change_dim_and_pos(self, new_dim, new_pos):
