@@ -7,6 +7,7 @@ from modules.storm_tracks import StormTracks
 from modules.uair import Uair
 from modules.skewt import Skewt
 from modules.trop import Trop
+from modules.soundings import Soundings
 import argparse
 
 
@@ -18,6 +19,8 @@ CLASS_MAP = {
         'RTMA': Uair,
         'SKEWT': Skewt,
         'TROP': Trop,
+        'GFS-SND': Soundings,
+        'NAM-SND': Soundings,
     }
 
 

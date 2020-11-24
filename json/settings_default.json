@@ -1,11 +1,12 @@
 {
   "sites": {
-    "test": "https://magtest.ncep.noaa.gov",
+    "test": "https://mag.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
     "products_from": "prod",
     "cluster_from": "prod",
+    "stations_from": "test",
     "storms_from": "test",
     "order_of_iteration": [
       "test",
@@ -185,6 +186,12 @@
       "type_count": 0,
       "product_count": 2,
       "hour_count": 1
+    },
+    "NAM-SND": {
+      "section": "Forecast Soundings",
+      "model": "NAM-SND",
+      "station_count": 5,
+      "hour_count": 3
     }
   },
   "delays": {

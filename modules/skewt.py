@@ -4,6 +4,7 @@ from datetime import date
 import logging
 import random
 
+
 class Skewt (Uair):
 
     def set_common_for_all(self):
