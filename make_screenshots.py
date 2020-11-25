@@ -35,7 +35,6 @@ def take_screenshots():
         single_model = GfsLike(model=model, driver=wrapper.driver, handles=wrapper.handles, filename=filename)
 
     single_model.make_now()
-
     wrapper.tear_down()
 
 
@@ -61,7 +60,6 @@ def parse_arguments():
 
     if args.area is not None:
         settings = Settings(filename)
-
         if args.area is not None:
             settings.plan[model]['area'] = {}
             for area_name in args.area:

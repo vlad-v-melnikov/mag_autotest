@@ -3,6 +3,7 @@ from modules.gfs_like import GfsLike
 from modules.uair import Uair
 from modules.skewt import Skewt
 from modules.trop import Trop
+from modules.soundings import Soundings
 from pprint import pprint
 from datetime import date, datetime
 
@@ -11,10 +12,12 @@ CLASS_MAP = {
         'RTMA': Uair,
         'SKEWT': Skewt,
         'TROP': Trop,
+        'GFS-SND': Soundings,
+        'NAM-SND': Soundings,
     }
 
 class TodayChecker:
-    excluded_areas = ['PANELS', 'HRW-NMMB', 'HIRES-FV3']
+    excluded_models = ['PANELS', 'HRW-NMMB', 'HIRES-FV3', 'GFS-SND']
     cycles = {}
 
     def __init__(self, driver, handles, filename="json/settings_check_today.json"):
@@ -59,7 +62,7 @@ class TodayChecker:
     def iterate_model_guidance(self, what_for, counter, total, models):
         first = True
         for model in models:
-            if model in self.excluded_areas:
+            if model in self.excluded_models:
                 continue
             counter += 1
             dude = GfsLike(model, self.driver, self.handles, filename=self.settings_file)
@@ -77,7 +80,7 @@ class TodayChecker:
     def iterate_observations(self, what_for, counter, total, models):
         first = True
         for model in models:
-            if model in self.excluded_areas:
+            if model in self.excluded_models:
                 continue
             counter += 1
             dude = CLASS_MAP[model](model, self.driver, self.handles, filename=self.settings_file)
@@ -95,7 +98,7 @@ class TodayChecker:
     def iterate_trop(self, what_for, counter, total, models):
         first = True
         for model in models:
-            if model in self.excluded_areas:
+            if model in self.excluded_models:
                 continue
             counter += 1
             dude = CLASS_MAP[model](model, self.driver, self.handles, filename=self.settings_file)
@@ -116,6 +119,27 @@ class TodayChecker:
             dude.click_back()
         return counter
 
+    def iterate_soundings(self, what_for, counter, total, models):
+        first = True
+        for model in models:
+            if model in self.excluded_models:
+                continue
+            counter += 1
+            dude = CLASS_MAP[model](model, self.driver, self.handles, filename=self.settings_file)
+            if first:
+                dude.setup_page(what_for)
+                first = False
+            dude.plan['station_count'] = 0
+
+            dude.click_type()
+            dude.click_tab()
+            elements = dude.get_all_stations()
+            assert len(elements) > 0, 'No stations found'
+            dude.click_station(elements[0])
+            self.save_cycles(what_for, dude, counter, total)
+            dude.click_back()
+        return counter
+
     def check_today_now(self):
         what_for = 'test'
         counter = 0
@@ -126,11 +150,15 @@ class TodayChecker:
                                  if self.settings.plan[model]['section'] == 'Observations and Analyses']
         trop_models = [model for model in self.settings.plan.keys()
                               if self.settings.plan[model]['section'] == 'Tropical Guidance']
-        total = len(set(model_guidance_models + observation_models + trop_models) - set(self.excluded_areas))
+        sounding_models = [model for model in self.settings.plan.keys()
+                              if self.settings.plan[model]['section'] == 'Forecast Soundings']
+        total = len(set(model_guidance_models + observation_models + trop_models + sounding_models)
+                    - set(self.excluded_models))
 
         counter = self.iterate_model_guidance(what_for, counter, total, model_guidance_models)
         counter = self.iterate_observations(what_for, counter, total, observation_models)
-        self.iterate_trop(what_for, counter, total, trop_models)
+        counter = self.iterate_trop(what_for, counter, total, trop_models)
+        self.iterate_soundings(what_for, counter, total, sounding_models)
 
         print()
         results = self.find_no_today()

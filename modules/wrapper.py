@@ -136,5 +136,5 @@ class Wrapper:
             self.driver.close()
         print("Done.")
         logging.info("Done.")
-        print(f"Screenshots taken. Running time: {(time.time() - self.start_time):.2f} seconds.")
-        logging.info(f"Screenshots taken. Running time: {(time.time() - self.start_time):.2f} seconds.")
+        print(f"Running time: {(time.time() - self.start_time):.2f} seconds.")
+        logging.info(f"Running time: {(time.time() - self.start_time):.2f} seconds.")

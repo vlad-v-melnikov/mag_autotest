@@ -193,9 +193,9 @@
     "NAM-SND": {
       "section": "Forecast Soundings",
       "model": "NAM-SND",
-      "station_count": 2,
-      "hour_count": 2,
-      "stations": ["6RO", "KJAX", "XMR"]
+      "station_count": 5,
+      "hour_count": 5,
+      "stations": []
     },
     "GFS-SND": {
       "section": "Forecast Soundings",
