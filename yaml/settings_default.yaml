@@ -1,0 +1,200 @@
+delays:
+  common: 0.5
+  hover_and_click: 0.5
+  image: 1
+driver: Firefox
+headless: false
+plan:
+  ESTOFS:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: ESTOFS
+    product_count: 1
+    section: Model Guidance
+  FIREWX:
+    area: {}
+    area_count: 0
+    hour_count: 1
+    model: FIREWX
+    product_count: 1
+    section: Model Guidance
+  GEFS-MEAN-SPRD:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: GEFS-MEAN-SPRD
+    product_count: 3
+    section: Model Guidance
+  GEFS-SPAG:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: GEFS-SPAG
+    product_count: 1
+    section: Model Guidance
+  GFS:
+    area: {}
+    area_count: 2
+    hour_count: 1
+    model: GFS
+    product_count: 2
+    section: Model Guidance
+  GFS-SND:
+    hour_count: 2
+    model: GFS-SND
+    section: Forecast Soundings
+    station_count: 2
+    stations: []
+  HREF:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: HREF
+    product_count: 3
+    section: Model Guidance
+  HRRR:
+    area: {}
+    area_count: 2
+    hour_count: 2
+    model: HRRR
+    product_count: 2
+    section: Model Guidance
+  HRW-ARW:
+    area: {}
+    area_count: 0
+    hour_count: 1
+    model: HRW-ARW
+    product_count: 1
+    section: Model Guidance
+  HRW-ARW2:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: HRW-ARW2
+    product_count: 3
+    section: Model Guidance
+  ICE-DRIFT:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: ICE-DRIFT
+    product_count: 1
+    section: Model Guidance
+  NAEFS:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: NAEFS
+    product_count: 2
+    section: Model Guidance
+  NAM:
+    area:
+      NORTH-PAC: []
+    area_count: 1
+    hour_count: 1
+    model: NAM
+    product_count: 2
+    section: Model Guidance
+  NAM-HIRES:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: NAM-HIRES
+    product_count: 0
+    section: Model Guidance
+  NAM-SND:
+    hour_count: 5
+    model: NAM-SND
+    section: Forecast Soundings
+    station_count: 5
+    stations: []
+  NBM:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: NBM
+    product_count: 3
+    section: Model Guidance
+  PANELS:
+    area: {}
+    area_count: 3
+    hour_count: 1
+    model: PANELS
+    product_count: 2
+    section: Model Guidance
+  RAP:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: RAP
+    product_count: 0
+    section: Model Guidance
+  RTMA:
+    area: {}
+    area_count: 1
+    model: RTMA
+    product_count: 0
+    section: Observations and Analyses
+  SKEWT:
+    area: {}
+    area_count: 1
+    model: SKEWT
+    section: Observations and Analyses
+    station_count: 1
+  SREF:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: SREF
+    product_count: 3
+    section: Model Guidance
+  SREF-CLUSTER:
+    area: {}
+    area_count: 0
+    cluster_count: 3
+    hour_count: 1
+    model: SREF-CLUSTER
+    product_count: 0
+    section: Model Guidance
+  STORM-TRACKS:
+    area: {}
+    area_count: 0
+    hour_count: 1
+    model: STORM-TRACKS
+    product_count: 0
+    section: Model Guidance
+  TROP:
+    hour_count: 1
+    model: TROP
+    product_count: 2
+    section: Tropical Guidance
+    storm_count: 0
+    storms: {}
+    type_count: 0
+  UAIR:
+    area: {}
+    area_count: 1
+    model: UAIR
+    product_count: 0
+    section: Observations and Analyses
+  WW3:
+    area: {}
+    area_count: 1
+    hour_count: 1
+    model: WW3
+    product_count: 3
+    section: Model Guidance
+sites:
+  area_from: prod
+  cluster_from: prod
+  cycle_from: test
+  order_of_iteration:
+  - test
+  - prod
+  prod: https://mag.ncep.noaa.gov
+  products_from: prod
+  stations_from: test
+  storms_from: test
+  test: https://magtest.ncep.noaa.gov
+  today_only: false

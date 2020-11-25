@@ -47,7 +47,7 @@ class Wrapper:
     def __init__(self,
                  model,
                  clear=True,
-                 filename='json\settings_default.json',
+                 filename='yaml/settings_default.yaml',
                  headless=False,
                  log_name='screenshot_maker'):
         self.start_time = time.time()

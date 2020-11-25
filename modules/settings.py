@@ -1,12 +1,12 @@
-import json
+import yaml
 from pprint import pprint
 
 
 class Settings:
-    def __init__(self, filename='json/settings_default.json'):
+    def __init__(self, filename='yaml/settings_default.yaml'):
 
-        with open(filename) as json_file:
-            self.settings = json.load(json_file)
+        with open(filename) as file:
+            self.settings = yaml.load(file, Loader=yaml.FullLoader)
 
         self.filename = filename
         self.sites = self.settings['sites']
@@ -23,8 +23,8 @@ class Settings:
             'plan': self.plan,
             'delays': self.delays
         }
-        with open(self.filename, 'w') as json_file:
-            json.dump(all_settings, json_file, indent=2)
+        with open(self.filename, 'w') as file:
+            yaml.dump(all_settings, file, default_flow_style=False)
 
 
 def main():

@@ -20,7 +20,7 @@ import modules.dimensions as dim
 
 class GfsLike:
 
-    def __init__(self, model, driver, handles, filename='json\settings_default.json'):
+    def __init__(self, model, driver, handles, filename='yaml\settings_default.yaml'):
         self.settings = Settings(filename)
         self.plan = self.settings.plan[model]
         self.driver = driver

@@ -1,0 +1,22 @@
+---
+driver: Firefox
+compare:
+  box_color:
+  - 102
+  - 102
+  - 102
+  box_color_four:
+    Chrome:
+    - 0
+    - 0
+    - 0
+    Firefox:
+    - 76
+    - 76
+    - 76
+  padding_offset:
+  - 95
+  - 100
+  - 50
+  - 120
+  use_padding: true

@@ -9,7 +9,7 @@ def check_today():
     wrapper = Wrapper('GFS',
                       clear=False,
                       headless=parse_arguments(),
-                      filename='json/settings_check_today.json',
+                      filename='yaml/settings_check_today.yaml',
                       log_name='check_today')
     cycle_matcher = TodayChecker(driver=wrapper.driver, handles=wrapper.handles)
     cycle_matcher.check_today_now()

@@ -43,7 +43,7 @@ def parse_arguments():
     parser.add_argument('model',
                         help="Model name to take screenshots")
     parser.add_argument('-s', '--settings',
-                        help="Name of the json settings file different from default_settings.json")
+                        help="Name of the yaml settings file different from default_settings.yaml")
     parser.add_argument('-l', '--headless',
                         help="Force headless mode irrespective of the settings file",
                         action="store_true")
@@ -54,9 +54,9 @@ def parse_arguments():
     model = args.model.upper()
     headless = args.headless
 
-    filename = args.settings if args.settings else 'json/settings_default.json'
-    if filename[:5] != 'json/':
-        filename = 'json/' + filename
+    filename = args.settings if args.settings else 'yaml/settings_default.yaml'
+    if filename[:5] != 'yaml/':
+        filename = 'yaml/' + filename
 
     if args.area is not None:
         settings = Settings(filename)

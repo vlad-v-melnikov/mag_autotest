@@ -10,8 +10,8 @@
 *.log
 /geckodriver.exe
 /chromedriver.exe
-/json/MAG133.json
-/json/MAG144.json
+/yaml/MAG133.yaml
+/yaml/MAG144.yaml
 /dist/
 /check_today.spec
 /build/

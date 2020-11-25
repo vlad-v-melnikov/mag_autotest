@@ -9,7 +9,7 @@ from selenium import webdriver
 
 class TestGfsLike(unittest.TestCase):
     def setUp(self) -> None:
-        filename = 'json/settings_default.json'
+        filename = 'yaml/settings_default.yaml'
         self.settings = Settings(filename=filename)
         self.driver = webdriver.Firefox()
         self.site = "https://mag.ncep.noaa.gov"

@@ -20,7 +20,7 @@ class TodayChecker:
     excluded_models = ['PANELS', 'HRW-NMMB', 'HIRES-FV3', 'GFS-SND']
     cycles = {}
 
-    def __init__(self, driver, handles, filename="json/settings_check_today.json"):
+    def __init__(self, driver, handles, filename="yaml/settings_check_today.yaml"):
         self.settings_file = filename
         self.settings = Settings(filename)
         self.models = self.settings.plan

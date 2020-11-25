@@ -1,12 +1,12 @@
-import json
+import yaml
 from pprint import pprint
 
 
 class SettingsCompare:
-    def __init__(self, filename='json/settings_compare.json'):
+    def __init__(self, filename='yaml/settings_compare.yaml'):
 
-        with open(filename) as json_file:
-            self.settings = json.load(json_file)
+        with open(filename) as file:
+            self.settings = yaml.load(file, Loader=yaml.FullLoader)
 
         self.compare = self.settings['compare']
         self.driver = self.settings['driver']
