@@ -1,6 +1,6 @@
 {
   "sites": {
-    "test": "https://mag.ncep.noaa.gov",
+    "test": "https://magtest.ncep.noaa.gov",
     "prod": "https://mag.ncep.noaa.gov",
     "area_from": "prod",
     "cycle_from": "test",
@@ -12,7 +12,7 @@
       "test",
       "prod"
     ],
-    "today_only": true
+    "today_only": false
   },
   "driver": "Firefox",
   "headless": false,
@@ -167,17 +167,20 @@
       "area_count": 1,
       "product_count": 0
     },
+    "SKEWT": {
+      "section": "Observations and Analyses",
+      "model": "SKEWT",
+      "area_count": 1,
+      "station_count": 1,
+      "area": {
+        "SAMER": ["EGYP", "SBPA", "SBFI"]
+      }
+    },
     "RTMA": {
       "section": "Observations and Analyses",
       "model": "RTMA",
       "area_count": 1,
       "product_count": 0
-    },
-    "SKEWT": {
-      "section": "Observations and Analyses",
-      "model": "SKEWT",
-      "area_count": 1,
-      "station_count": 1
     },
     "TROP": {
       "section": "Tropical Guidance",
@@ -191,7 +194,8 @@
       "section": "Forecast Soundings",
       "model": "NAM-SND",
       "station_count": 2,
-      "hour_count": 2
+      "hour_count": 2,
+      "stations": ["6RO", "KJAX", "XMR"]
     },
     "GFS-SND": {
       "section": "Forecast Soundings",

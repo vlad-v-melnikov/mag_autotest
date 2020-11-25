@@ -25,6 +25,7 @@ class Skewt (Uair):
         else:
             cycles = self.driver.find_elements_by_xpath(f"//a[contains(@href, 'skewt')]")
         assert len(cycles) > 0, f'No cycles found {area}, {product}'
+        cycles.reverse()
         return cycles
 
     def click_cycle(self, **kwargs):
