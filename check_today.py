@@ -1,6 +1,7 @@
 from modules.wrapper import Wrapper
 from modules.today_checker import TodayChecker
 import argparse
+import traceback
 
 
 def check_today():
@@ -12,8 +13,15 @@ def check_today():
                       filename='yaml/settings_check_today.yaml',
                       log_name='check_today')
     cycle_matcher = TodayChecker(driver=wrapper.driver, handles=wrapper.handles)
-    cycle_matcher.check_today_now()
-    wrapper.tear_down()
+    try:
+        cycle_matcher.check_today_now()
+    except Exception as e:
+        print("\n--Something went wrong:--")
+        print(e)
+        print()
+        traceback.print_exc()
+    finally:
+        wrapper.tear_down()
 
 
 def parse_arguments() -> bool:
