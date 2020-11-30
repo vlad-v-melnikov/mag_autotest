@@ -21,13 +21,7 @@ plan:
     area_count: 2
     product_count: 2
     hour_count: 1
-    area:
-      INDIA:
-        - precip_p12
-        - 250_wnd_ht
-      POLAR:
-        - 850_pw_ht
-        - 850_temp_mslp_precip
+    area: {}
   GEFS-SPAG:
     section: Model Guidance
     model: GEFS-SPAG
@@ -55,12 +49,7 @@ plan:
     area_count: 2
     product_count: 2
     hour_count: 2
-    area:
-      US-SAMOA:
-        - GFS_300_wnd_ht,850_vort_ht,700_rh_ht,10m_wnd_precip
-        - GFS_1000_500_thick,700_rh_ht,500_vort_ht,250_wnd_ht
-      US-SC:
-        - sim_radar_1km_HR
+    area: {}
   NAM:
     section: Model Guidance
     model: NAM
@@ -138,10 +127,7 @@ plan:
     product_count: 2
     hour_count: 1
     cluster_count: 1
-    area:
-      CONUS:
-        - 300_wnd_ht
-        - 850_temp_ht
+    area: {}
   WW3:
     section: Model Guidance
     model: WW3
@@ -169,36 +155,19 @@ plan:
     area_count: 2
     product_count: 2
     hour_count: 1
-    area:
-      ASIA:
-        - GFS
-      ALASKA:
-        - GFS-NAM
-        - GFS
+    area: {}
   UAIR:
     section: Observations and Analyses
     model: UAIR
     area_count: 1
     product_count: 0
-    area:
-      NAMER:
-        - "1000"
-        - "100"
-      WEST-ATL:
-        - "925"
-        - "250"
+    area: {}
   SKEWT:
     section: Observations and Analyses
     model: SKEWT
     area_count: 2
     station_count: 2
-    area:
-      SAMER:
-        - SBGL
-        - SBPA
-      NAMER:
-        - CYAM
-        - KFFC
+    area: {}
   RTMA:
     section: Observations and Analyses
     model: RTMA
@@ -218,9 +187,7 @@ plan:
     model: NAM-SND
     station_count: 2
     hour_count: 2
-    stations:
-      - TJSJ
-      - OUN
+    stations: []
   GFS-SND:
     section: Forecast Soundings
     model: GFS-SND
