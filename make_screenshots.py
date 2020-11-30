@@ -9,6 +9,7 @@ from modules.skewt import Skewt
 from modules.trop import Trop
 from modules.soundings import Soundings
 import argparse
+import traceback
 
 
 CLASS_MAP = {
@@ -34,8 +35,15 @@ def take_screenshots():
     else:
         single_model = GfsLike(model=model, driver=wrapper.driver, handles=wrapper.handles, filename=filename)
 
-    single_model.make_now()
-    wrapper.tear_down()
+    try:
+        single_model.make_now()
+    except Exception as e:
+        print("\n--Something went wrong:--")
+        print(e)
+        print()
+        traceback.print_exc()
+    finally:
+        wrapper.tear_down()
 
 
 def parse_arguments():
@@ -47,8 +55,6 @@ def parse_arguments():
     parser.add_argument('-l', '--headless',
                         help="Force headless mode irrespective of the settings file",
                         action="store_true")
-    parser.add_argument('-a', '--area', nargs='+',
-                        help="Areas to crawl. Divide with space or comma and space.")
 
     args = parser.parse_args()
     model = args.model.upper()
@@ -57,15 +63,6 @@ def parse_arguments():
     filename = args.settings if args.settings else 'yaml/settings_default.yaml'
     if filename[:5] != 'yaml/':
         filename = 'yaml/' + filename
-
-    if args.area is not None:
-        settings = Settings(filename)
-        if args.area is not None:
-            settings.plan[model]['area'] = {}
-            for area_name in args.area:
-                settings.plan[model]['area'][area_name.replace(',', '').upper()] = []
-
-        settings.save()
 
     return model, filename, headless
 

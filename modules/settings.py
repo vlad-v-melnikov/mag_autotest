@@ -15,17 +15,6 @@ class Settings:
         self.plan = self.settings['plan']
         self.delays = self.settings['delays']
 
-    def save(self):
-        all_settings = {
-            'sites': self.sites,
-            'driver': self.driver,
-            'headless': self.headless,
-            'plan': self.plan,
-            'delays': self.delays
-        }
-        with open(self.filename, 'w') as file:
-            yaml.dump(all_settings, file, default_flow_style=False)
-
 
 def main():
     settings = Settings()
