@@ -134,6 +134,7 @@ class Wrapper:
         for handle in self.handles.values():
             self.driver.switch_to.window(handle)
             self.driver.close()
+        self.driver.quit()
         print("Done.")
         logging.info("Done.")
         print(f"Running time: {(time.time() - self.start_time):.2f} seconds.")
