@@ -33,6 +33,21 @@ def log_config(log_name='screenshot_maker'):
                         level=logging.INFO)
 
 
+def make_dirs_if_none(log_name):
+    if log_name == 'screenshot_maker' and not os.path.isdir('./screenshots'):
+        print("Making directory for screenshots")
+        logging.info("Making directory for screenshots")
+        os.mkdir('./screenshots')
+    if log_name == 'check_today' and not os.path.isdir('./reports'):
+        print("Making directory for reports")
+        logging.info("Making directory for reports")
+        os.mkdir('./reports')
+    if not os.path.isdir('./logs'):
+        print("Making directory for logs")
+        logging.info("Making directory for logs")
+        os.mkdir('./logs')
+
+
 class Wrapper:
     handles = {}
     driver = {
@@ -49,10 +64,13 @@ class Wrapper:
                  clear=True,
                  filename='yaml/settings_default.yaml',
                  headless=False,
-                 log_name='screenshot_maker'):
+                 log_name='screenshot_maker',
+                 remote=False,
+                 name='',
+                 password=''):
         self.start_time = time.time()
         self.settings = Settings(filename)
-        self.make_dirs_if_none(log_name)
+        make_dirs_if_none(log_name)
         log_config(log_name)
         if model not in self.settings.plan.keys():
             print(f"Model name {model} not found. Exiting.")
@@ -68,24 +86,28 @@ class Wrapper:
 
         print("Setting up web driver...", end=' ')
         logging.info("Setting up web driver...")
-        options = self.driver_options[self.settings.driver]()
-        if headless:
-            self.settings.headless = headless
-        options.headless = self.settings.headless
-        if self.settings.driver == "Chrome":
-            options.add_argument(f"--window-size={dim.WINDOW_WIDTH},{dim.WINDOW_HEIGHT}")
-        else:
-            options.add_argument(f"--width={dim.WINDOW_WIDTH}")
-            options.add_argument(f"--height={dim.WINDOW_HEIGHT}")
-        self.driver = self.driver[self.settings.driver](options=options)
-        self.driver.set_page_load_timeout(5)
 
-        if sys.platform == 'linux' and self.settings.driver == 'Firefox':
-            # need to do first window size change before making screenshots, bug in firefox/linux browser
-            self.driver.set_window_size(dim.WINDOW_WIDTH, dim.WINDOW_HEIGHT)
+        if remote:
+            self.setup_remote(name, password)
         else:
-            if not self.settings.headless:
-                self.driver.maximize_window()
+            options = self.driver_options[self.settings.driver]()
+            if headless:
+                self.settings.headless = headless
+            options.headless = self.settings.headless
+            if self.settings.driver == "Chrome":
+                options.add_argument(f"--window-size={dim.WINDOW_WIDTH},{dim.WINDOW_HEIGHT}")
+            else:
+                options.add_argument(f"--width={dim.WINDOW_WIDTH}")
+                options.add_argument(f"--height={dim.WINDOW_HEIGHT}")
+            self.driver = self.driver[self.settings.driver](options=options)
+            self.driver.set_page_load_timeout(5)
+
+            if sys.platform == 'linux' and self.settings.driver == 'Firefox':
+                # need to do first window size change before making screenshots, bug in firefox/linux browser
+                self.driver.set_window_size(dim.WINDOW_WIDTH, dim.WINDOW_HEIGHT)
+            else:
+                if not self.settings.headless:
+                    self.driver.maximize_window()
 
         print("Done.")
         logging.info("Done.")
@@ -96,19 +118,25 @@ class Wrapper:
         except TimeoutException as e:
             logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
 
-    def make_dirs_if_none(self, log_name):
-        if log_name == 'screenshot_maker' and not os.path.isdir('./screenshots'):
-            print("Making directory for screenshots")
-            logging.info("Making directory for screenshots")
-            os.mkdir('./screenshots')
-        if log_name == 'check_today' and not os.path.isdir('./reports'):
-            print("Making directory for reports")
-            logging.info("Making directory for reports")
-            os.mkdir('./reports')
-        if not os.path.isdir('./logs'):
-            print("Making directory for logs")
-            logging.info("Making directory for logs")
-            os.mkdir('./logs')
+    def setup_remote(self, name, password):
+        print("Using remote web driver...", end=' ')
+        logging.info("Using remote web driver...")
+        desired_cap = {
+            'resolution': f'{dim.WINDOW_WIDTH}x{dim.WINDOW_HEIGHT}',
+            'os_version': '10',
+            'browser': f'{self.settings.driver}',
+            'browser_version': 'latest',
+            'os': 'Windows',
+            'name': 'Checking today cycles on prod',
+            'project': 'MAG',
+            'browserstack.debug': 'true',
+            'browserstack.console': 'errors',
+        }
+        self.driver = webdriver.Remote(
+            command_executor=f'https://{name}:{password}'
+                             '@hub-cloud.browserstack.com/wd/hub',
+            desired_capabilities=desired_cap)
+        self.driver.maximize_window()
 
     @retry(TimeoutException, tries=5, delay=1)
     def open_test_site(self):

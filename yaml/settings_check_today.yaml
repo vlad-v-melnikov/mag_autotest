@@ -172,6 +172,6 @@ plan:
     hour_count: 1
     stations: []
 delays:
-  hover_and_click: 0.5
-  common: 0.5
+  hover_and_click: 1
+  common: 1
   image: 1

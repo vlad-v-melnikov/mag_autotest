@@ -15,7 +15,6 @@ class Settings:
         self.plan = self.settings['plan']
         self.delays = self.settings['delays']
 
-
 def main():
     settings = Settings()
 
