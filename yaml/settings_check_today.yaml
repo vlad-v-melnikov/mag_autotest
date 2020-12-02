@@ -12,8 +12,11 @@ sites:
   - test
   - prod
   today_only: false
+
 driver: Firefox
+
 headless: true
+
 remote:
   bstack:options:
     os: "Windows"
@@ -23,6 +26,7 @@ remote:
     debug : "true"
   browserName: "Firefox"
   browserVersion: "latest"
+
 plan:
   GFS:
     section: Model Guidance
@@ -180,6 +184,7 @@ plan:
     station_count: 1
     hour_count: 1
     stations: []
+
 delays:
   hover_and_click: 1
   common: 1

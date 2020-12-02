@@ -207,6 +207,7 @@ plan:
     station_count: 1
     hour_count: 1
     stations: []
+
 delays:
   hover_and_click: 0.5
   common: 0.5
