@@ -123,10 +123,10 @@ class Wrapper:
         print("Using remote web driver...", end=' ')
         logging.info("Using remote web driver...")
         desired_cap = self.settings.remote
-        if 'name' not in desired_cap.keys():
-            desired_cap['name'] = test_name
-        if 'browser' not in desired_cap.keys():
-            desired_cap['browser'] = self.settings.driver
+        if 'sessionName' not in desired_cap['bstack:options'].keys():
+            desired_cap['bstack:options']['sessionName'] = test_name
+        if 'browserName' not in desired_cap.keys():
+            desired_cap['browserName'] = self.settings.driver
         self.driver = webdriver.Remote(
             command_executor=f'https://{name}:{password}'
                              '@hub-cloud.browserstack.com/wd/hub',

@@ -12,17 +12,21 @@ sites:
   - test
   - prod
   today_only: false
+
 driver: Chrome
+
 headless: false
+
 remote:
-  'resolution': '1920x1080'
-  'os': 'Windows'
-  'os_version': '10'
-  'browser': 'Firefox'
-  'browser_version': 'latest'
-  'project': 'MAG'
-  'browserstack.debug': 'true'
-  'browserstack.console': 'errors'
+  'bstack:options':
+    os: "Windows"
+    osVersion: "10"
+    resolution : "1920x1080"
+    projectName : "MAG"
+    debug : "true"
+  browserName: "Chrome"
+  browserVersion: "latest"
+
 plan:
   GFS:
     section: Model Guidance
