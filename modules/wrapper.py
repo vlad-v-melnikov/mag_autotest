@@ -5,7 +5,6 @@ from retry import retry
 from datetime import datetime
 import sys
 import time
-from pprint import pprint
 
 # selenium
 from selenium import webdriver
@@ -69,7 +68,7 @@ class Wrapper:
                  remote=False,
                  name='',
                  password='',
-                 test_name = ''):
+                 test_name=''):
         self.start_time = time.time()
         self.settings = Settings(filename)
         make_dirs_if_none(log_name)
