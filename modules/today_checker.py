@@ -27,7 +27,7 @@ class TodayChecker:
         self.driver = driver
         self.handles = handles
 
-    def save_cycles(self, what_for, dude, counter, total):
+    def save_cycles(self, dude, counter, total):
         print(f"Model {counter} out of {total}: saving cycles for {dude.plan['model']}")
         elements = dude.get_all_cycles()
         self.cycles[dude.plan['model']] = [element.get_attribute('title') for element in elements]
@@ -73,7 +73,7 @@ class TodayChecker:
             dude.click_model()
             area = self.find_area_id()
             dude.click_area(area)
-            self.save_cycles(what_for, dude, counter, total)
+            self.save_cycles(dude, counter, total)
             dude.click_back()
         return counter
 
@@ -91,7 +91,7 @@ class TodayChecker:
             dude.click_model()
             area = self.find_area_id(prefix='obsarea')
             dude.click_area(area)
-            self.save_cycles(what_for, dude, counter, total)
+            self.save_cycles(dude, counter, total)
             dude.click_back()
         return counter
 
@@ -115,7 +115,7 @@ class TodayChecker:
             assert len(elements) > 0, 'No types found'
             dude.click_type(elements[0].text)
 
-            self.save_cycles(what_for, dude, counter, total)
+            self.save_cycles(dude, counter, total)
             dude.click_back()
         return counter
 
@@ -136,7 +136,7 @@ class TodayChecker:
             elements = dude.get_all_stations()
             assert len(elements) > 0, 'No stations found'
             dude.click_station(elements[0])
-            self.save_cycles(what_for, dude, counter, total)
+            self.save_cycles(dude, counter, total)
             dude.click_back()
         return counter
 

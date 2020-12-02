@@ -67,7 +67,8 @@ class Wrapper:
                  log_name='screenshot_maker',
                  remote=False,
                  name='',
-                 password=''):
+                 password='',
+                 test_name = ''):
         self.start_time = time.time()
         self.settings = Settings(filename)
         make_dirs_if_none(log_name)
@@ -88,7 +89,7 @@ class Wrapper:
         logging.info("Setting up web driver...")
 
         if remote:
-            self.setup_remote(name, password)
+            self.setup_remote(name, password, test_name)
         else:
             options = self.driver_options[self.settings.driver]()
             if headless:
@@ -118,7 +119,7 @@ class Wrapper:
         except TimeoutException as e:
             logging.error(f"Exception {type(e)} was thrown while trying to open TEST or PROD site")
 
-    def setup_remote(self, name, password):
+    def setup_remote(self, name, password, test_name):
         print("Using remote web driver...", end=' ')
         logging.info("Using remote web driver...")
         desired_cap = {
@@ -127,7 +128,7 @@ class Wrapper:
             'browser': f'{self.settings.driver}',
             'browser_version': 'latest',
             'os': 'Windows',
-            'name': 'Checking today cycles on prod',
+            'name': 'Checking today cycles on test',
             'project': 'MAG',
             'browserstack.debug': 'true',
             'browserstack.console': 'errors',

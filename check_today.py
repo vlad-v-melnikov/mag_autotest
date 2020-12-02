@@ -15,7 +15,8 @@ def check_today():
                       log_name='check_today',
                       remote=remote,
                       name=name,
-                      password=password)
+                      password=password,
+                      test_name='Checking availability of today cycles on test')
     cycle_matcher = TodayChecker(driver=wrapper.driver, handles=wrapper.handles)
     try:
         cycle_matcher.check_today_now()
@@ -30,23 +31,22 @@ def check_today():
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-l', '--headless',
-                        help="Force headless mode irrespective of the settings file",
-                        action="store_true")
-    parser.add_argument('-r', '--remote',
-                        help="Remote server testing on BrowserStack",
-                        action="store_true")
-    parser.add_argument('-n', '--name',
-                        help="Name for remote access to BrowserStack")
-    parser.add_argument('-p', '--pwd',
-                        help="Password for remote access to BrowserStack")
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-l', '--headless',
+                       help="Force headless mode irrespective of the settings file",
+                       action="store_true")
+    group.add_argument('-r', '--remote',
+                       nargs=2,
+                       help="Remote server testing on BrowserStack, followed by <name> and <password>")
+
     args = parser.parse_args()
     headless = args.headless
-    remote = args.remote
-    name = args.name
-    pwd = args.pwd
+    remote = args.remote is not None
+    name = args.remote[0] if remote else ''
+    password = args.remote[1] if remote else ''
 
-    return headless, remote, name, pwd
+    return headless, remote, name, password
 
 
 if __name__ == "__main__":
