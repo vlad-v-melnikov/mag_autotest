@@ -24,7 +24,7 @@ remote:
     resolution : "1920x1080"
     projectName : "MAG"
     debug : "true"
-  browserName: "Chrome"
+  browserName: "Firefox"
   browserVersion: "latest"
 
 plan:

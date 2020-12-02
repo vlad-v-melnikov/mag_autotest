@@ -20,9 +20,8 @@ remote:
     osVersion: "10"
     resolution : "1920x1080"
     projectName : "MAG"
-    sessionName : "Default name of the test"
     debug : "true"
-  browserName: "Chrome"
+  browserName: "Firefox"
   browserVersion: "latest"
 plan:
   GFS:
