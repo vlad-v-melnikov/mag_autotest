@@ -193,7 +193,6 @@ class GfsLike:
     @retry(TimeoutException, tries=3, delay=2)
     def final_click(self, hour):
         self.click_hour(hour, force=True)
-        self.wait_image_page_load()
 
     def wait_image_page_load(self):
         WebDriverWait(self.driver, 10).until(

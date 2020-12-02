@@ -2,6 +2,7 @@ from modules.gfs_like import GfsLike
 from retry import retry
 import logging
 import time
+import modules.dimensions as dim
 
 from selenium.common.exceptions import TimeoutException
 
@@ -87,6 +88,11 @@ class Uair(GfsLike):
 
     def make_screenshot(self, **kwargs):
         area, what_for, product = kwargs.values()
+
+        new_dim = {'width': dim.WINDOW_WIDTH, 'height': dim.WINDOW_HEIGHT}
+        new_pos = self.driver.get_window_position()
+        old_dim, old_pos = self.change_dim_and_pos(new_dim, new_pos)
+
         self.wait_image_page_load()
         time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
@@ -94,3 +100,5 @@ class Uair(GfsLike):
                                      self.plan['model'] + '_' +
                                      area + '_' +
                                      product + '.png')
+
+        self.change_dim_and_pos(old_dim, old_pos)

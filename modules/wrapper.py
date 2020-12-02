@@ -5,6 +5,7 @@ from retry import retry
 from datetime import datetime
 import sys
 import time
+from pprint import pprint
 
 # selenium
 from selenium import webdriver
@@ -77,7 +78,7 @@ class Wrapper:
             print(f"Model name {model} not found. Exiting.")
             logging.info(f"Model name {model} not found. Exiting.")
             sys.exit(0)
-        if self.settings.driver not in self.driver.keys():
+        if not remote and self.settings.driver not in self.driver.keys():
             print("Unsupported web driver. Exiting.")
             logging.info("Unsupported web driver. Exiting.")
             sys.exit(0)
@@ -122,17 +123,11 @@ class Wrapper:
     def setup_remote(self, name, password, test_name):
         print("Using remote web driver...", end=' ')
         logging.info("Using remote web driver...")
-        desired_cap = {
-            'resolution': f'{dim.WINDOW_WIDTH}x{dim.WINDOW_HEIGHT}',
-            'os_version': '10',
-            'browser': f'{self.settings.driver}',
-            'browser_version': 'latest',
-            'os': 'Windows',
-            'name': 'Checking today cycles on test',
-            'project': 'MAG',
-            'browserstack.debug': 'true',
-            'browserstack.console': 'errors',
-        }
+        desired_cap = self.settings.remote
+        if 'name' not in desired_cap.keys():
+            desired_cap['name'] = test_name
+        if 'browser' not in desired_cap.keys():
+            desired_cap['browser'] = self.settings.driver
         self.driver = webdriver.Remote(
             command_executor=f'https://{name}:{password}'
                              '@hub-cloud.browserstack.com/wd/hub',

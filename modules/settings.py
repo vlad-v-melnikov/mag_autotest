@@ -12,8 +12,10 @@ class Settings:
         self.sites = self.settings['sites']
         self.driver = self.settings['driver']
         self.headless = self.settings['headless']
+        self.remote = self.settings['remote']
         self.plan = self.settings['plan']
         self.delays = self.settings['delays']
+
 
 def main():
     settings = Settings()
@@ -21,6 +23,7 @@ def main():
     pprint(settings.sites)
     pprint(settings.driver)
     pprint(settings.plan)
+    pprint(settings.remote)
 
 
 if __name__ == "__main__":

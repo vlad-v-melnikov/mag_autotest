@@ -12,8 +12,17 @@ sites:
   - test
   - prod
   today_only: false
-driver: Firefox
+driver: Chrome
 headless: false
+remote:
+  'resolution': '1920x1080'
+  'os': 'Windows'
+  'os_version': '10'
+  'browser': 'Firefox'
+  'browser_version': 'latest'
+  'project': 'MAG'
+  'browserstack.debug': 'true'
+  'browserstack.console': 'errors'
 plan:
   GFS:
     section: Model Guidance
@@ -46,15 +55,15 @@ plan:
   PANELS:
     section: Model Guidance
     model: PANELS
-    area_count: 2
-    product_count: 2
-    hour_count: 2
+    area_count: 1
+    product_count: 1
+    hour_count: 1
     area: {}
   NAM:
     section: Model Guidance
     model: NAM
-    area_count: 1
-    product_count: 1
+    area_count: 2
+    product_count: 2
     hour_count: 1
     area: {}
   NAM-HIRES:
@@ -160,7 +169,7 @@ plan:
     section: Observations and Analyses
     model: UAIR
     area_count: 1
-    product_count: 0
+    product_count: 1
     area: {}
   SKEWT:
     section: Observations and Analyses

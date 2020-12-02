@@ -2,6 +2,7 @@ import time
 import random
 import logging
 from retry import retry
+import modules.dimensions as dim
 
 # selenium
 from selenium.common.exceptions import TimeoutException
@@ -28,7 +29,6 @@ class SREFCluster(GfsLike):
     @retry(TimeoutException, tries=3, delay=1)
     def click_cluster(self, cluster):
         try:
-            print("Clicking cluster", cluster)
             self.hover_and_click(cluster, 'link_text', force=True)
         except Exception as e:
             logging.error(f"Exception {type(e)} was thrown for {cluster} while clicking this cluster")
@@ -57,6 +57,11 @@ class SREFCluster(GfsLike):
 
     def make_screenshot(self, **kwargs):
         area, hour, what_for, product, cluster = kwargs.values()
+
+        new_dim = {'width': dim.WINDOW_WIDTH, 'height': dim.WINDOW_HEIGHT}
+        new_pos = self.driver.get_window_position()
+        old_dim, old_pos = self.change_dim_and_pos(new_dim, new_pos)
+
         time.sleep(self.settings.delays['image'])  # let the image load
         self.driver.save_screenshot('screenshots/' +
                                     what_for + '_' +
@@ -65,6 +70,8 @@ class SREFCluster(GfsLike):
                                     product + '_' +
                                     hour + '_' +
                                     cluster.replace(' ', '-') + '.png')
+
+        self.change_dim_and_pos(old_dim, old_pos)
 
     def iterate_one_product(self, what_for, area, product) -> None:
         for hour in self.plan[(area, product)]:
