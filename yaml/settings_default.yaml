@@ -1,6 +1,6 @@
 ---
 sites:
-  test: https://mag.ncep.noaa.gov
+  test: https://magtest.ncep.noaa.gov
   prod: https://mag.ncep.noaa.gov
   area_from: prod
   cycle_from: test
@@ -13,7 +13,7 @@ sites:
   - prod
   today_only: false
 
-driver: Chrome
+driver: Firefox
 
 headless: false
 
