@@ -8,6 +8,7 @@
 /keep/
 
 *.log
+*.spec
 /geckodriver.exe
 /chromedriver.exe
 /yaml/MAG133.yaml
