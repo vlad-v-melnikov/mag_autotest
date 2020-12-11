@@ -1,3 +1,9 @@
+import datetime
+import time
+import requests
+import json
+from datetime import datetime
+
 TODAY_TESTCASES = {
     'GFS': 'MT-T3',
     'GEFS-SPAG': 'MT-T4',
@@ -13,7 +19,7 @@ TODAY_TESTCASES = {
     'SREF': 'MT-T14',
     'HREF': 'MT-T15',
     'NBM': 'MT-T16',
-    'SREF-CLUSTER': 'MT-17',
+    'SREF-CLUSTER': 'MT-T17',
     'WW3': 'MT-T18',
     'ESTOFS': 'MT-T19',
     'ICE-DRIFT': 'MT-T20',
@@ -25,3 +31,38 @@ TODAY_TESTCASES = {
     'GFS-SND': 'MT-T26',
     'NAM-SND': 'MT-T27'
 }
+
+
+def send_report(result, cycle_key, test_case_key, comment, start_time):
+    url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
+    payload = {
+        "projectKey": "MT",
+        "testCycleKey": cycle_key,
+        "testCaseKey": test_case_key,
+        "statusName": result,
+        "environmentName": "Firefox",
+        "actualEndDate": get_now_datetime(),
+        "executionTime": (time.time() - start_time) * 1000,
+        "testScriptResults": [
+            {
+                "statusName": result,
+                "actualEndDate": get_now_datetime(),
+                "actualResult": comment
+            }
+        ],
+    }
+
+    # print("Payload:")
+    # print(payload)
+
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDdhN2M5Zi01Y2EyLTM5MmEtYmJiNi0wOGJhNGYxNDdjOWUiLCJjb250ZXh0Ijp7ImJhc2VVcmwiOiJodHRwczpcL1wvdm1lbG5pa292LmF0bGFzc2lhbi5uZXQiLCJ1c2VyIjp7ImFjY291bnRJZCI6IjViOGRkYzU2OGFhYTBmMmJkMTFmYTM1NiJ9fSwiaXNzIjoiY29tLmthbm9haC50ZXN0LW1hbmFnZXIiLCJleHAiOjE2MzkwNzMwNjksImlhdCI6MTYwNzUzNzA2OX0.IyGN1eAX9s_T7B5eFJ91okpihQncinijH6Mc5eAadj4',
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+    print(response.text)
+
+
+def get_now_datetime():
+    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")

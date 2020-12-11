@@ -17,7 +17,7 @@ def check_today():
                       name=name,
                       password=password,
                       test_name='Checking availability of today cycles on test')
-    cycle_matcher = TodayChecker(driver=wrapper.driver, handles=wrapper.handles)
+    cycle_matcher = TodayChecker(driver=wrapper.driver, handles=wrapper.handles, start_time=wrapper.start_time)
     try:
         cycle_matcher.check_today_now()
     except Exception as e:

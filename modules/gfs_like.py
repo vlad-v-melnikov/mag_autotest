@@ -260,12 +260,8 @@ class GfsLike:
         logging.info(info_str)
 
     def setup_page(self, what_for) -> None:
-        print(f"Setting up page for {what_for}...", end=' ')
-        logging.info(f"Setting up page for {what_for}...")
         self.switch_to_window(what_for)
         self.reset_to_base(what_for)
-        print("Done.")
-        logging.info("Done.")
 
     def iterate_products(self, what_for, area):
         for product in self.plan['area'][area]:

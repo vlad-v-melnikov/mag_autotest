@@ -6,26 +6,33 @@ from modules.trop import Trop
 from modules.soundings import Soundings
 from pprint import pprint
 from datetime import date, datetime
+from modules.autotest import TODAY_TESTCASES
+from modules.autotest import send_report
+import time
+import requests
+import json
 
 CLASS_MAP = {
-        'UAIR': Uair,
-        'RTMA': Uair,
-        'SKEWT': Skewt,
-        'TROP': Trop,
-        'GFS-SND': Soundings,
-        'NAM-SND': Soundings,
-    }
+    'UAIR': Uair,
+    'RTMA': Uair,
+    'SKEWT': Skewt,
+    'TROP': Trop,
+    'GFS-SND': Soundings,
+    'NAM-SND': Soundings,
+}
+
 
 class TodayChecker:
-    excluded_models = ['PANELS', 'HRW-NMMB', 'HIRES-FV3', 'GFS-SND']
+    excluded_models = ['PANELS']
     cycles = {}
 
-    def __init__(self, driver, handles, filename="yaml/settings_check_today.yaml"):
+    def __init__(self, driver, handles, start_time, filename="yaml/settings_check_today.yaml"):
         self.settings_file = filename
         self.settings = Settings(filename)
         self.models = self.settings.plan
         self.driver = driver
         self.handles = handles
+        self.start_time = start_time
 
     def save_cycles(self, dude, counter, total):
         print(f"Model {counter} out of {total}: saving cycles for {dude.plan['model']}")
@@ -46,12 +53,30 @@ class TodayChecker:
         print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
         pprint(no_today)
 
-    def save_results(self, no_today):
+    def save_results_to_local_report(self, no_today):
         now = datetime.now()
         report_time = now.strftime("%Y%m%d%H%M%S")
         with open(f'reports/today_check_report_{report_time}.txt', 'w') as report_file:
             print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
             pprint(no_today, stream=report_file)
+
+    def save_results_to_jira(self, no_today):
+        print("Sending results to Jira")
+        for model, test in TODAY_TESTCASES.items():
+            print(model, test)
+            if model in no_today:
+                result = "Fail"
+                comment = "Today cycle NOT found for " + model
+            else:
+                result = "Pass"
+                comment = "Today cycle found for " + model
+            send_report(
+                result=result,
+                cycle_key="MT-R4",
+                test_case_key=test,
+                comment=comment,
+                start_time=self.start_time
+            )
 
     def find_area_id(self, prefix='modarea'):
         element = self.driver.find_element_by_xpath(
@@ -147,11 +172,11 @@ class TodayChecker:
         model_guidance_models = [model for model in self.settings.plan.keys()
                                  if self.settings.plan[model]['section'] == 'Model Guidance']
         observation_models = [model for model in self.settings.plan.keys()
-                                 if self.settings.plan[model]['section'] == 'Observations and Analyses']
+                              if self.settings.plan[model]['section'] == 'Observations and Analyses']
         trop_models = [model for model in self.settings.plan.keys()
-                              if self.settings.plan[model]['section'] == 'Tropical Guidance']
+                       if self.settings.plan[model]['section'] == 'Tropical Guidance']
         sounding_models = [model for model in self.settings.plan.keys()
-                              if self.settings.plan[model]['section'] == 'Forecast Soundings']
+                           if self.settings.plan[model]['section'] == 'Forecast Soundings']
         total = len(set(model_guidance_models + observation_models + trop_models + sounding_models)
                     - set(self.excluded_models))
 
@@ -163,5 +188,6 @@ class TodayChecker:
         print()
         results = self.find_no_today()
         self.print_results(results)
-        self.save_results(results)
+        self.save_results_to_local_report(results)
+        self.save_results_to_jira(results)
 

@@ -89,6 +89,12 @@ plan:
     area_count: 2
     product_count: 2
     hour_count: 2
+  HRW-NMMB:
+    section: Model Guidance
+    model: HRW-NMMB
+    area_count: 1
+    product_count: 1
+    hour_count: 1
   HRW-ARW:
     section: Model Guidance
     model: HRW-ARW
