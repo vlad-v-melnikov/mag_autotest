@@ -31,8 +31,8 @@ def check_today():
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-z', '--zephyr_scale',
-                        help="Push the results to Zephyr Scale on Jira",
+    parser.add_argument('-j', '--jira',
+                        help="Push the results to Zephyr Scale in Jira",
                         action="store_true")
 
     group = parser.add_mutually_exclusive_group()

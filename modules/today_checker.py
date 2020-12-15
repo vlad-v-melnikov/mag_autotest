@@ -59,7 +59,6 @@ class TodayChecker:
             pprint(no_today, stream=report_file)
 
     def save_results_to_jira(self, no_today):
-        print("Sending results to Jira")
         for model, test in TODAY_TESTCASES.items():
             # print(model, test)
             if model in no_today:

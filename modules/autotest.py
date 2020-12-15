@@ -55,9 +55,11 @@ def send_report(result, cycle_key, test_case_key, comment, start_time):
     # print("Payload:")
     # print(payload)
 
+    with open('token.txt') as file:
+        token = file.read()
     headers = {
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDdhN2M5Zi01Y2EyLTM5MmEtYmJiNi0wOGJhNGYxNDdjOWUiLCJjb250ZXh0Ijp7ImJhc2VVcmwiOiJodHRwczpcL1wvdm1lbG5pa292LmF0bGFzc2lhbi5uZXQiLCJ1c2VyIjp7ImFjY291bnRJZCI6IjViOGRkYzU2OGFhYTBmMmJkMTFmYTM1NiJ9fSwiaXNzIjoiY29tLmthbm9haC50ZXN0LW1hbmFnZXIiLCJleHAiOjE2MzkwNzMwNjksImlhdCI6MTYwNzUzNzA2OX0.IyGN1eAX9s_T7B5eFJ91okpihQncinijH6Mc5eAadj4',
+        'Authorization': f'Bearer {token}',
         'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
