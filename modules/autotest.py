@@ -61,7 +61,7 @@ def send_report(result, cycle_key, test_case_key, comment, start_time):
         'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-    print(response.text)
+    # print(response.text)
 
 
 def get_now_datetime():

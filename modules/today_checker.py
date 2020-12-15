@@ -8,9 +8,7 @@ from pprint import pprint
 from datetime import date, datetime
 from modules.autotest import TODAY_TESTCASES
 from modules.autotest import send_report
-import time
-import requests
-import json
+
 
 CLASS_MAP = {
     'UAIR': Uair,
@@ -63,7 +61,7 @@ class TodayChecker:
     def save_results_to_jira(self, no_today):
         print("Sending results to Jira")
         for model, test in TODAY_TESTCASES.items():
-            print(model, test)
+            # print(model, test)
             if model in no_today:
                 result = "Fail"
                 comment = "Today cycle NOT found for " + model
@@ -165,7 +163,7 @@ class TodayChecker:
             dude.click_back()
         return counter
 
-    def check_today_now(self):
+    def check_today_now(self, zephyr_scale):
         what_for = 'test'
         counter = 0
 
@@ -189,5 +187,7 @@ class TodayChecker:
         results = self.find_no_today()
         self.print_results(results)
         self.save_results_to_local_report(results)
-        self.save_results_to_jira(results)
+        if zephyr_scale:
+            self.save_results_to_jira(results)
+            print("Pushed results to Zephyr Scale in JIRA.")
 

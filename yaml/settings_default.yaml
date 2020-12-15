@@ -101,8 +101,8 @@ plan:
   HRW-NMMB:
     section: Model Guidance
     model: HRW-NMMB
-    area_count: 1
-    product_count: 1
+    area_count: 3
+    product_count: 5
     hour_count: 1
     area: {}
   HRW-ARW:
@@ -129,8 +129,8 @@ plan:
   HREF:
     section: Model Guidance
     model: HREF
-    area_count: 1
-    product_count: 3
+    area_count: 0
+    product_count: 5
     hour_count: 1
     area: {}
   NBM:
@@ -158,8 +158,8 @@ plan:
   ESTOFS:
     section: Model Guidance
     model: ESTOFS
-    area_count: 1
-    product_count: 1
+    area_count: 0
+    product_count: 0
     hour_count: 1
     area: {}
   ICE-DRIFT:
@@ -216,6 +216,6 @@ plan:
     stations: []
 
 delays:
-  hover_and_click: 0.5
-  common: 0.5
+  hover_and_click: 1
+  common: 1
   image: 1
