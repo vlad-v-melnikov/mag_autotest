@@ -63,11 +63,11 @@ def send_report_check_today(result, cycle_key, test_case_key, comment, start_tim
     requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
 
-def create_testcase_for_diff(name):
+def create_testcase_for_diff():
     url = "https://api.adaptavist.io/tm4j/v2/testcases"
     payload = {
         "projectKey": "MT",
-        "name": f"Image diff for {name} {get_now_datetime()}",
+        "name": f"Image Diff {get_now_datetime()}",
         "priorityName": "Normal",
         "statusName": "Approved",
         "folderId": 1082650
@@ -159,7 +159,7 @@ def get_now_datetime_utc():
 
 
 def get_now_datetime():
-    return datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 if __name__ == '__main__':

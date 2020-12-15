@@ -3,6 +3,7 @@ from PIL import Image, ImageChops
 import glob
 import logging
 from modules.settings_compare import SettingsCompare
+import modules.autotest as autotest
 from datetime import datetime
 
 class TestCompareImages(unittest.TestCase):
@@ -26,6 +27,8 @@ class TestCompareImages(unittest.TestCase):
         print(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
         logging.info(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
 
+        # TO DO: add test casing and pushing results for these two failures
+        test_case = autotest.create_testcase_for_diff()
         try:
             self.assertNotEqual(len(test_screens), 0,
                                 "No screenshots from TEST. Nothing to compare.")
@@ -42,7 +45,11 @@ class TestCompareImages(unittest.TestCase):
             logging.error("Number of screenshots for test and prod is DIFFERENT")
             raise e
 
+        # create test case and steps in Zephyr Scale
+
+
         screens = zip(prod_screens, test_screens)
+        results = []
         for prod, test in screens:
             img_prod = self.find_frame(Image.open(prod).convert('RGB'), prod)
             img_test = self.find_frame(Image.open(test).convert('RGB'), test)
@@ -50,11 +57,18 @@ class TestCompareImages(unittest.TestCase):
             with self.subTest(f"{test} DOES NOT MATCH {prod}"):
                 try:
                     self.assertFalse(bool(diff.getbbox()))
+                    results.append("Pass")
                 except AssertionError as e:
                     identifier = prod[(prod.find('_') + 1):prod.find('.png')]
                     logging.error(f'{test} DOES NOT match {prod}')
                     diff.save('screenshots/diff_' + identifier + '.png')
+                    results.append("Fail")
                     raise e
+
+        print(results)
+        # images compared successfully - check somehow that there was no "frame box problem"
+        screens = [screen[17:] for screen in prod_screens]
+        autotest.add_testcase_steps_for_images(test_case, screens)
 
     def find_frame(self, orig_image, img_name) -> Image:
         orig_pix_map = orig_image.load()
