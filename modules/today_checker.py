@@ -7,7 +7,7 @@ from modules.soundings import Soundings
 from pprint import pprint
 from datetime import date, datetime
 from modules.autotest import TODAY_TESTCASES
-from modules.autotest import send_report
+from modules.autotest import send_report_check_today
 
 
 CLASS_MAP = {
@@ -67,7 +67,7 @@ class TodayChecker:
             else:
                 result = "Pass"
                 comment = "Today cycle found for " + model
-            send_report(
+            send_report_check_today(
                 result=result,
                 cycle_key="MT-R4",
                 test_case_key=test,

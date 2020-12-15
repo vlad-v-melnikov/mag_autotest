@@ -3,6 +3,7 @@ import time
 import requests
 import json
 from datetime import datetime
+from pprint import pprint
 
 TODAY_TESTCASES = {
     'GFS': 'MT-T3',
@@ -33,7 +34,7 @@ TODAY_TESTCASES = {
 }
 
 
-def send_report(result, cycle_key, test_case_key, comment, start_time):
+def send_report_check_today(result, cycle_key, test_case_key, comment, start_time):
     url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
     payload = {
         "projectKey": "MT",
@@ -41,19 +42,16 @@ def send_report(result, cycle_key, test_case_key, comment, start_time):
         "testCaseKey": test_case_key,
         "statusName": result,
         "environmentName": "Firefox",
-        "actualEndDate": get_now_datetime(),
+        "actualEndDate": get_now_datetime_utc(),
         "executionTime": (time.time() - start_time) * 1000,
         "testScriptResults": [
             {
                 "statusName": result,
-                "actualEndDate": get_now_datetime(),
+                "actualEndDate": get_now_datetime_utc(),
                 "actualResult": comment
             }
         ],
     }
-
-    # print("Payload:")
-    # print(payload)
 
     with open('token.txt') as file:
         token = file.read()
@@ -62,9 +60,111 @@ def send_report(result, cycle_key, test_case_key, comment, start_time):
         'Authorization': f'Bearer {token}',
         'Content-Type': 'application/json'
     }
+    requests.request("POST", url, headers=headers, data=json.dumps(payload))
+
+
+def create_testcase_for_diff(name):
+    url = "https://api.adaptavist.io/tm4j/v2/testcases"
+    payload = {
+        "projectKey": "MT",
+        "name": f"Image diff for {name} {get_now_datetime()}",
+        "priorityName": "Normal",
+        "statusName": "Approved",
+        "folderId": 1082650
+    }
+
+    with open('token.txt') as file:
+        token = file.read()
+
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+
+    result = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+    print(result.text)
+    if "errorCode" not in result.json():
+        return result.json()["key"]
+    else:
+        return False
+
+
+def add_testcase_steps_for_images(test_case, images):
+    url = f"https://api.adaptavist.io/tm4j/v2/testcases/{test_case}/teststeps"
+    payload = {
+        "mode": "OVERWRITE",
+        "items": []
+    }
+
+    for image in images:
+        payload["items"].append(
+            {
+                "inline": {
+                    "description": f"Test image {image}",
+                    "expectedResult": "Image on TEST matches image on PROD"
+                }
+            }
+        )
+
+    with open('token.txt') as file:
+        token = file.read()
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+
+    return requests.request("POST", url, headers=headers, data=json.dumps(payload))
+
+
+def send_report_diff(test_case, results):
+    import requests
+
+    url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
+    testScriptResults = []
+    for result in results:
+        testScriptResults.append(
+            {
+                "statusName": f"{result}",
+                "actualEndDate": get_now_datetime_utc(),
+                "actualResult": "TEST matches PROD" if result == 'Pass' else "TEST does not match PROD"
+            }
+        )
+    payload = {
+        "projectKey": "MT",
+        "testCycleKey": "MT-R5",
+        "testCaseKey": f"{test_case}",
+        "statusName": "Pass" if "Fail" not in results else "Fail",
+        "testScriptResults": testScriptResults,
+        "environmentName": "Firefox",
+        "actualEndDate": get_now_datetime_utc()
+    }
+
+    with open('token.txt') as file:
+        token = file.read()
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': f'{token}',
+        'Content-Type': 'application/json'
+    }
+
     response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-    # print(response.text)
+
+    print(response.text)
+
+
+def get_now_datetime_utc():
+    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def get_now_datetime():
-    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+
+
+if __name__ == '__main__':
+    test_case = 'MT-T30'
+    results = ["Pass", "Pass", "Pass", "Pass"]
+
+    send_report_diff(test_case, results)
+

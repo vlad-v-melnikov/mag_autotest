@@ -1,5 +1,6 @@
 ---
 driver: Firefox
+jira: true
 compare:
   box_color:
   - 102

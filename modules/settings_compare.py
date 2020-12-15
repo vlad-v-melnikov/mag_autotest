@@ -10,6 +10,7 @@ class SettingsCompare:
 
         self.compare = self.settings['compare']
         self.driver = self.settings['driver']
+        self.jira = self.settings['jira']
 
 
 def main():

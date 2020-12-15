@@ -216,6 +216,6 @@ plan:
     stations: []
 
 delays:
-  hover_and_click: 1
-  common: 1
+  hover_and_click: 0.5
+  common: 0.5
   image: 1
