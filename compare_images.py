@@ -45,9 +45,6 @@ class TestCompareImages(unittest.TestCase):
             logging.error("Number of screenshots for test and prod is DIFFERENT")
             raise e
 
-        # create test case and steps in Zephyr Scale
-
-
         screens = zip(prod_screens, test_screens)
         results = []
         for prod, test in screens:

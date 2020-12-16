@@ -49,7 +49,7 @@ def parse_arguments():
     remote = args.remote is not None
     name = args.remote[0] if remote else ''
     password = args.remote[1] if remote else ''
-    zephyr_scale = args.zephyr_scale
+    zephyr_scale = args.jira
 
     return headless, remote, name, password, zephyr_scale
 
