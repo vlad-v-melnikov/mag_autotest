@@ -28,7 +28,9 @@ class TestCompareImages(unittest.TestCase):
         print(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
         logging.info(f'{len(prod_screens)} images from PROD, {len(test_screens)} from TEST.')
 
-        test_case = autotest.create_testcase_for_diff()
+        test_case = None
+        if self.settings.jira:
+            test_case = autotest.create_testcase_for_diff()
 
         try:
             self.assertNotEqual(len(test_screens), 0,
@@ -37,7 +39,8 @@ class TestCompareImages(unittest.TestCase):
                                 "No screenshots from PROD. Nothing to compare.")
         except AssertionError as e:
             logging.error("Zero screenshots from TEST and/or PROD")
-            autotest.report_diff_failure(test_case, "Zero screenshots from TEST and/or PROD",)
+            if self.settings.jira:
+                autotest.report_diff_failure(test_case, "Zero screenshots from TEST and/or PROD",)
             raise e
 
         try:
@@ -45,7 +48,8 @@ class TestCompareImages(unittest.TestCase):
                              "Number of screenshots for test and prod is DIFFERENT")
         except AssertionError as e:
             logging.error("Number of screenshots for test and prod is DIFFERENT")
-            autotest.report_diff_failure(test_case, "Number of screenshots for test and prod is DIFFERENT", )
+            if self.settings.jira:
+                autotest.report_diff_failure(test_case, "Number of screenshots for test and prod is DIFFERENT", )
             raise e
 
         screens = zip(prod_screens, test_screens)
@@ -67,9 +71,10 @@ class TestCompareImages(unittest.TestCase):
 
         # pushing results of image comparison to Zephyr Scale
         print('Results of comparison: ', results)
-        screens = [screen[17:] for screen in prod_screens]
-        autotest.add_testcase_steps_for_images(test_case, screens)
-        autotest.send_execution_image_diff(test_case, results)
+        if self.settings.jira:
+            screens = [screen[17:] for screen in prod_screens]
+            autotest.add_testcase_steps_for_images(test_case, screens)
+            autotest.send_execution_image_diff(test_case, results)
 
     def find_frame(self, orig_image, img_name, test_case) -> Image:
         orig_pix_map = orig_image.load()
