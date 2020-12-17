@@ -176,9 +176,9 @@ class JiraInterface:
 
         requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
-        #execution
+        # execution
         url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
-        testScriptResults = [
+        test_script_results = [
             {
                 "statusName": "Fail",
                 "actualEndDate": get_now_datetime_utc(),
@@ -190,7 +190,7 @@ class JiraInterface:
             "testCycleKey": self.settings.compare['cycle_key'],
             "testCaseKey": f"{test_case}",
             "statusName": "Fail",
-            "testScriptResults": testScriptResults,
+            "testScriptResults": test_script_results,
             "environmentName": self.settings.environment,
             "actualEndDate": get_now_datetime_utc()
         }
@@ -218,4 +218,3 @@ if __name__ == '__main__':
     if not test_case:
         sys.exit(0)
     jira.report_diff_failure(test_case, 'Did not find any images')
-
