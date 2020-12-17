@@ -9,4 +9,31 @@ compare:
   cycle_key: MT-R6
   folder_id: 1082650
 
+TODAY_TESTCASES:
+    'GFS': 'MT-T3'
+    'GEFS-SPAG': 'MT-T4'
+    'NAEFS': 'MT-T5'
+    'NAM': 'MT-T6'
+    'NAM-HIRES': 'MT-T7'
+    'FIREWX': 'MT-T8'
+    'RAP': 'MT-T9'
+    'HRRR': 'MT-T10'
+    'HRW-NMMB': 'MT-T11'
+    'HRW-ARW': 'MT-T12'
+    'HRW-ARW2': 'MT-T13'
+    'SREF': 'MT-T14'
+    'HREF': 'MT-T15'
+    'NBM': 'MT-T16'
+    'SREF-CLUSTER': 'MT-T17'
+    'WW3': 'MT-T18'
+    'ESTOFS': 'MT-T19'
+    'ICE-DRIFT': 'MT-T20'
+    'STORM-TRACKS': 'MT-T21'
+    'UAIR': 'MT-T22'
+    'SKEWT': 'MT-T23'
+    'RTMA': 'MT-T24'
+    'TROP': 'MT-T25'
+    'GFS-SND': 'MT-T26'
+    'NAM-SND': 'MT-T27'
+
 

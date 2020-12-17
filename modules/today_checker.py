@@ -6,7 +6,6 @@ from modules.trop import Trop
 from modules.soundings import Soundings
 from pprint import pprint
 from datetime import date, datetime
-from modules.jirainterface import TODAY_TESTCASES
 from modules.jirainterface import JiraInterface
 
 
@@ -62,7 +61,7 @@ class TodayChecker:
 
     def save_results_to_jira(self, no_today):
         jira = JiraInterface(self.settings.driver)
-        for model, test in TODAY_TESTCASES.items():
+        for model, test in jira.settings.TODAY_TESTCASES.items():
             if model in no_today:
                 result = "Fail"
                 comment = "Today cycle NOT found for " + model
@@ -190,4 +189,3 @@ class TodayChecker:
         if zephyr_scale:
             self.save_results_to_jira(results)
             print("Pushed results to Zephyr Scale in JIRA.")
-

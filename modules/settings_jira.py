@@ -13,6 +13,7 @@ class SettingsJira:
         self.token_file = self.settings['token_file']
         self.compare = self.settings['compare']
         self.check_today = self.settings['check_today']
+        self.TODAY_TESTCASES = self.settings['TODAY_TESTCASES']
 
         if environment in self.get_environments():
             self.environment = environment
