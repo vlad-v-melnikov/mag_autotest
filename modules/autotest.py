@@ -118,9 +118,7 @@ def add_testcase_steps_for_images(test_case, images):
     return requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
 
-def send_report_diff(test_case, results):
-    import requests
-
+def send_execution_image_diff(test_case, results):
     url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
     testScriptResults = []
     for result in results:
@@ -133,7 +131,7 @@ def send_report_diff(test_case, results):
         )
     payload = {
         "projectKey": "MT",
-        "testCycleKey": "MT-R5",
+        "testCycleKey": "MT-R6",
         "testCaseKey": f"{test_case}",
         "statusName": "Pass" if "Fail" not in results else "Fail",
         "testScriptResults": testScriptResults,
@@ -154,6 +152,64 @@ def send_report_diff(test_case, results):
     print(response.text)
 
 
+def report_diff_failure(test_case, comment):
+    # step creation
+    url = f"https://api.adaptavist.io/tm4j/v2/testcases/{test_case}/teststeps"
+    payload = {
+        "mode": "OVERWRITE",
+        "items": []
+    }
+
+    payload["items"].append(
+        {
+            "inline": {
+                "description": f"Test availability of images for diff",
+                "expectedResult": "Images are available for diff"
+            }
+        }
+    )
+
+    with open('token.txt') as file:
+        token = file.read()
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+
+    result = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+    print(result.text)
+
+    #execution
+    url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
+    testScriptResults = [
+        {
+            "statusName": "Fail",
+            "actualEndDate": get_now_datetime_utc(),
+            "actualResult": comment
+        }
+    ]
+    payload = {
+        "projectKey": "MT",
+        "testCycleKey": "MT-R6",
+        "testCaseKey": f"{test_case}",
+        "statusName": "Fail",
+        "testScriptResults": testScriptResults,
+        "environmentName": "Firefox",
+        "actualEndDate": get_now_datetime_utc()
+    }
+
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': f'{token}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+
+    print(response.text)
+
+
 def get_now_datetime_utc():
     return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -163,8 +219,8 @@ def get_now_datetime():
 
 
 if __name__ == '__main__':
-    test_case = 'MT-T30'
-    results = ["Pass", "Pass", "Pass", "Pass"]
-
-    send_report_diff(test_case, results)
+    test_case = create_testcase_for_diff()
+    if not test_case:
+        exit(0)
+    report_diff_failure(test_case, 'Did not find any images')
 
