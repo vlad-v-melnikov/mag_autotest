@@ -4,7 +4,6 @@ import requests
 import json
 from datetime import datetime
 from modules.settings_jira import SettingsJira
-from pprint import pprint
 import sys
 
 TODAY_TESTCASES = {
@@ -88,7 +87,6 @@ class JiraInterface:
         }
 
         result = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-        print(result.text)
         if "errorCode" not in result.json():
             return result.json()["key"]
         return False
@@ -149,9 +147,7 @@ class JiraInterface:
             'Content-Type': 'application/json'
         }
 
-        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-
-        print(response.text)
+        requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
     def report_diff_failure(self, test_case, comment):
         # step creation
@@ -178,8 +174,7 @@ class JiraInterface:
             'Content-Type': 'application/json'
         }
 
-        result = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-        print(result.text)
+        requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
         #execution
         url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
@@ -206,9 +201,7 @@ class JiraInterface:
             'Content-Type': 'application/json'
         }
 
-        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-
-        print(response.text)
+        requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
 
 def get_now_datetime_utc():

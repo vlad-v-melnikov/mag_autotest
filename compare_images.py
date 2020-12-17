@@ -71,11 +71,12 @@ class TestCompareImages(unittest.TestCase):
                     raise e
 
         # pushing results of image comparison to Zephyr Scale
-        print('Results of comparison: ', results)
         if self.settings.jira:
+            print("Pushing results to Zephyr Scale on Jira...")
             screens = [screen[17:] for screen in prod_screens]
             self.jira_interface.add_testcase_steps_for_images(test_case, screens)
             self.jira_interface.send_execution_image_diff(test_case, results)
+            print("Done.")
 
     def find_frame(self, orig_image, img_name, test_case) -> Image:
         orig_pix_map = orig_image.load()
