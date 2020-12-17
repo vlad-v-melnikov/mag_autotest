@@ -6,6 +6,7 @@ from modules.settings_compare import SettingsCompare
 import modules.autotest as autotest
 from datetime import datetime
 
+
 class TestCompareImages(unittest.TestCase):
 
     X_RIGHT_LIMITER_SINGLE = 50
@@ -50,8 +51,8 @@ class TestCompareImages(unittest.TestCase):
         screens = zip(prod_screens, test_screens)
         results = []
         for prod, test in screens:
-            img_prod = self.find_frame(Image.open(prod).convert('RGB'), prod)
-            img_test = self.find_frame(Image.open(test).convert('RGB'), test)
+            img_prod = self.find_frame(Image.open(prod).convert('RGB'), prod, test_case)
+            img_test = self.find_frame(Image.open(test).convert('RGB'), test, test_case)
             diff = ImageChops.difference(img_prod, img_test)
             with self.subTest(f"{test} DOES NOT MATCH {prod}"):
                 try:
@@ -70,7 +71,7 @@ class TestCompareImages(unittest.TestCase):
         autotest.add_testcase_steps_for_images(test_case, screens)
         autotest.send_execution_image_diff(test_case, results)
 
-    def find_frame(self, orig_image, img_name) -> Image:
+    def find_frame(self, orig_image, img_name, test_case) -> Image:
         orig_pix_map = orig_image.load()
         width, height = orig_image.size
 
@@ -99,6 +100,7 @@ class TestCompareImages(unittest.TestCase):
             }
             box = self.search_for_it(target, orig_pix_map, four_images=True)
 
+            # ---code to check if there is something wrong with finding the box---
             # target = orig_image.crop((target['left'], target['top'], target['right'], target['bottom']))
             # target.save('screenshots/target.png')
             # to_save = orig_image.crop(box)
@@ -108,6 +110,7 @@ class TestCompareImages(unittest.TestCase):
             self.assertEqual(len(box), 4, f"Could not find borders of the frame for {img_name}.")
         except AssertionError as e:
             logging.error(f"Could not find borders of the frame for {img_name}.")
+            autotest.report_diff_failure(test_case, f"Could not find borders of the frame for {img_name}.")
             raise e
 
         return orig_image.crop(box)
