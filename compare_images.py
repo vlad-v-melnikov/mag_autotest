@@ -3,7 +3,7 @@ from PIL import Image, ImageChops
 import glob
 import logging
 from modules.settings_compare import SettingsCompare
-import modules.autotest as autotest
+from modules.jirainterface import JiraInterface
 from datetime import datetime
 
 
@@ -15,6 +15,7 @@ class TestCompareImages(unittest.TestCase):
         self.settings = SettingsCompare()
         self.COLOR_SINGLE = self.settings.compare['box_color']
         self.COLOR_FOUR = self.settings.compare['box_color_four']
+        self.jira_interface = JiraInterface(self.settings.driver)
 
         now = datetime.now()
         log_time = now.strftime("%Y%m%d%H%M%S")
@@ -30,7 +31,7 @@ class TestCompareImages(unittest.TestCase):
 
         test_case = None
         if self.settings.jira:
-            test_case = autotest.create_testcase_for_diff()
+            test_case = self.jira_interface.create_testcase_for_diff()
 
         try:
             self.assertNotEqual(len(test_screens), 0,
@@ -40,7 +41,7 @@ class TestCompareImages(unittest.TestCase):
         except AssertionError as e:
             logging.error("Zero screenshots from TEST and/or PROD")
             if self.settings.jira:
-                autotest.report_diff_failure(test_case, "Zero screenshots from TEST and/or PROD",)
+                self.jira_interface.report_diff_failure(test_case, "Zero screenshots from TEST and/or PROD", )
             raise e
 
         try:
@@ -49,7 +50,7 @@ class TestCompareImages(unittest.TestCase):
         except AssertionError as e:
             logging.error("Number of screenshots for test and prod is DIFFERENT")
             if self.settings.jira:
-                autotest.report_diff_failure(test_case, "Number of screenshots for test and prod is DIFFERENT", )
+                self.jira_interface.report_diff_failure(test_case, "Number of screenshots for test and prod is DIFFERENT", )
             raise e
 
         screens = zip(prod_screens, test_screens)
@@ -73,8 +74,8 @@ class TestCompareImages(unittest.TestCase):
         print('Results of comparison: ', results)
         if self.settings.jira:
             screens = [screen[17:] for screen in prod_screens]
-            autotest.add_testcase_steps_for_images(test_case, screens)
-            autotest.send_execution_image_diff(test_case, results)
+            self.jira_interface.add_testcase_steps_for_images(test_case, screens)
+            self.jira_interface.send_execution_image_diff(test_case, results)
 
     def find_frame(self, orig_image, img_name, test_case) -> Image:
         orig_pix_map = orig_image.load()
@@ -115,7 +116,7 @@ class TestCompareImages(unittest.TestCase):
             self.assertEqual(len(box), 4, f"Could not find borders of the frame for {img_name}.")
         except AssertionError as e:
             logging.error(f"Could not find borders of the frame for {img_name}.")
-            autotest.report_diff_failure(test_case, f"Could not find borders of the frame for {img_name}.")
+            self.jira_interface.report_diff_failure(test_case, f"Could not find borders of the frame for {img_name}.")
             raise e
 
         return orig_image.crop(box)

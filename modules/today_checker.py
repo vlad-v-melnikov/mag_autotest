@@ -6,8 +6,8 @@ from modules.trop import Trop
 from modules.soundings import Soundings
 from pprint import pprint
 from datetime import date, datetime
-from modules.autotest import TODAY_TESTCASES
-from modules.autotest import send_report_check_today
+from modules.jirainterface import TODAY_TESTCASES
+from modules.jirainterface import JiraInterface
 
 
 CLASS_MAP = {
@@ -18,6 +18,19 @@ CLASS_MAP = {
     'GFS-SND': Soundings,
     'NAM-SND': Soundings,
 }
+
+
+def print_results(no_today):
+    print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
+    pprint(no_today)
+
+
+def save_results_to_local_report(no_today):
+    now = datetime.now()
+    report_time = now.strftime("%Y%m%d%H%M%S")
+    with open(f'reports/today_check_report_{report_time}.txt', 'w') as report_file:
+        print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
+        pprint(no_today, stream=report_file)
 
 
 class TodayChecker:
@@ -47,29 +60,17 @@ class TodayChecker:
 
         return no_today
 
-    def print_results(self, no_today):
-        print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
-        pprint(no_today)
-
-    def save_results_to_local_report(self, no_today):
-        now = datetime.now()
-        report_time = now.strftime("%Y%m%d%H%M%S")
-        with open(f'reports/today_check_report_{report_time}.txt', 'w') as report_file:
-            print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
-            pprint(no_today, stream=report_file)
-
     def save_results_to_jira(self, no_today):
+        jira = JiraInterface(self.settings.driver)
         for model, test in TODAY_TESTCASES.items():
-            # print(model, test)
             if model in no_today:
                 result = "Fail"
                 comment = "Today cycle NOT found for " + model
             else:
                 result = "Pass"
                 comment = "Today cycle found for " + model
-            send_report_check_today(
+            jira.send_report_check_today(
                 result=result,
-                cycle_key="MT-R4",
                 test_case_key=test,
                 comment=comment,
                 start_time=self.start_time
@@ -184,8 +185,8 @@ class TodayChecker:
 
         print()
         results = self.find_no_today()
-        self.print_results(results)
-        self.save_results_to_local_report(results)
+        print_results(results)
+        save_results_to_local_report(results)
         if zephyr_scale:
             self.save_results_to_jira(results)
             print("Pushed results to Zephyr Scale in JIRA.")

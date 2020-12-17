@@ -1,6 +1,6 @@
 ---
-driver: Firefox
-jira: false
+driver: Edge
+jira: true
 compare:
   box_color:
   - 102

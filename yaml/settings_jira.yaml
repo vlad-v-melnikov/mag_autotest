@@ -1,0 +1,12 @@
+---
+project_key: MT
+token_file: token.txt
+
+check_today:
+  cycle_key: MT-R4
+
+compare:
+  cycle_key: MT-R6
+  folder_id: 1082650
+
+
