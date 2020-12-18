@@ -6,6 +6,7 @@
 /screenshots/
 /logs/
 /keep/
+/demos/
 
 *.log
 *.spec
@@ -18,5 +19,4 @@
 /build/
 /reports/
 /json/trop.json
-/demos/
 /token.txt
