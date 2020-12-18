@@ -28,14 +28,7 @@ class JiraInterface:
             ]
         }
 
-        with open(self.settings.token_file) as file:
-            token = file.read()
-        headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': f'Basic {token}',
-            'Cookie': 'JSESSIONID=B6668DF5DA8A0D8B5825AEDD27823258; atlassian.xsrf.token=BZYC-SHM8-8S0W-Z5IJ_1161eb542607d58ae1ad29b0f67da98b39e40fb4_lin'
-        }
+        headers = get_headers(self.get_token())
         requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
     def create_testcase_for_diff(self):
@@ -47,16 +40,7 @@ class JiraInterface:
             "status": "Approved",
             "folder": self.settings.compare['folder']
         }
-
-        with open(self.settings.token_file) as file:
-            token = file.read()
-
-        headers = {
-            'Accept': 'application/json',
-            'Authorization': f'Basic {token}',
-            'Content-Type': 'application/json',
-            'Cookie': 'JSESSIONID=B6668DF5DA8A0D8B5825AEDD27823258; atlassian.xsrf.token=BZYC-SHM8-8S0W-Z5IJ_1161eb542607d58ae1ad29b0f67da98b39e40fb4_lin'
-        }
+        headers = get_headers(self.get_token())
 
         result = requests.request("POST", url, headers=headers, data=json.dumps(payload))
         if result.ok:
@@ -80,14 +64,7 @@ class JiraInterface:
                 }
             )
 
-        with open(self.settings.token_file) as file:
-            token = file.read()
-        headers = {
-            'Accept': 'application/json',
-            'Authorization': f'Bearer {token}',
-            'Content-Type': 'application/json'
-        }
-
+        headers = get_headers(self.get_token())
         return requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
     def send_execution_image_diff(self, test_case, results):
@@ -111,14 +88,7 @@ class JiraInterface:
             "actualEndDate": get_now_datetime_utc()
         }
 
-        with open(self.settings.token_file) as file:
-            token = file.read()
-        headers = {
-            'Accept': 'application/json',
-            'Authorization': f'{token}',
-            'Content-Type': 'application/json'
-        }
-
+        headers = get_headers(self.get_token())
         requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
     def report_diff_failure(self, test_case, comment):
