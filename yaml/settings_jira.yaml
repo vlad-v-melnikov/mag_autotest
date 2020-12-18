@@ -1,39 +1,39 @@
 ---
-project_key: MT
+project_key: MAG
 token_file: token.txt
 
 check_today:
-  cycle_key: MT-R4
+  cycle_key: MAG-C1
 
 compare:
-  cycle_key: MT-R6
-  folder_id: 1082650
+  cycle_key: MAG-C2
+  folder: "/Image Diffs"
 
 TODAY_TESTCASES:
-    'GFS': 'MT-T3'
-    'GEFS-SPAG': 'MT-T4'
-    'NAEFS': 'MT-T5'
-    'NAM': 'MT-T6'
-    'NAM-HIRES': 'MT-T7'
-    'FIREWX': 'MT-T8'
-    'RAP': 'MT-T9'
-    'HRRR': 'MT-T10'
-    'HRW-NMMB': 'MT-T11'
-    'HRW-ARW': 'MT-T12'
-    'HRW-ARW2': 'MT-T13'
-    'SREF': 'MT-T14'
-    'HREF': 'MT-T15'
-    'NBM': 'MT-T16'
-    'SREF-CLUSTER': 'MT-T17'
-    'WW3': 'MT-T18'
-    'ESTOFS': 'MT-T19'
-    'ICE-DRIFT': 'MT-T20'
-    'STORM-TRACKS': 'MT-T21'
-    'UAIR': 'MT-T22'
-    'SKEWT': 'MT-T23'
-    'RTMA': 'MT-T24'
-    'TROP': 'MT-T25'
-    'GFS-SND': 'MT-T26'
-    'NAM-SND': 'MT-T27'
+    'GFS': 'MAG-T2'
+    'GEFS-SPAG': 'MAG-T3'
+    'NAEFS': 'MAG-T4'
+    'NAM': 'MAG-T5'
+    'NAM-HIRES': 'MAG-T6'
+    'FIREWX': 'MAG-T7'
+    'RAP': 'MAG-T8'
+    'HRRR': 'MAG-T9'
+    'HRW-NMMB': 'MAG-T10'
+    'HRW-ARW': 'MAG-T11'
+    'HRW-ARW2': 'MAG-T12'
+    'SREF': 'MAG-T13'
+    'HREF': 'MAG-T14'
+    'NBM': 'MAG-T15'
+    'SREF-CLUSTER': 'MAG-T16'
+    'WW3': 'MAG-T17'
+    'ESTOFS': 'MAG-T18'
+    'ICE-DRIFT': 'MAG-T19'
+    'STORM-TRACKS': 'MAG-T20'
+    'UAIR': 'MAG-T21'
+    'SKEWT': 'MAG-T22'
+    'RTMA': 'MAG-T23'
+    'TROP': 'MAG-T24'
+    'GFS-SND': 'MAG-T25'
+    'NAM-SND': 'MAG-T26'
 
 
