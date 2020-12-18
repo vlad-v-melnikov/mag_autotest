@@ -1,11 +1,11 @@
+from pprint import pprint
+from datetime import date, datetime
 from modules.settings import Settings
 from modules.gfs_like import GfsLike
 from modules.uair import Uair
 from modules.skewt import Skewt
 from modules.trop import Trop
 from modules.soundings import Soundings
-from pprint import pprint
-from datetime import date, datetime
 from modules.jirainterface import JiraInterface
 
 

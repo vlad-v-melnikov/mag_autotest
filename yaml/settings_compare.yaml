@@ -1,5 +1,5 @@
 ---
-driver: Edge
+driver: Firefox
 jira: true
 compare:
   box_color:

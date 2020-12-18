@@ -43,7 +43,6 @@ def parse_arguments():
                        nargs=2,
                        help="Remote server testing on BrowserStack, followed by <name> and <password>")
 
-
     args = parser.parse_args()
     headless = args.headless
     remote = args.remote is not None
