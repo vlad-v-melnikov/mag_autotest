@@ -13,7 +13,8 @@ class JiraInterface:
         self.settings = SettingsJira(environment)
 
     def send_report_check_today(self, result, test_case_key, comment, start_time):
-        url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/testrun/{self.settings.check_today['cycle_key']}/testcase/{test_case_key}/testresult"
+        url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/testrun/{self.settings.check_today['cycle_key']}" \
+              f"/testcase/{test_case_key}/testresult"
         payload = {
             "status": result,
             "environment": self.settings.environment,
