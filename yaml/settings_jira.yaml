@@ -18,7 +18,7 @@ TODAY_TESTCASES:
     'FIREWX': 'MAG-T7'
     'RAP': 'MAG-T8'
     'HRRR': 'MAG-T9'
-    'HRW-NMMB': 'MAG-T10'
+    'HRW-FV3': 'MAG-T10'
     'HRW-ARW': 'MAG-T11'
     'HRW-ARW2': 'MAG-T12'
     'SREF': 'MAG-T13'

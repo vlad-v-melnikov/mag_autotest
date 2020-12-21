@@ -46,8 +46,12 @@ class TodayChecker:
 
     def save_cycles(self, dude, counter, total):
         print(f"Model {counter} out of {total}: saving cycles for {dude.plan['model']}")
-        elements = dude.get_all_cycles()
-        self.cycles[dude.plan['model']] = [element.get_attribute('title') for element in elements]
+        try:
+            elements = dude.get_all_cycles()
+            self.cycles[dude.plan['model']] = [element.get_attribute('title') for element in elements]
+        except AssertionError:
+            self.cycles[dude.plan['model']] = []
+
 
     def find_no_today(self):
         no_today = []

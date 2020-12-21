@@ -15,7 +15,7 @@ sites:
 
 driver: Firefox
 
-headless: true
+headless: false
 
 remote:
   bstack:options:
@@ -89,9 +89,9 @@ plan:
     area_count: 2
     product_count: 2
     hour_count: 2
-  HRW-NMMB:
+  HRW-FV3:
     section: Model Guidance
-    model: HRW-NMMB
+    model: HRW-FV3
     area_count: 1
     product_count: 1
     hour_count: 1
