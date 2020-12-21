@@ -3,10 +3,12 @@ import time
 import requests
 import json
 from datetime import datetime
+
 try:
     from modules.settings_jira import SettingsJira
 except ImportError:
     from settings_jira import SettingsJira
+
 
 class JiraInterface:
     def __init__(self, environment):
@@ -90,7 +92,9 @@ class JiraInterface:
         headers = get_headers(self.get_token())
         requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
-    def report_diff_failure(self, test_case, comment):
+    def report_diff_failure(self, test_case, comment, img_name=''):
+        img_name = img_name.replace('\\', '/')
+        print("Image name:", img_name)
         # step creation
         url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/testcase/{test_case}"
         payload = {
@@ -127,6 +131,29 @@ class JiraInterface:
         headers = get_headers(self.get_token())
         requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
+        # attachment
+        if not img_name:
+            return
+        self.attach_images_to_step(test_case, [img_name])
+
+    def attach_images_to_step(self, test_case, images, step_index=0):
+        url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/testcase/{test_case}/step/{step_index}/attachments"
+        headers = get_headers(self.get_token())
+        headers.pop('Content-Type')
+
+        files = []
+        for image_name in images:
+            files.append(
+                ('file', (image_name,
+                          open(image_name, 'rb'),
+                          'image/png'))
+            )
+        response = requests.request("POST", url, headers=headers, data={}, files=files)
+        for file in files:  # need to close the files, to avoid warning
+            file[1][1].close()
+        print(response.status_code)
+        print(response.text)
+
     def get_token(self):
         with open(self.settings.token_file) as file:
             token = file.read()
@@ -143,11 +170,11 @@ def get_now_datetime():
 
 def get_headers(token):
     return {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': f'Basic {token}',
-            'Cookie': 'JSESSIONID=B6668DF5DA8A0D8B5825AEDD27823258; atlassian.xsrf.token=BZYC-SHM8-8S0W-Z5IJ_1161eb542607d58ae1ad29b0f67da98b39e40fb4_lin'
-        }
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': f'Basic {token}',
+        'Cookie': 'JSESSIONID=B6668DF5DA8A0D8B5825AEDD27823258; atlassian.xsrf.token=BZYC-SHM8-8S0W-Z5IJ_1161eb542607d58ae1ad29b0f67da98b39e40fb4_lin'
+    }
 
 
 if __name__ == '__main__':

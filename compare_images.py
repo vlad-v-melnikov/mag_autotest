@@ -119,7 +119,10 @@ class TestCompareImages(unittest.TestCase):
             self.assertEqual(len(box), 4, f"Could not find borders of the frame for {img_name}.")
         except AssertionError as e:
             logging.error(f"Could not find borders of the frame for {img_name}.")
-            self.jira_interface.report_diff_failure(test_case, f"Could not find borders of the frame for {img_name}.")
+            self.jira_interface.report_diff_failure(
+                test_case,
+                f"Could not find borders of the frame for {img_name}.",
+                img_name)
             raise e
 
         return orig_image.crop(box)
