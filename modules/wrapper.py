@@ -22,8 +22,9 @@ def clear_screenshots(model=''):
     for f in files:
         os.unlink(f)
     if len(files) > 0:
-        print("Cleared previous screenshots for", model)
-        logging.info("Cleared previous screenshots for" + model)
+        text = f"Cleared previous screenshots for {model}" if model else "Cleared previous screenshots"
+        print(text)
+        logging.info(text)
 
 
 def log_config(log_name='screenshot_maker'):
@@ -83,7 +84,7 @@ class Wrapper:
             sys.exit(0)
 
         if clear:
-            clear_screenshots(model)
+            clear_screenshots()
 
         print("Setting up web driver...", end=' ')
         logging.info("Setting up web driver...")
