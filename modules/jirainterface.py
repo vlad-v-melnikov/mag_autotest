@@ -7,8 +7,6 @@ try:
     from modules.settings_jira import SettingsJira
 except ImportError:
     from settings_jira import SettingsJira
-import sys
-from pprint import pprint
 
 class JiraInterface:
     def __init__(self, environment):
@@ -45,53 +43,55 @@ class JiraInterface:
         headers = get_headers(self.get_token())
 
         result = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+        print(result.text)
         if result.ok:
             return result.json()['key']
         return False
 
     def add_testcase_steps_for_images(self, test_case, images):
-        url = f"https://api.adaptavist.io/tm4j/v2/testcases/{test_case}/teststeps"
+        url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/testcase/{test_case}"
         payload = {
-            "mode": "OVERWRITE",
-            "items": []
+            "testScript": {
+                "type": "STEP_BY_STEP",
+                "steps": []
+            }
         }
 
         for image in images:
-            payload["items"].append(
+            payload["testScript"]["steps"].append(
                 {
-                    "inline": {
-                        "description": f"Test image {image}",
-                        "expectedResult": "Image on TEST matches image on PROD"
-                    }
+                    "description": f"Test image {image}",
+                    "expectedResult": "Image on TEST matches image on PROD"
                 }
             )
 
         headers = get_headers(self.get_token())
-        return requests.request("POST", url, headers=headers, data=json.dumps(payload))
+        response = requests.request("PUT", url, headers=headers, data=json.dumps(payload))
+        print(response.text)
+        return response
 
     def send_execution_image_diff(self, test_case, results):
-        url = "https://api.adaptavist.io/tm4j/v2/testexecutions"
+        url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/testrun/{self.settings.compare['cycle_key']}" \
+              f"/testcase/{test_case}/testresult"
         test_script_results = []
         for result in results:
             test_script_results.append(
                 {
-                    "statusName": f"{result}",
-                    "actualEndDate": get_now_datetime_utc(),
-                    "actualResult": "TEST matches PROD" if result == 'Pass' else "TEST does not match PROD"
+                    "index": len(test_script_results),
+                    "status": result,
+                    "comment": "TEST matches PROD" if result == 'Pass' else "TEST does not match PROD"
                 }
             )
         payload = {
-            "projectKey": self.settings.project_key,
-            "testCycleKey": self.settings.compare['cycle_key'],
-            "testCaseKey": f"{test_case}",
-            "statusName": "Pass" if "Fail" not in results else "Fail",
-            "testScriptResults": test_script_results,
-            "environmentName": self.settings.environment,
+            "status": "Pass" if "Fail" not in results else "Fail",
+            "scriptResults": test_script_results,
+            "environment": self.settings.environment,
             "actualEndDate": get_now_datetime_utc()
         }
 
         headers = get_headers(self.get_token())
-        requests.request("POST", url, headers=headers, data=json.dumps(payload))
+        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+        print(response.text)
 
     def report_diff_failure(self, test_case, comment):
         # step creation
@@ -129,8 +129,7 @@ class JiraInterface:
 
         headers = get_headers(self.get_token())
         response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-        print(response.json())
-
+        print(response.text)
 
     def get_token(self):
         with open(self.settings.token_file) as file:
@@ -157,4 +156,8 @@ def get_headers(token):
 
 if __name__ == '__main__':
     jira = JiraInterface('Firefox')
-    jira.report_diff_failure('MAG-T29', 'No images for diff found')
+    test_case = jira.create_testcase_for_diff()
+    if test_case:
+        jira.add_testcase_steps_for_images(test_case, ['one', 'two', 'three'])
+    else:
+        print("Test case could not be created.")
