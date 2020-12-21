@@ -43,7 +43,6 @@ class JiraInterface:
         headers = get_headers(self.get_token())
 
         result = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-        print(result.text)
         if result.ok:
             return result.json()['key']
         return False
@@ -66,9 +65,7 @@ class JiraInterface:
             )
 
         headers = get_headers(self.get_token())
-        response = requests.request("PUT", url, headers=headers, data=json.dumps(payload))
-        print(response.text)
-        return response
+        requests.request("PUT", url, headers=headers, data=json.dumps(payload))
 
     def send_execution_image_diff(self, test_case, results):
         url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/testrun/{self.settings.compare['cycle_key']}" \
@@ -90,8 +87,7 @@ class JiraInterface:
         }
 
         headers = get_headers(self.get_token())
-        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-        print(response.text)
+        requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
     def report_diff_failure(self, test_case, comment):
         # step creation
@@ -128,8 +124,7 @@ class JiraInterface:
         }
 
         headers = get_headers(self.get_token())
-        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-        print(response.text)
+        requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
     def get_token(self):
         with open(self.settings.token_file) as file:
