@@ -3,8 +3,10 @@ import time
 import requests
 import json
 from datetime import datetime
-# from modules.settings_jira import SettingsJira
-from settings_jira import SettingsJira
+try:
+    from modules.settings_jira import SettingsJira
+except ImportError:
+    from settings_jira import SettingsJira
 import sys
 from pprint import pprint
 
