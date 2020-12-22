@@ -1,7 +1,7 @@
 import yaml
 from pprint import pprint
 import requests
-
+import sys
 
 class SettingsJira:
     def __init__(self, environment, filename='yaml/settings_jira.yaml'):
@@ -22,8 +22,12 @@ class SettingsJira:
 
     def get_environments(self, project_key):
         url = f"https://nco-jira.ncep.noaa.gov/rest/atm/1.0/environments?projectKey={project_key}"
-        with open(self.token_file) as file:
-            token = file.read()
+        try:
+            with open(self.token_file) as file:
+                token = file.read()
+        except FileNotFoundError:
+            print(f'---Could not send info to Jira as the token file {self.token_file} is not found.---')
+            sys.exit(0)
         headers = {
             'Accept': 'application/json',
             'Authorization': f'Basic {token}',

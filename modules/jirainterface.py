@@ -163,8 +163,12 @@ class JiraInterface:
                 print(response.text)
 
     def get_token(self):
-        with open(self.settings.token_file) as file:
-            token = file.read()
+        try:
+            with open(self.settings.token_file) as file:
+                token = file.read()
+        except FileNotFoundError as e:
+            print(f"---Cannot open file {self.settings.token_file}.---")
+            raise e
         return token
 
 

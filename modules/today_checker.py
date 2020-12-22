@@ -20,6 +20,10 @@ CLASS_MAP = {
 
 
 def print_results(no_today):
+    if not no_today:
+        print("All models have today's cycles.")
+        return
+
     print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
     pprint(no_today)
 
@@ -28,8 +32,11 @@ def save_results_to_local_report(no_today):
     now = datetime.now()
     report_time = now.strftime("%Y%m%d%H%M%S")
     with open(f'reports/today_check_report_{report_time}.txt', 'w') as report_file:
-        print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
-        pprint(no_today, stream=report_file)
+        if no_today:
+            print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
+            pprint(no_today, stream=report_file)
+        else:
+            print(f"All models have today's cycles", file=report_file)
 
 
 class TodayChecker:
