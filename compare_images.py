@@ -32,8 +32,7 @@ class TestCompareImages(unittest.TestCase):
         test_case = None
         if self.settings.jira:
             test_case = self.jira_interface.create_testcase_for_diff()
-
-        self.assertTrue(test_case, "Test case could not be created.")
+            self.assertTrue(test_case, "Test case could not be created.")
 
         try:
             self.assertNotEqual(len(test_screens), 0,
