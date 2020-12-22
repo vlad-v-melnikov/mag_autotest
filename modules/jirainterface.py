@@ -154,19 +154,13 @@ class JiraInterface:
         headers.pop('Content-Type')
 
         for image_name in images:
-            files = [
-                (
-                    ('file', (image_name,
-                              open(image_name, 'rb'),
-                              'image/png'))
-                )
-            ]
-
-            pprint(files)
-            response = requests.request("POST", url, headers=headers, data={}, files=files)
-            files[0][1][1].close()
-            print(response.status_code)
-            print(response.text)
+            with open(image_name, 'rb') as file:
+                files = [
+                    ('file', (image_name, file, 'image/png'))
+                ]
+                response = requests.request("POST", url, headers=headers, data={}, files=files)
+                print(response.status_code)
+                print(response.text)
 
     def get_token(self):
         with open(self.settings.token_file) as file:
