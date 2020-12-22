@@ -2,9 +2,10 @@ import yaml
 from pprint import pprint
 import requests
 import sys
+import json
 
 class SettingsJira:
-    def __init__(self, environment, filename='yaml/settings_jira.yaml'):
+    def __init__(self, environment='Unknown', filename='yaml/settings_jira.yaml'):
 
         with open(filename) as file:
             self.settings = yaml.load(file, Loader=yaml.FullLoader)
@@ -26,7 +27,7 @@ class SettingsJira:
             with open(self.token_file) as file:
                 token = file.read()
         except FileNotFoundError:
-            print(f'---Could not send info to Jira as the token file {self.token_file} is not found.---')
+            print(f'---Could not send info to Jira. Token file "{self.token_file}" is not found.---')
             sys.exit(0)
         headers = {
             'Accept': 'application/json',
@@ -35,9 +36,28 @@ class SettingsJira:
                       'atlassian.xsrf.token=BZYC-SHM8-8S0W-Z5IJ_1161eb542607d58ae1ad29b0f67da98b39e40fb4_lin'
         }
 
-        response = requests.request("GET", url, headers=headers).json()
+        try:
+            response = requests.request("GET", url, headers=headers)
+        except Exception as e:
+            print('\n', type(e), '\n', e, '\n')
+            print('---Could not connect to Jira: check VPN and/or connection parameters---')
+            sys.exit(0)
+
+        try:
+            response_json = response.json()
+        except json.JSONDecodeError:
+            print("---Could not connect to Jira:---")
+            print("Response error code:", response.status_code)
+            if response.status_code == 401 or response.status_code == 403:
+                print("Authentication error: make your token again with correct username and password")
+                if response.status_code == 403:
+                    print("If this error repeats, you may need to enter Jira from your browser and enter CAPTCHA.")
+            else:
+                print(response.text)
+            sys.exit(0)
+
         environments = []
-        for val in response:
+        for val in response_json:
             environments.append(val['name'])
 
         return environments
