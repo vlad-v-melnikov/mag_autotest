@@ -15,7 +15,7 @@ sites:
 
 driver: Firefox
 
-headless: false
+headless: true
 
 remote:
   bstack:options:

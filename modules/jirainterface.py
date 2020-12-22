@@ -3,6 +3,7 @@ import time
 import requests
 import json
 from datetime import datetime
+from pprint import pprint
 
 try:
     from modules.settings_jira import SettingsJira
@@ -92,6 +93,17 @@ class JiraInterface:
         headers = get_headers(self.get_token())
         requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
+    def send_execution_image_diff_attachments(self, screens, test_case, results):
+        step_index = -1
+        for result, screen in zip(results, screens):
+            step_index += 1
+            if result == 'Pass':
+                continue
+            screen_prod = 'screenshots/prod_' + screen
+            screen_test = 'screenshots/test_' + screen
+            screen_diff = 'screenshots/diff_' + screen
+            self.attach_images_to_step(test_case, [screen_prod, screen_test, screen_diff], step_index)
+
     def report_diff_failure(self, test_case, comment, img_name=''):
         img_name = img_name.replace('\\', '/')
         print("Image name:", img_name)
@@ -141,18 +153,20 @@ class JiraInterface:
         headers = get_headers(self.get_token())
         headers.pop('Content-Type')
 
-        files = []
         for image_name in images:
-            files.append(
-                ('file', (image_name,
-                          open(image_name, 'rb'),
-                          'image/png'))
-            )
-        response = requests.request("POST", url, headers=headers, data={}, files=files)
-        for file in files:  # need to close the files, to avoid warning
-            file[1][1].close()
-        print(response.status_code)
-        print(response.text)
+            files = [
+                (
+                    ('file', (image_name,
+                              open(image_name, 'rb'),
+                              'image/png'))
+                )
+            ]
+
+            pprint(files)
+            response = requests.request("POST", url, headers=headers, data={}, files=files)
+            files[0][1][1].close()
+            print(response.status_code)
+            print(response.text)
 
     def get_token(self):
         with open(self.settings.token_file) as file:

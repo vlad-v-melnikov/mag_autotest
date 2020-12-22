@@ -77,6 +77,7 @@ class TestCompareImages(unittest.TestCase):
             print("Pushing results to Zephyr Scale on Jira...")
             screens = [screen[17:] for screen in prod_screens]
             self.jira_interface.add_testcase_steps_for_images(test_case, screens)
+            self.jira_interface.send_execution_image_diff_attachments(screens, test_case, results)
             self.jira_interface.send_execution_image_diff(test_case, results)
             print("Done.")
 
