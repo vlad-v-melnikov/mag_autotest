@@ -104,6 +104,7 @@ class JiraInterface:
             screen_diff = 'screenshots/diff_' + screen
             self.attach_images_to_step(test_case, [screen_prod, screen_test, screen_diff], step_index)
 
+
     def report_diff_failure(self, test_case, comment, img_name=''):
         img_name = img_name.replace('\\', '/')
         print("Image name:", img_name)
@@ -159,8 +160,8 @@ class JiraInterface:
                     ('file', (image_name, file, 'image/png'))
                 ]
                 response = requests.request("POST", url, headers=headers, data={}, files=files)
-                print(response.status_code)
-                print(response.text)
+                if response.ok:
+                    print(f"Image {image_name} attached to step")
 
     def get_token(self):
         try:
