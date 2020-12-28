@@ -2,7 +2,7 @@
 sites:
   test: https://magtest.ncep.noaa.gov
   prod: https://mag.ncep.noaa.gov
-  area_from: test
+  area_from: prod
   cycle_from: test
   products_from: test
   cluster_from: prod
@@ -88,7 +88,7 @@ plan:
     section: Model Guidance
     model: RAP
     area_count: 1
-    product_count: 0
+    product_count: 4
     hour_count: 1
     area: {}
   HRRR:

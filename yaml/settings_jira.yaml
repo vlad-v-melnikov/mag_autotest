@@ -12,6 +12,7 @@ compare:
 TODAY_TESTCASES:
     'GFS': 'MAG-T2'
     'GEFS-SPAG': 'MAG-T3'
+    'GEFS-MEAN-SPRD': 'MAG-T73'
     'NAEFS': 'MAG-T4'
     'NAM': 'MAG-T5'
     'NAM-HIRES': 'MAG-T6'
