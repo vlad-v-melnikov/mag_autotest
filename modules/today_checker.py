@@ -141,14 +141,17 @@ class TodayChecker:
             dude.plan['area_count'] = 0
 
             elements = dude.get_all_storms()
-            assert len(elements) > 0, 'No storms found'
-            dude.click_storm(elements[-1].text)
+            try:
+                assert len(elements) > 0, 'No storms found'
+                dude.click_storm(elements[-1].text)
 
-            elements = dude.get_all_types()
-            assert len(elements) > 0, 'No types found'
-            dude.click_type(elements[0].text)
+                elements = dude.get_all_types()
+                assert len(elements) > 0, 'No types found'
+                dude.click_type(elements[0].text)
 
-            self.save_cycles(dude, counter, total)
+                self.save_cycles(dude, counter, total)
+            except AssertionError as e:
+                print(f"Model {counter} out of {total}: ", e)
             dude.click_back()
         return counter
 
