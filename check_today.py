@@ -24,7 +24,6 @@ def check_today():
         print("\n--Something went wrong:--")
         print(e)
         print()
-        traceback.print_exc()
     finally:
         wrapper.tear_down()
 

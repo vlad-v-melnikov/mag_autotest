@@ -201,5 +201,8 @@ class TodayChecker:
         print_results(results)
         save_results_to_local_report(results)
         if zephyr_scale:
-            self.save_results_to_jira(results)
-            print("Pushed results to Zephyr Scale in JIRA.")
+            try:
+                self.save_results_to_jira(results)
+                print("Pushed results to Zephyr Scale in JIRA.")
+            except Exception as e:
+                print("An error happened while trying to connect to Jira: ", e)
