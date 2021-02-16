@@ -20,4 +20,4 @@ compare:
   - 100
   - 50
   - 120
-  use_padding: true
+  use_padding: false
