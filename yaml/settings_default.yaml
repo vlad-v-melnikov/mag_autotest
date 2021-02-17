@@ -34,7 +34,8 @@ plan:
     area_count: 0
     product_count: 0
     hour_count: 1
-    area: {}
+    area:
+      NAMER: []
   GEFS-SPAG:
     section: Model Guidance
     model: GEFS-SPAG
@@ -216,6 +217,6 @@ plan:
     stations: []
 
 delays:
-  hover_and_click: 1
+  hover_and_click: 2
   common: 1
-  image: 1
+  image: 2
