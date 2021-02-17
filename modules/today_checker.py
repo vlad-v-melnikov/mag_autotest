@@ -24,7 +24,7 @@ def print_results(no_today):
         print("All models have today's cycles.")
         return
 
-    print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:")
+    print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in {len(no_today)} models:")
     pprint(no_today)
 
 
