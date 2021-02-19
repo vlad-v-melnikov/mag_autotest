@@ -15,7 +15,8 @@ class TestCompareImages(unittest.TestCase):
         self.settings = SettingsCompare()
         self.COLOR_SINGLE = self.settings.compare['box_color']
         self.COLOR_FOUR = self.settings.compare['box_color_four']
-        self.jira_interface = JiraInterface(self.settings.driver)
+        if self.settings.jira:
+            self.jira_interface = JiraInterface(self.settings.driver)
 
         now = datetime.now()
         log_time = now.strftime("%Y%m%d%H%M%S")

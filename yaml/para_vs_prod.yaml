@@ -1,6 +1,6 @@
 ---
 sites:
-  test: https://magtest.ncep.noaa.gov
+  test: https://magpara.ncep.noaa.gov
   prod: https://mag.ncep.noaa.gov
   area_from: prod
   cycle_from: test
@@ -10,8 +10,8 @@ sites:
   storms_from: test
   order_of_iteration:
   - test
-  - prod
-  today_only: true
+#  - prod
+  today_only: false
 
 driver: Firefox
 
@@ -35,7 +35,7 @@ plan:
     product_count: 0
     hour_count: 1
     area:
-      NAMER: []
+      US-SAMOA: []
   GEFS-SPAG:
     section: Model Guidance
     model: GEFS-SPAG
@@ -152,8 +152,8 @@ plan:
   WW3:
     section: Model Guidance
     model: WW3
-    area_count: 1
-    product_count: 3
+    area_count: 0
+    product_count: 0
     hour_count: 1
     area: {}
   ESTOFS:
@@ -180,15 +180,16 @@ plan:
   UAIR:
     section: Observations and Analyses
     model: UAIR
-    area_count: 1
-    product_count: 1
+    area_count: 0
+    product_count: 0
     area: {}
   SKEWT:
     section: Observations and Analyses
     model: SKEWT
-    area_count: 2
-    station_count: 2
-    area: {}
+    area_count: 0
+    station_count: 0
+    area:
+      NAMER: []
   RTMA:
     section: Observations and Analyses
     model: RTMA
