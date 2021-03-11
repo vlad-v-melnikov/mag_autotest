@@ -1,7 +1,6 @@
 from modules.wrapper import Wrapper
 from modules.today_checker import TodayChecker
 import argparse
-import traceback
 
 
 def check_today():
