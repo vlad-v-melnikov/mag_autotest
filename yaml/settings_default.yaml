@@ -31,7 +31,7 @@ plan:
   GFS:
     section: Model Guidance
     model: GFS
-    area_count: 0
+    area_count: 1
     product_count: 0
     hour_count: 1
     area:
@@ -217,6 +217,6 @@ plan:
     stations: []
 
 delays:
-  hover_and_click: 2
-  common: 1
-  image: 2
+  hover_and_click: 1
+  common: 2
+  image: 1

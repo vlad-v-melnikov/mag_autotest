@@ -5,3 +5,4 @@ retry
 Pillow
 pyyaml
 requests
+browserstack-local

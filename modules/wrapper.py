@@ -12,6 +12,9 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
+# BrowserStack Local, for VPN testing
+from browserstack.local import Local
+
 # internal
 from modules.settings import Settings
 import modules.dimensions as dim
@@ -70,6 +73,7 @@ class Wrapper:
                  name='',
                  password='',
                  test_name=''):
+        self.bs_local = Local()
         self.start_time = time.time()
         self.settings = Settings(filename)
         make_dirs_if_none(log_name)
@@ -124,6 +128,12 @@ class Wrapper:
         print("Using remote web driver...", end=' ')
         logging.info("Using remote web driver...")
         desired_cap = self.settings.remote
+
+        # add capability for local testing and set up local connection
+        desired_cap['browserstack.local'] = 'true'
+        bs_local_args = {'key': password, 'forcelocal': 'true'}
+        self.bs_local.start(**bs_local_args)
+
         if 'sessionName' not in desired_cap['bstack:options'].keys():
             desired_cap['bstack:options']['sessionName'] = test_name
         if 'browserName' not in desired_cap.keys():
@@ -153,6 +163,9 @@ class Wrapper:
         logging.info("Done.")
 
     def tear_down(self):
+        if self.bs_local:
+            self.bs_local.stop()
+
         print("Closing sites...", end=' ')
         logging.info("Closing sites...")
         for handle in self.handles.values():
