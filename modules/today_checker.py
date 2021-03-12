@@ -61,7 +61,6 @@ class TodayChecker:
         except AssertionError:
             self.cycles[dude.plan['model']] = []
 
-
     def find_no_today(self):
         no_today = []
         date_today = date.today().strftime("%Y%m%d")
