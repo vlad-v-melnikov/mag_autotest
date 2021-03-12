@@ -31,12 +31,14 @@ def print_results(no_today):
 def save_results_to_local_report(no_today):
     now = datetime.now()
     report_time = now.strftime("%Y%m%d%H%M%S")
-    with open(f'reports/today_check_report_{report_time}.txt', 'w') as report_file:
+    report_file_name = f'reports/today_check_report_{report_time}.txt'
+    with open(report_file_name, 'w') as report_file:
         if no_today:
             print(f"No today's date {datetime.now().strftime('%Y/%m/%d %H:%M:%S')} in:", file=report_file)
             pprint(no_today, stream=report_file)
         else:
             print(f"All models have today's cycles", file=report_file)
+    return report_file_name
 
 
 class TodayChecker:
@@ -199,10 +201,14 @@ class TodayChecker:
         print()
         results = self.find_no_today()
         print_results(results)
-        save_results_to_local_report(results)
+        report_file_name = save_results_to_local_report(results)
         if zephyr_scale:
             try:
                 self.save_results_to_jira(results)
                 print("Pushed results to Zephyr Scale in JIRA.")
+                with open(report_file_name, 'a') as report_file:
+                    print("Pushed results to Zephyr Scale in JIRA.", file=report_file)
             except Exception as e:
-                print("An error happened while trying to connect to Jira: ", e)
+                print("An error happened while trying to connect to JIRA: ", e)
+                with open(report_file_name, 'a') as report_file:
+                    print("An error happened while trying to connect to JIRA: ", e, file=report_file)
