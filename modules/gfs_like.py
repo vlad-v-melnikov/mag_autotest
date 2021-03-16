@@ -103,8 +103,8 @@ class GfsLike:
         logging.info(f"Setting cycle for {area}...")
         if 'area_cycle' in self.plan.keys() \
                 and area in self.plan['area_cycle'].keys():
-            print("Set by prescribed cycle.")
-            logging.info("Set by prescribed cycle.")
+            print(f"Set by prescribed cycle {self.plan['area_cycle'][area]}.")
+            logging.info(f"Set by prescribed cycle {self.plan['area_cycle'][area]}.")
             return
 
         what_for = self.settings.sites['cycle_from']
