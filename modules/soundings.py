@@ -98,6 +98,11 @@ class Soundings(GfsLike):
         print(f"Setting cycle...", end=' ')
         logging.info(f"Setting cycle...")
 
+        if 'cycle' in self.plan.keys():
+            print(f"Set by prescribed cycle {self.plan['cycle']}")
+            logging.info(f"Set by prescribed cycle {self.plan['cycle']}")
+            return
+
         cycles = self.get_all_cycles()
         self.plan['cycle'] = cycles[1].get_attribute('id') if len(cycles) > 1 \
             else cycles[0].get_attribute('id')

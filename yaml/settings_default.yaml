@@ -1,6 +1,6 @@
 ---
 sites:
-  test: https://magtest.ncep.noaa.gov
+  test: https://mag.ncep.noaa.gov
   prod: https://mag.ncep.noaa.gov
   area_from: prod
   cycle_from: test
@@ -32,10 +32,13 @@ plan:
     section: Model Guidance
     model: GFS
     area_count: 1
-    product_count: 0
+    product_count: 1
     hour_count: 1
     area:
       NAMER: []
+      CONUS: []
+    area_cycle:
+      NAMER: 2021031512UTC
   GEFS-SPAG:
     section: Model Guidance
     model: GEFS-SPAG
@@ -149,6 +152,8 @@ plan:
     hour_count: 1
     cluster_count: 1
     area: {}
+    area_cycle:
+      CONUS: 2021031515UTC
   WW3:
     section: Model Guidance
     model: WW3
@@ -182,13 +187,19 @@ plan:
     model: UAIR
     area_count: 1
     product_count: 1
-    area: {}
+    area:
+      AFRICA: []
+    area_cycle:
+      AFRICA: 2021031612UTC
   SKEWT:
     section: Observations and Analyses
     model: SKEWT
     area_count: 2
     station_count: 2
-    area: {}
+    area:
+      NAMER: []
+    area_cycle:
+      NAMER: '03/16/2021 00UTC'
   RTMA:
     section: Observations and Analyses
     model: RTMA
@@ -202,6 +213,7 @@ plan:
     type_count: 1
     product_count: 2
     hour_count: 1
+    cycle: 2021031500UTC
     storm: {}
   NAM-SND:
     section: Forecast Soundings
@@ -215,6 +227,7 @@ plan:
     station_count: 1
     hour_count: 1
     stations: []
+    cycle: 2021031512UTC
 
 delays:
   hover_and_click: 1

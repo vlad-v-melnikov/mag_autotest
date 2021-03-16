@@ -79,6 +79,11 @@ class Trop(GfsLike):
         print(f"Setting cycle...", end=' ')
         logging.info(f"Setting cycle...")
 
+        if 'cycle' in self.plan.keys():
+            print(f"Set by prescribed cycle {self.plan['cycle']}")
+            logging.info(f"Set by prescribed cycle {self.plan['cycle']}")
+            return
+
         what_for = self.settings.sites['cycle_from']
         self.driver.switch_to.window(self.handles[what_for])
 
